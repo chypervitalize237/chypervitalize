@@ -82,7 +82,7 @@ $('#modal').addEventListener('click',e=>{if(e.target===$('#modal')){const r=$('#
 render();api('me').then(async r=>{
  state.user=r.user;state.ai=r.ai;state.demo=r.demo;
  if(state.user){try{const {draft}=await api('draft');if(draft&&!stored){state.cv={...structuredClone(blank),...draft.cv};state.cvLang=draft.cvLang||state.cvLang;state.lang=draft.lang||state.lang;}}catch{}}
- if(checkoutResult==='success'||(checkoutSession&&checkoutResult!=='cancelled')){await verifyPayment();return;}
+ if(checkoutResult==='success'){await verifyPayment();return;}else if(checkoutSession){localStorage.removeItem('chyper-checkout-session');checkoutSession=null;}
  if(checkoutResult==='cancelled'){localStorage.removeItem('chyper-checkout-session');state.route='editor';render();return;}
  if(state.user){
   if(!(state.user.expires>Date.now())){try{const paid=await api('checkout-status',{});state.user=paid.user||state.user;if(paid.paid&&state.user.expires>Date.now()){state.route='editor';render();showDownloadModal();return;}}catch{}}
