@@ -9,3 +9,5 @@
 .payment-success{max-width:700px;min-height:65vh;margin:0 auto;padding:80px 0;text-align:center}.payment-success h1{font-size:clamp(36px,7vw,56px);margin:20px 0}.payment-success>p{color:var(--muted);max-width:520px;margin:0 auto 30px}.payment-success .payment-download{display:flex;width:100%;max-width:470px;min-height:80px;margin:25px auto;font-size:24px;font-weight:700;background:#b5e89a;box-shadow:0 8px 24px #304b2e18}.payment-success>.text-button{display:block;margin:20px auto}.payment-success progress{display:block;margin:30px auto;accent-color:#608b45}
 
 dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:700;background:#b5e89a;margin-top:22px}dialog:has(.payment-download){text-align:center}
+
+.old-price{text-decoration:line-through;opacity:.55;font-size:15px}.sale-price{display:flex;align-items:center;gap:8px;margin:8px 0 2px}.sale-badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border:1px solid currentColor;border-radius:999px}
