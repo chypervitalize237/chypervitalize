@@ -80,8 +80,7 @@ render();api('me').then(async r=>{
  if(checkoutResult==='success'||(checkoutSession&&checkoutResult!=='cancelled')){await verifyPayment();return;}
  if(checkoutResult==='cancelled'){localStorage.removeItem('chyper-checkout-session');state.route='editor';render();return;}
  if(state.user){
-  if(!(state.user.expires>Date.now())){try{const paid=await api('checkout-status',{});state.user=paid.user||state.user;}catch{}}
-  if(state.user.expires>Date.now()){state.route='editor';render();showDownloadModal();return;}
+  if(!(state.user.expires>Date.now())){try{const paid=await api('checkout-status',{});state.user=paid.user||state.user;if(paid.paid&&state.user.expires>Date.now()){state.route='editor';render();showDownloadModal();return;}}catch{}}
  }
  render();
 }).catch(()=>{if(checkoutResult==='success'){state.route='payment';state.payment='error';render();}});
