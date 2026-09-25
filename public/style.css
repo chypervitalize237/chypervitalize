@@ -243,3 +243,9 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 .alt-plan:first-child:before{content:'AJÁNLOTT';font-size:9px;letter-spacing:1.2px;font-weight:700;color:#5c784b}
 dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
 @media(max-width:600px){.alt-plans{grid-template-columns:1fr}.alt-plan{min-height:130px}}
+
+/* Recommend the larger monthly plan */
+.alt-plan:first-child{border-color:var(--line);background:#fffefa}
+.alt-plan:first-child:before{content:none}
+.alt-plan:last-child{border-color:#9fbd8b;background:#f4faef}
+.alt-plan:last-child:before{content:'AJÁNLOTT';font-size:9px;letter-spacing:1.2px;font-weight:700;color:#5c784b}
