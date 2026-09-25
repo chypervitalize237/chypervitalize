@@ -114,3 +114,25 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 .cv-paper.cv-style-compact{padding:34px 40px;font-size:12px}.cv-style-compact .cv-head{text-align:left;margin-bottom:18px}.cv-style-compact .cv-head h2{font-family:Arial,sans-serif;font-size:28px}.cv-style-compact section{margin:15px 0}.cv-style-compact section h3{margin-bottom:6px}
 .cv-paper.cv-style-elegant{padding:58px 54px}.cv-style-elegant .cv-head{border:0;text-align:center}.cv-style-elegant .cv-head h2{font-family:Georgia,serif;font-size:38px;font-weight:400;font-style:italic}.cv-style-elegant section h3{text-align:center;font-family:Georgia,serif;font-weight:400;letter-spacing:3px}
 .cv-paper.cv-style-tech{padding:44px;border-top:5px solid #252921;border-bottom:5px solid #252921}.cv-style-tech .cv-head{text-align:left}.cv-style-tech .cv-head h2{font-family:Arial,sans-serif;font-size:35px;font-weight:800}.cv-style-tech .cv-title{font-family:monospace}.cv-style-tech section h3{font-family:monospace;border-left:4px solid #252921;padding-left:9px}
+
+/* 5 genuinely different Chypermax CV layouts, inspired by current professional template patterns */
+.cv-paper.cv-style-modern{display:grid;grid-template-columns:1fr 2fr;column-gap:30px;align-content:start;border-top:0;padding:0 44px 44px;background:#fff}
+.cv-style-modern .cv-head{grid-column:1/-1;margin:0 -44px 28px;padding:34px 44px;background:#26342f;color:#fff;border:0}
+.cv-style-modern .cv-head h2,.cv-style-modern .cv-head p{color:#fff}.cv-style-modern section{grid-column:2}.cv-style-modern section:nth-of-type(1),.cv-style-modern section:last-child{grid-column:1}.cv-style-modern section h3{border-bottom:2px solid #91b6a5}
+
+.cv-paper.cv-style-executive{padding:58px 62px;background:#fbfaf7;border-top:9px solid #171717}
+.cv-style-executive .cv-head{padding-bottom:24px;margin-bottom:30px;text-align:center;border-bottom:3px double #171717}
+.cv-style-executive .cv-head h2{font-family:Georgia,serif;font-size:36px;letter-spacing:5px}.cv-style-executive section{padding-left:18px;border-left:1px solid #aaa}.cv-style-executive section h3{font-family:Georgia,serif;letter-spacing:2px}
+
+.cv-paper.cv-style-creative{display:grid;grid-template-columns:34% 66%;padding:0;background:#fff;align-content:start}
+.cv-style-creative .cv-head{grid-column:1/-1;padding:36px 42px;background:#b9d8c2;border:0;text-align:left}.cv-style-creative .cv-head h2{font-size:38px}
+.cv-style-creative section{grid-column:2;padding:0 36px}.cv-style-creative section:nth-of-type(1),.cv-style-creative section:last-child{grid-column:1;background:#edf4ef;margin:0;padding:22px 25px}.cv-style-creative section h3{background:transparent;border-bottom:2px solid #719780}
+
+.cv-paper.cv-style-elegant{display:grid;grid-template-columns:1.7fr .9fr;column-gap:38px;padding:54px;background:#fff}
+.cv-style-elegant .cv-head{grid-column:1/-1;text-align:center;padding-bottom:26px;border-bottom:1px solid #b7aa96}.cv-style-elegant .cv-head h2{font-family:Georgia,serif;font-size:39px;font-weight:400;letter-spacing:1px}
+.cv-style-elegant section{grid-column:1}.cv-style-elegant section:nth-of-type(1),.cv-style-elegant section:last-child{grid-column:2}.cv-style-elegant section h3{font-family:Georgia,serif;color:#746553;border-bottom:1px solid #d8cdbd}
+
+.cv-paper.cv-style-tech{display:grid;grid-template-columns:1fr 2.25fr;padding:0;background:#f8fafb;border:0;align-content:start}
+.cv-style-tech .cv-head{grid-column:1/-1;padding:34px 40px;background:#17232d;color:#fff;border-left:10px solid #55b7a5}.cv-style-tech .cv-head h2,.cv-style-tech .cv-head p{color:#fff}.cv-style-tech section{grid-column:2;padding:0 32px}.cv-style-tech section:nth-of-type(1),.cv-style-tech section:last-child{grid-column:1;background:#e7eff1;margin:0;padding:20px 22px}.cv-style-tech section h3{font-family:monospace;color:#1e675d;border-left:4px solid #55b7a5;padding-left:8px}
+
+@media(max-width:700px){.cv-paper.cv-style-modern,.cv-paper.cv-style-creative,.cv-paper.cv-style-elegant,.cv-paper.cv-style-tech{grid-template-columns:1fr}.cv-style-modern .cv-head,.cv-style-creative .cv-head,.cv-style-elegant .cv-head,.cv-style-tech .cv-head,.cv-style-modern section,.cv-style-creative section,.cv-style-elegant section,.cv-style-tech section,.cv-style-modern section:nth-of-type(1),.cv-style-modern section:last-child,.cv-style-creative section:nth-of-type(1),.cv-style-creative section:last-child,.cv-style-elegant section:nth-of-type(1),.cv-style-elegant section:last-child,.cv-style-tech section:nth-of-type(1),.cv-style-tech section:last-child{grid-column:1}}
