@@ -228,3 +228,6 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 .hero-template-card.is-next{left:78%!important}
 .template-arrow{background:rgba(247,245,236,.68);border-color:rgba(70,76,65,.12);box-shadow:0 6px 22px rgba(42,48,38,.06)}
 @media(max-width:700px){.hero-template-card.is-prev,.hero-template-card.is-next{opacity:.1!important}.hero-template-card.is-prev{left:13%!important}.hero-template-card.is-next{left:87%!important}}
+
+.template-picker-title{position:absolute;top:2px;left:50%;transform:translateX(-50%);z-index:10;width:100%;text-align:center;font-size:15px;font-weight:600;letter-spacing:.02em;color:#4d5548}
+.hero-template-carousel .hero-cv-examples{margin-top:30px}
