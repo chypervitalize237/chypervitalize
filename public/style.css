@@ -25,3 +25,23 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 .mini-person{display:flex;gap:10px;align-items:center}.mini-person>i{width:34px;height:34px;border-radius:50%;background:#d8d8d2;margin:0}.mini-columns{display:grid;grid-template-columns:35% 65%;gap:8px}.mini-columns span{height:45px;background:#f2f2ed;border-top:4px solid #91a77e}
 .ats-mini{text-align:center}.ats-mini>i{height:4px}.ats-mini>i:last-child{width:65%;margin-left:auto;margin-right:auto}
 @media(max-width:650px){.resume-choices{grid-template-columns:1fr}.resume-mini{height:120px}}
+
+
+/* Chyper 1 — Basic Resume */
+.basic-cv{padding:0!important;text-align:left;overflow:hidden}
+.basic-cv .basic-head{display:flex;align-items:center;gap:18px;padding:28px 30px;background:#e8f0df;border-bottom:1px solid #cbd6c2}
+.basic-cv .basic-head h2{font:400 28px Georgia,serif;text-align:left;margin:0}
+.basic-cv .basic-title{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;margin:6px 0}
+.basic-cv .basic-contact{font-size:8px!important;color:#5f6859;margin:0}
+.basic-photo{width:72px;height:82px;object-fit:cover;border-radius:2px;flex:0 0 auto}
+.basic-body{display:grid;grid-template-columns:34% 66%;min-height:500px}
+.basic-body>aside{padding:24px 20px;background:#f3f5ee;border-right:1px solid #e0e4da}
+.basic-body>main{padding:24px 26px}
+.basic-cv section{margin:0 0 20px}
+.basic-cv h3{font:600 9px Arial,sans-serif!important;text-align:left!important;letter-spacing:1.4px!important;border:0!important;border-bottom:1px solid #a9b89e!important;margin:0 0 10px!important;padding:0 0 6px!important}
+.basic-cv p{font-size:8.5px;line-height:1.65}
+.basic-entry{margin:0 0 15px}
+.basic-entry strong{display:block;font-size:10px}
+.basic-entry small{display:block;font-size:8px;color:#697063;margin:2px 0 4px}
+.basic-org{font-style:italic;color:#5f6859;margin-bottom:4px}
+@media(max-width:650px){.basic-cv .basic-head{padding:24px 20px}.basic-body{grid-template-columns:36% 64%}.basic-body>aside{padding:20px 14px}.basic-body>main{padding:20px 16px}.basic-photo{width:60px;height:70px}}
