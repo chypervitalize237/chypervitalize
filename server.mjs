@@ -10,7 +10,7 @@ const db=new DatabaseSync(join(dir,'chyper.sqlite'));db.exec(`PRAGMA journal_mod
 const limits=new Map();
 function json(res,data,status=200){res.writeHead(status,{'Content-Type':'application/json'});res.end(JSON.stringify(data));}
 function user(req){let token=(req.headers.cookie||'').match(/(?:^|; )session=([a-f0-9]+)/)?.[1];return token?db.prepare('SELECT u.* FROM users u JOIN sessions s ON u.id=s.uid WHERE s.token=? AND s.expires>?').get(token,Date.now()):null;}
-function safe(u){return u?{email:u.email,expires:u.expires,plan:u.plan,ref:u.ref,credits:Number(u.credits||0)}:null;} const planCredits={day:1,week:2,month:5};
+function safe(u){return u?{email:u.email,expires:u.expires,plan:u.plan,ref:u.ref,credits:Number(u.credits||0)}:null;} const planCredits={day:1,week:3,month:10};
 async function body(req){let v='';for await(const chunk of req){v+=chunk;if(v.length>3000000)throw Error('Request too large');}return JSON.parse(v||'{}');}
 http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','same-origin');res.setHeader('X-Frame-Options','DENY');const url=new URL(req.url,'http://localhost');try{
  if(req.method==='POST'&&req.headers.origin&&new URL(req.headers.origin).host!==req.headers.host)return json(res,{error:'Origin rejected'},403);
