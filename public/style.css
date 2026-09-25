@@ -165,3 +165,11 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 .hero-template-card.is-next{transform:translate(12%,-50%) scale(1)}
 @media(max-width:1050px){.hero-template-card.is-prev{transform:translate(-96%,-50%) scale(1)}.hero-template-card.is-next{transform:translate(-4%,-50%) scale(1)}}
 @media(max-width:700px){.hero-template-card.is-prev{transform:translate(-88%,-50%) scale(1)}.hero-template-card.is-next{transform:translate(-12%,-50%) scale(1)}}
+
+/* Shared color customization for every Chypermax CV template */
+.cv-paper:not(.basic-cv){--cv-custom-accent:var(--template-accent,#74866b)}
+.cv-paper:not(.basic-cv) h3{border-color:var(--cv-custom-accent)!important;color:var(--cv-custom-accent)}
+.cv-paper:not(.basic-cv) header{border-color:var(--cv-custom-accent)}
+.cv-style-modern header,.cv-style-creative header,.cv-style-tech header{background:var(--cv-custom-accent)!important}
+.cv-style-modern section:nth-of-type(odd),.cv-style-creative section:nth-of-type(odd),.cv-style-tech section:nth-of-type(odd){border-color:var(--cv-custom-accent)}
+.cv-style-elegant h3,.cv-style-executive h3,.cv-style-professional h3,.cv-style-compact h3,.cv-style-minimal h3,.cv-style-ats h3{color:var(--cv-custom-accent)!important;border-color:var(--cv-custom-accent)!important}
