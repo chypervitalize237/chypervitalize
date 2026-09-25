@@ -87,3 +87,20 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 /* Two subscription options: keep the pricing cards centered. */
 .pricing .price-grid{grid-template-columns:repeat(2,minmax(0,1fr));max-width:660px;margin-left:auto;margin-right:auto}
 @media(max-width:700px){.pricing .price-grid{grid-template-columns:1fr;max-width:420px}}
+
+/* Chypermax 10-template selector */
+.resume-choices-10{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;max-height:68vh;overflow:auto;padding:4px}
+.resume-choices-10 .resume-choice{min-width:0}
+.resume-choices-10 .resume-mini{height:150px;background:#faf9f4;border:1px solid var(--line);padding:18px;text-align:left;overflow:hidden}
+.resume-choices-10 .resume-mini b,.resume-choices-10 .resume-mini small{display:block}
+.resume-choices-10 .resume-mini hr{border:0;border-top:1px solid #bbb;margin:12px 0}
+.resume-choices-10 .resume-mini i{display:block;height:5px;background:#d8d8d2;margin:7px 0;border-radius:4px}
+.resume-choices-10 .modern-mini{border-top:22px solid #c7e9b0}
+.resume-choices-10 .executive-mini{border-top:7px solid #30352e}
+.resume-choices-10 .minimal-mini{padding:28px;background:#fff}
+.resume-choices-10 .creative-mini{border-left:38px solid #c7e9b0}
+.resume-choices-10 .professional-mini{border-left:7px solid #596354}
+.resume-choices-10 .compact-mini i{height:3px;margin:5px 0}
+.resume-choices-10 .elegant-mini b{font-family:serif;font-size:20px;font-weight:500}
+.resume-choices-10 .tech-mini{border-top:4px solid #333;border-bottom:4px solid #333}
+@media(max-width:700px){.resume-choices-10{grid-template-columns:1fr;max-height:72vh}}
