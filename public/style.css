@@ -11,3 +11,17 @@
 dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:700;background:#b5e89a;margin-top:22px}dialog:has(.payment-download){text-align:center}
 
 .old-price{text-decoration:line-through;opacity:.55;font-size:15px}.sale-price{display:flex;align-items:center;gap:8px;margin:8px 0 2px}.sale-badge{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 7px;border:1px solid currentColor;border-radius:999px}
+
+/* Chyper resume type chooser */
+.resume-choices{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:24px}
+.resume-choice{position:relative;text-align:left;border:1px solid var(--line);background:var(--white);border-radius:10px;padding:16px;transition:.2s}
+.resume-choice:hover{border-color:#8fac78;transform:translateY(-2px)}
+.resume-choice>strong{display:block;font-size:19px;margin-top:12px}.resume-choice>small{display:block;color:var(--muted);margin-top:3px}
+.resume-choice>p{font-size:12px!important;line-height:1.5;margin:9px 0!important;color:var(--muted)}
+.resume-choice>em{font-size:12px;font-style:normal;font-weight:700;color:#52684a}
+.recommended-choice{border:2px solid #b8d9a3}.choice-badge{position:absolute;right:10px;top:9px;background:var(--green);border-radius:999px;padding:4px 7px;font-size:8px;font-weight:700;letter-spacing:.08em;z-index:2}
+.resume-mini{height:135px;border:1px solid #e5e4dd;background:#fff;padding:14px;box-shadow:0 6px 18px #3331}
+.resume-mini hr{margin:10px 0}.resume-mini i{display:block;height:4px;background:#e0e0da;margin:7px 0}.resume-mini b{font:15px Georgia,serif}.resume-mini small{display:block;font-size:7px;margin-top:3px}
+.mini-person{display:flex;gap:10px;align-items:center}.mini-person>i{width:34px;height:34px;border-radius:50%;background:#d8d8d2;margin:0}.mini-columns{display:grid;grid-template-columns:35% 65%;gap:8px}.mini-columns span{height:45px;background:#f2f2ed;border-top:4px solid #91a77e}
+.ats-mini{text-align:center}.ats-mini>i{height:4px}.ats-mini>i:last-child{width:65%;margin-left:auto;margin-right:auto}
+@media(max-width:650px){.resume-choices{grid-template-columns:1fr}.resume-mini{height:120px}}
