@@ -1,4 +1,4 @@
-import {locales,strings} from './i18n.js';
+import {locales,strings} from './i18n.js?v=20260925-prices';
 import {fieldExample} from './examples.js';
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sections=['personal','summary','experience','education','skills','languages','projects','awards','volunteer','certifications'];
