@@ -1,7 +1,7 @@
-// Chyper subscription pricing. The weekly intro renews monthly at $12.49 after 7 days.
+// Chypermax subscription pricing. The weekly intro renews monthly at $12.49 after 7 days.
 export function checkoutPrice(plan,language='en'){
  if(!['day','month'].includes(plan))throw new Error('plan');
- return {currency:'usd',amount:plan==='day'?299:1249,name:plan==='day'?'Chyper — first week':'Chyper — monthly',locale:language==='no'?'nb':language==='sr'?'auto':language};
+ return {currency:'usd',amount:plan==='day'?299:1249,name:plan==='day'?'Chypermax — first week':'Chypermax — monthly',locale:language==='no'?'nb':language==='sr'?'auto':language};
 }
 export function applyCheckoutPrice(form,plan,language){
  const price=checkoutPrice(plan,language);
