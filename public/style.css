@@ -147,3 +147,15 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 .template-dots{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:9}
 .template-dots i{width:6px;height:6px;border-radius:50%;background:#c9c9bf;transition:.2s}.template-dots i.active{width:18px;border-radius:5px;background:#6f8265}
 @media(max-width:700px){.hero-template-carousel{min-height:480px}.hero-template-carousel .hero-cv-examples{height:450px}.hero-template-card{width:285px}.template-prev{left:2px}.template-next{right:2px}}
+
+/* Three-card homepage CV carousel: previous / active / next */
+.hero-template-carousel .hero-cv-examples{overflow:visible}
+.hero-template-card{overflow:hidden}
+.hero-template-card .cv-paper{overflow:hidden}
+.hero-template-card.is-prev,.hero-template-card.is-next{opacity:.42;z-index:1;pointer-events:auto;filter:saturate(.75)}
+.hero-template-card.is-prev{transform:translate(-112%,-50%) scale(.76)}
+.hero-template-card.is-next{transform:translate(12%,-50%) scale(.76)}
+.hero-template-card.is-front{opacity:1;z-index:3;filter:none;transform:translate(-50%,-50%) scale(1)}
+.hero-template-card .cv-paper,.hero-template-card .cv-paper *{overflow-wrap:anywhere;word-break:normal}
+@media(max-width:1050px){.hero-template-card.is-prev{transform:translate(-96%,-50%) scale(.68)}.hero-template-card.is-next{transform:translate(-4%,-50%) scale(.68)}}
+@media(max-width:700px){.hero-template-card.is-prev,.hero-template-card.is-next{opacity:.2}.hero-template-card.is-prev{transform:translate(-88%,-50%) scale(.62)}.hero-template-card.is-next{transform:translate(-12%,-50%) scale(.62)}}
