@@ -45,3 +45,12 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 .basic-entry small{display:block;font-size:8px;color:#697063;margin:2px 0 4px}
 .basic-org{font-style:italic;color:#5f6859;margin-bottom:4px}
 @media(max-width:650px){.basic-cv .basic-head{padding:24px 20px}.basic-body{grid-template-columns:36% 64%}.basic-body>aside{padding:20px 14px}.basic-body>main{padding:20px 16px}.basic-photo{width:60px;height:70px}}
+
+/* Homepage: show both CV examples */
+.hero-cv-examples{position:relative;min-height:555px}
+.hero-cv-examples .sample-cv{position:absolute;width:82%;transition:transform .2s ease}
+.hero-cv-examples .sample-basic{left:0;top:34px;transform:rotate(-5deg);z-index:1}
+.hero-cv-examples .sample-ats{right:0;top:0;transform:rotate(4deg);z-index:2}
+.hero-cv-examples .sample-type{position:absolute;top:10px;left:12px;z-index:5;background:var(--bone);border:1px solid var(--line);border-radius:999px;padding:5px 9px;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.hero-cv-examples .sample-cv .cv-paper{min-height:500px}
+@media(max-width:760px){.hero-cv-examples{min-height:500px}.hero-cv-examples .sample-cv{width:86%}.hero-cv-examples .sample-basic{left:-2%;top:42px}.hero-cv-examples .sample-ats{right:-2%}}
