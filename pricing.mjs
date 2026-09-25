@@ -12,7 +12,6 @@ export function applyCheckoutPrice(form,plan,language){
  form.set('line_items[0][price_data][currency]',price.currency);
  form.set('line_items[0][price_data][unit_amount]',String(price.amount));
  form.set('line_items[0][price_data][product_data][name]',price.name);
- if(plan==='month')form.set('line_items[0][price_data][recurring][interval]','month');
  form.set('locale',price.locale);
  form.set('adaptive_pricing[enabled]','false');
  form.set('metadata[language]',language||'en');
