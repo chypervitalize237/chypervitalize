@@ -54,3 +54,11 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 .hero-cv-examples .sample-type{position:absolute;top:10px;left:12px;z-index:5;background:var(--bone);border:1px solid var(--line);border-radius:999px;padding:5px 9px;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
 .hero-cv-examples .sample-cv .cv-paper{min-height:500px}
 @media(max-width:760px){.hero-cv-examples{min-height:500px}.hero-cv-examples .sample-cv{width:86%}.hero-cv-examples .sample-basic{left:-2%;top:42px}.hero-cv-examples .sample-ats{right:-2%}}
+
+/* Click-to-front homepage CV prototypes */
+.hero-cv-examples .sample-cv{cursor:pointer;transition:transform .28s ease,filter .28s ease;transform-origin:center}
+.hero-cv-examples .sample-basic{z-index:1;filter:brightness(.97)}
+.hero-cv-examples .sample-ats{z-index:1;filter:brightness(.97)}
+.hero-cv-examples .sample-basic.is-front{z-index:4;transform:translate(10%,0) rotate(-2deg) scale(1.02);filter:none}
+.hero-cv-examples .sample-ats.is-front{z-index:4;transform:translate(-2%,0) rotate(3deg) scale(1.02);filter:none}
+.hero-cv-examples .sample-cv:focus-visible{outline:2px solid #829771;outline-offset:4px}
