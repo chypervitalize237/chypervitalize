@@ -186,3 +186,25 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 .hero-template-card.is-next{transform:translate(8%,-50%) scale(1)}
 @media(max-width:1050px){.hero-template-card,.hero-template-card.is-front,.hero-template-card.is-prev,.hero-template-card.is-next{width:300px;height:430px;max-width:300px;max-height:430px}.hero-template-card.is-prev{transform:translate(-104%,-50%) scale(1)}.hero-template-card.is-next{transform:translate(4%,-50%) scale(1)}}
 @media(max-width:700px){.hero-template-card,.hero-template-card.is-front,.hero-template-card.is-prev,.hero-template-card.is-next{width:270px;height:400px;max-width:270px;max-height:400px}.hero-template-card.is-prev{transform:translate(-102%,-50%) scale(1)}.hero-template-card.is-next{transform:translate(2%,-50%) scale(1)}}
+
+/* Carousel v5: stable three-card viewport */
+.hero-visual{overflow:visible}
+.hero-template-carousel{width:620px;max-width:100%;height:570px;overflow:hidden;margin:0 auto}
+.hero-template-carousel .hero-cv-examples{position:relative;width:100%;height:520px;overflow:hidden}
+.hero-template-card,.hero-template-card.is-front,.hero-template-card.is-prev,.hero-template-card.is-next{
+ width:250px!important;height:400px!important;max-width:250px!important;max-height:400px!important;
+ top:50%;margin:0!important;overflow:hidden!important;border-radius:2px;
+}
+.hero-template-card{opacity:0;transform:translate(-50%,-50%)!important}
+.hero-template-card.is-front{left:50%!important;opacity:1;z-index:3;filter:none;transform:translate(-50%,-50%)!important}
+.hero-template-card.is-prev{left:17%!important;opacity:.34;z-index:1;filter:saturate(.72);transform:translate(-50%,-50%)!important}
+.hero-template-card.is-next{left:83%!important;opacity:.34;z-index:1;filter:saturate(.72);transform:translate(-50%,-50%)!important}
+.hero-template-card .cv-paper{position:relative!important;width:100%!important;height:100%!important;min-width:0!important;max-width:100%!important;min-height:0!important;max-height:100%!important;margin:0!important;overflow:hidden!important;box-sizing:border-box!important}
+.hero-template-card .sample-type{max-width:calc(100% - 20px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.template-prev{left:8px}.template-next{right:8px}
+@media(max-width:700px){
+ .hero-template-carousel{height:480px}
+ .hero-template-carousel .hero-cv-examples{height:440px}
+ .hero-template-card,.hero-template-card.is-front,.hero-template-card.is-prev,.hero-template-card.is-next{width:220px!important;height:360px!important;max-width:220px!important;max-height:360px!important}
+ .hero-template-card.is-prev{left:5%!important}.hero-template-card.is-next{left:95%!important}
+}
