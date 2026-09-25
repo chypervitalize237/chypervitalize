@@ -45,7 +45,24 @@ const paymentCopy={
  nl:['Betaling geslaagd!','Je cv is klaar. Veel succes met je volgende stap!','CV downloaden','Betaling controleren…','De betaling is nog niet bevestigd. Probeer het over een paar seconden opnieuw.','Opnieuw controleren','Log in met het account waarmee je hebt betaald.']
 };
 function reviewStars(n){return '<span class="review-stars" aria-label="'+n+' / 5">'+[1,2,3,4,5].map(i=>i<=n?'★':'☆').join('')+'</span>';}
-function reviewsBlock(){const hu=state.lang==='hu',items=state.reviews||[];return `<div class="customer-reviews"><p class="eyebrow">CHYPER / REVIEWS</p><h2>${hu?'Vásárlói vélemények':'Customer reviews'}</h2><div class="review-compose"><strong>${hu?'Értékeld a Chypert':'Rate Chyper'}</strong><div class="star-picker">${[1,2,3,4,5].map(i=>`<button type="button" data-action="rate-${i}" aria-label="${i} star">${i<=state.reviewRating?'★':'☆'}</button>`).join('')}</div><textarea id="review-text" maxlength="500" placeholder="${hu?'Írd le a tapasztalatodat…':'Share your experience…'}"></textarea>${button(hu?'Vélemény küldése':'Submit review','submit-review','secondary','')}</div><div class="review-list">${items.map(r=>`<article>${reviewStars(Number(r.rating))}<p>${esc(r.text)}</p></article>`).join('')}</div></div>`;}
+function reviewsBlock(){const hu=state.lang==='hu',items=state.reviews||[];
+ const examples=hu?[
+  {rating:5,text:'Gyorsan össze tudtam rakni a CV-met, és a végeredmény letisztult lett.'},
+  {rating:5,text:'Egyszerű volt használni, nem kellett sokat állítgatni rajta.'},
+  {rating:4,text:'Jól néz ki a CV és könnyű volt kitölteni. Pár extra sablonnak még örülnék.'},
+  {rating:5,text:'Telefonról is simán végig tudtam csinálni.'},
+  {rating:4,text:'Hasznos és átlátható oldal. A PDF is rendben lett.'},
+  {rating:3,text:'Alapvetően jó, de több személyre szabási lehetőség még jól jönne.'}
+ ]:[
+  {rating:5,text:'I put my CV together quickly and the result looked clean and professional.'},
+  {rating:5,text:'Simple to use and I did not have to spend much time adjusting things.'},
+  {rating:4,text:'The CV looks good and was easy to fill out. A few more templates would be nice.'},
+  {rating:5,text:'Worked smoothly on my phone too.'},
+  {rating:4,text:'Useful and straightforward. The PDF came out well.'},
+  {rating:3,text:'Good overall, but I would like a few more customization options.'}
+ ];
+ const shown=items.length?items:examples;
+ return `<div class="customer-reviews"><p class="eyebrow">CHYPER / REVIEWS</p><h2>${hu?'Vásárlói vélemények':'Customer reviews'}</h2><div class="review-list">${shown.map((r,i)=>`<article>${reviewStars(Number(r.rating))}<p>${esc(r.text)}</p>${!items.length?`<small class="review-example">${hu?'Példa vélemény':'Example review'}</small>`:''}</article>`).join('')}</div><div class="review-compose"><strong>${hu?'Értékeld a Chypert':'Rate Chyper'}</strong><div class="star-picker">${[1,2,3,4,5].map(i=>`<button type="button" data-action="rate-${i}" aria-label="${i} star">${i<=state.reviewRating?'★':'☆'}</button>`).join('')}</div><textarea id="review-text" maxlength="500" placeholder="${hu?'Írd le a tapasztalatodat…':'Share your experience…'}"></textarea>${button(hu?'Vélemény küldése':'Submit review','submit-review','secondary','')}</div></div>`;}
 async function loadReviews(){try{const r=await api('reviews');state.reviews=r.reviews||[];if(state.route==='payment')render();}catch{}}
 function paymentPage(){
  const c=paymentCopy[state.lang]||paymentCopy.en,ready=state.payment==='paid'&&Number(state.user?.credits||0)>0;
