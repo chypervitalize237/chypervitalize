@@ -34,7 +34,7 @@ function styledCvMarkup(d,lang,example=false){
  const style=state.cvStyle||state.resumeType||'ats';
  if(style==='basic')return basicCvMarkup(d,lang,example);
  const base=cvMarkup(d,lang,example);
- return base.replace('class="cv-paper','class="cv-paper cv-style-'+esc(style));
+ return base.replace('class="cv-paper','style="--template-accent:'+esc(state.basicAccent)+';--template-shade:'+Number(state.basicShade||0)+'%" class="cv-paper cv-style-'+esc(style));
 }
 function activeCvMarkup(d,lang,example=false){return styledCvMarkup(d,lang,example);}
 
