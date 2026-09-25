@@ -136,3 +136,14 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 .cv-style-tech .cv-head{grid-column:1/-1;padding:34px 40px;background:#17232d;color:#fff;border-left:10px solid #55b7a5}.cv-style-tech .cv-head h2,.cv-style-tech .cv-head p{color:#fff}.cv-style-tech section{grid-column:2;padding:0 32px}.cv-style-tech section:nth-of-type(1),.cv-style-tech section:last-child{grid-column:1;background:#e7eff1;margin:0;padding:20px 22px}.cv-style-tech section h3{font-family:monospace;color:#1e675d;border-left:4px solid #55b7a5;padding-left:8px}
 
 @media(max-width:700px){.cv-paper.cv-style-modern,.cv-paper.cv-style-creative,.cv-paper.cv-style-elegant,.cv-paper.cv-style-tech{grid-template-columns:1fr}.cv-style-modern .cv-head,.cv-style-creative .cv-head,.cv-style-elegant .cv-head,.cv-style-tech .cv-head,.cv-style-modern section,.cv-style-creative section,.cv-style-elegant section,.cv-style-tech section,.cv-style-modern section:nth-of-type(1),.cv-style-modern section:last-child,.cv-style-creative section:nth-of-type(1),.cv-style-creative section:last-child,.cv-style-elegant section:nth-of-type(1),.cv-style-elegant section:last-child,.cv-style-tech section:nth-of-type(1),.cv-style-tech section:last-child{grid-column:1}}
+
+/* Homepage CV template carousel */
+.hero-template-carousel{position:relative;width:100%;height:100%;min-height:570px;display:flex;align-items:center;justify-content:center}
+.hero-template-carousel .hero-cv-examples{position:relative;width:100%;height:540px;overflow:hidden}
+.hero-template-card{position:absolute;left:50%;top:50%;width:360px;opacity:0;pointer-events:none;transform:translate(-50%,-50%) scale(.88);transition:transform .42s ease,opacity .42s ease;z-index:0}
+.hero-template-card.is-front{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1);z-index:3}
+.template-arrow{position:absolute;top:48%;z-index:8;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:#f7f5ecdd;backdrop-filter:blur(6px);font-size:28px;line-height:1;cursor:pointer;display:grid;place-items:center}
+.template-prev{left:-12px}.template-next{right:-12px}
+.template-dots{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:9}
+.template-dots i{width:6px;height:6px;border-radius:50%;background:#c9c9bf;transition:.2s}.template-dots i.active{width:18px;border-radius:5px;background:#6f8265}
+@media(max-width:700px){.hero-template-carousel{min-height:480px}.hero-template-carousel .hero-cv-examples{height:450px}.hero-template-card{width:285px}.template-prev{left:2px}.template-next{right:2px}}
