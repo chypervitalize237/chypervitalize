@@ -231,3 +231,15 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 
 .template-picker-title{position:absolute;top:2px;left:50%;transform:translateX(-50%);z-index:10;width:100%;text-align:center;font-size:15px;font-weight:600;letter-spacing:.02em;color:#4d5548}
 .hero-template-carousel .hero-cv-examples{margin-top:30px}
+
+/* Checkout plan cards */
+.alt-plans{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0 14px}
+.alt-plan{min-height:154px;padding:20px;border:1px solid var(--line);border-radius:12px;background:#fffefa;text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:8px;transition:transform .18s,border-color .18s,box-shadow .18s,background .18s}
+.alt-plan:hover{transform:translateY(-2px);border-color:#9fbd8b;box-shadow:0 10px 26px rgba(48,75,46,.09);background:#fbfff7}
+.alt-plan span{font-size:13px;font-weight:650;color:#555d50}
+.alt-plan strong{font-family:'Libre Caslon Display',Georgia,serif;font-size:31px;font-weight:400;line-height:1;color:#252921}
+.alt-plan small{font-size:12px;line-height:1.45;color:var(--muted)}
+.alt-plan:first-child{border-color:#9fbd8b;background:#f4faef}
+.alt-plan:first-child:before{content:'AJÁNLOTT';font-size:9px;letter-spacing:1.2px;font-weight:700;color:#5c784b}
+dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
+@media(max-width:600px){.alt-plans{grid-template-columns:1fr}.alt-plan{min-height:130px}}
