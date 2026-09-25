@@ -62,3 +62,16 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 .hero-cv-examples .sample-basic.is-front{z-index:4;transform:translate(10%,0) rotate(-2deg) scale(1.02);filter:none}
 .hero-cv-examples .sample-ats.is-front{z-index:4;transform:translate(-2%,0) rotate(3deg) scale(1.02);filter:none}
 .hero-cv-examples .sample-cv:focus-visible{outline:2px solid #829771;outline-offset:4px}
+
+/* Chyper 1 appearance controls */
+.basic-cv .basic-head{background:color-mix(in srgb,var(--basic-accent,#e8f0df),#000 var(--basic-shade,0%))}
+.basic-cv .basic-body>aside{background:color-mix(in srgb,var(--basic-accent,#e8f0df),#fff 58%)}
+.basic-cv.basic-side-right .basic-body{grid-template-columns:66% 34%}
+.basic-cv.basic-side-right .basic-body>main{grid-column:1;grid-row:1}
+.basic-cv.basic-side-right .basic-body>aside{grid-column:2;grid-row:1;border-right:0;border-left:1px solid #e0e4da}
+.basic-design-controls{margin:22px 0 6px;padding:18px;border:1px solid var(--line);border-radius:12px;background:#faf9f4;display:grid;gap:14px}
+.basic-design-controls .design-head{display:flex;justify-content:space-between;align-items:baseline}.basic-design-controls .design-head small{color:var(--muted)}
+.basic-design-controls label{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;font-size:13px;font-weight:600}
+.basic-design-controls input[type=color]{width:52px;height:34px;padding:2px;border:1px solid var(--line);border-radius:8px;background:white}
+.basic-design-controls input[type=range]{width:100%;grid-column:1/-1}
+.side-choice{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600}.side-choice span{margin-right:auto}.side-choice button{border:1px solid var(--line);background:white;border-radius:8px;padding:8px 14px}.side-choice button.active{background:#dcebd0;border-color:#9db78b}
