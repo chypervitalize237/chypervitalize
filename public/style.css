@@ -159,3 +159,9 @@ dialog .payment-download{width:100%;min-height:76px;font-size:24px;font-weight:7
 .hero-template-card .cv-paper,.hero-template-card .cv-paper *{overflow-wrap:anywhere;word-break:normal}
 @media(max-width:1050px){.hero-template-card.is-prev{transform:translate(-96%,-50%) scale(.68)}.hero-template-card.is-next{transform:translate(-4%,-50%) scale(.68)}}
 @media(max-width:700px){.hero-template-card.is-prev,.hero-template-card.is-next{opacity:.2}.hero-template-card.is-prev{transform:translate(-88%,-50%) scale(.62)}.hero-template-card.is-next{transform:translate(-12%,-50%) scale(.62)}}
+
+/* Keep neighboring homepage CV previews the same size as the active one */
+.hero-template-card.is-prev{transform:translate(-112%,-50%) scale(1)}
+.hero-template-card.is-next{transform:translate(12%,-50%) scale(1)}
+@media(max-width:1050px){.hero-template-card.is-prev{transform:translate(-96%,-50%) scale(1)}.hero-template-card.is-next{transform:translate(-4%,-50%) scale(1)}}
+@media(max-width:700px){.hero-template-card.is-prev{transform:translate(-88%,-50%) scale(1)}.hero-template-card.is-next{transform:translate(-12%,-50%) scale(1)}}
