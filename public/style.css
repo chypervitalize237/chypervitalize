@@ -1525,3 +1525,61 @@ body,.page,.hero-reference{background:#F3EBDD!important;color:#241F1C!important}
  color:#E8DDD0!important;
  white-space:nowrap!important;
 }
+
+
+/* v26 — hard fix for Elegant/Executive portrait + identity collision */
+.hero-reference .hero-style-elegant .cv-head,
+.hero-reference .hero-style-executive .cv-head{
+ position:relative!important;
+ display:block!important;
+ height:190px!important;
+ min-height:190px!important;
+ padding:0!important;
+ overflow:hidden!important;
+}
+.hero-reference .hero-style-elegant img.cv-photo,
+.hero-reference .hero-style-executive img.cv-photo{
+ position:absolute!important;
+ top:14px!important;
+ left:50%!important;
+ transform:translateX(-50%)!important;
+ width:78px!important;
+ height:78px!important;
+ margin:0!important;
+ border-radius:50%!important;
+ object-fit:cover!important;
+ object-position:50% 18%!important;
+ z-index:30!important;
+}
+.hero-reference .hero-style-elegant .hero-cv-name,
+.hero-reference .hero-style-executive .hero-cv-name{
+ position:absolute!important;
+ top:105px!important;
+ left:12px!important;
+ right:12px!important;
+ width:auto!important;
+ height:auto!important;
+ margin:0!important;
+ z-index:60!important;
+ text-align:center!important;
+ transform:none!important;
+ overflow:visible!important;
+}
+.hero-reference .hero-style-elegant .hero-cv-name strong,
+.hero-reference .hero-style-executive .hero-cv-name strong{
+ display:block!important;
+ margin:0!important;
+ color:#fffaf2!important;
+ font:700 17px/1.15 Georgia,serif!important;
+ white-space:nowrap!important;
+ overflow:visible!important;
+}
+.hero-reference .hero-style-elegant .hero-cv-name small,
+.hero-reference .hero-style-executive .hero-cv-name small{
+ display:block!important;
+ margin-top:5px!important;
+ color:#eaded0!important;
+ font:600 7px/1.2 Arial,sans-serif!important;
+ white-space:nowrap!important;
+ overflow:visible!important;
+}
