@@ -1030,3 +1030,11 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
  margin-left:0!important;margin-right:0!important;transform:none!important;
 }
 .hero-template-card .cv-head,.hero-template-card .basic-head{box-sizing:border-box!important;max-width:100%!important}
+
+/* footer impact statement */
+.impact-strip{
+ width:100%;box-sizing:border-box;margin:0;padding:22px 28px;
+ text-align:center;background:#252921;color:#f7f5ed;
+ font-size:clamp(18px,2vw,28px);font-weight:650;letter-spacing:-.02em;
+ border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)
+}
