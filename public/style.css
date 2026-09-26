@@ -1489,3 +1489,39 @@ body,.page,.hero-reference{background:#F3EBDD!important;color:#241F1C!important}
 .hero-reference .hero-style-tech{--card-head:#242321;--card-side:#9E9C96}
 .hero-reference .hero-template-card .hero-cv-name strong{color:#FFF9EF!important}
 .hero-reference .hero-template-card .hero-cv-name small{color:#E8DDD0!important}
+
+
+/* v25 — fix centered female example identity being hidden by portrait */
+.hero-reference .hero-style-elegant .cv-head,
+.hero-reference .hero-style-executive .cv-head{
+ min-height:190px!important;
+ padding-bottom:52px!important;
+ overflow:visible!important;
+}
+.hero-reference .hero-style-elegant .hero-cv-name,
+.hero-reference .hero-style-executive .hero-cv-name{
+ position:absolute!important;
+ top:118px!important;
+ left:16px!important;
+ right:16px!important;
+ z-index:200!important;
+ display:block!important;
+ visibility:visible!important;
+ opacity:1!important;
+ text-align:center!important;
+}
+.hero-reference .hero-style-elegant .hero-cv-name strong,
+.hero-reference .hero-style-executive .hero-cv-name strong{
+ display:block!important;
+ color:#FFF9EF!important;
+ font-size:17px!important;
+ line-height:1.15!important;
+ white-space:nowrap!important;
+}
+.hero-reference .hero-style-elegant .hero-cv-name small,
+.hero-reference .hero-style-executive .hero-cv-name small{
+ display:block!important;
+ margin-top:4px!important;
+ color:#E8DDD0!important;
+ white-space:nowrap!important;
+}
