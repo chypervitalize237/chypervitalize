@@ -1287,3 +1287,20 @@ body{background:#f7f5ed!important}
 .hero-reference .hero-style-compact img.cv-photo{left:0!important;top:0!important;width:70px!important;height:82px!important}
 .hero-reference .hero-style-elegant img.cv-photo{position:static!important;width:86px!important;height:86px!important;border-radius:50%!important;margin:0 auto 9px!important}
 .hero-reference .hero-style-tech img.cv-photo{left:22px!important;top:18px!important;width:88px!important;height:98px!important;border-radius:4px!important}
+
+
+/* v16 — rounded animated motivational footer strip */
+.impact-strip{
+  border-radius:18px!important;
+  transition:transform .28s cubic-bezier(.2,.8,.2,1),border-radius .28s ease,box-shadow .28s ease!important;
+  transform:translateZ(0);
+}
+.impact-strip:hover{
+  transform:translateY(-4px) scale(1.012)!important;
+  border-radius:28px!important;
+  box-shadow:0 16px 34px rgba(37,41,33,.18)!important;
+}
+@media (prefers-reduced-motion:reduce){
+  .impact-strip{transition:none!important}
+  .impact-strip:hover{transform:none!important}
+}
