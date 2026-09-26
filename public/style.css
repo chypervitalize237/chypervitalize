@@ -1002,3 +1002,21 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
 .hero-template-card.is-prev .cv-head h2,.hero-template-card.is-next .cv-head h2{opacity:.82!important}
 .hero-template-card.is-prev .cv-head .cv-title,.hero-template-card.is-next .cv-head .cv-title,
 .hero-template-card.is-prev .cv-head .cv-contact,.hero-template-card.is-next .cv-head .cv-contact{opacity:.66!important}
+
+/* v6 guaranteed example identity: independent of template internals */
+.hero-template-card{overflow:hidden!important}
+.hero-template-card .hero-example-identity{
+ position:absolute!important;z-index:30!important;top:46px!important;left:18px!important;right:18px!important;
+ display:flex!important;flex-direction:column!important;gap:3px!important;box-sizing:border-box!important;
+ pointer-events:none!important;overflow:hidden!important;color:#252921!important
+}
+.hero-template-card .hero-example-identity strong{
+ display:block!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;
+ white-space:nowrap!important;font:700 17px/1.08 Arial,Helvetica,sans-serif!important;color:inherit!important;opacity:1!important
+}
+.hero-template-card .hero-example-identity span{
+ display:block!important;max-width:100%!important;overflow:hidden!important;text-overflow:ellipsis!important;
+ white-space:nowrap!important;font:600 6px/1.2 Arial,Helvetica,sans-serif!important;color:inherit!important;opacity:.78!important
+}
+.hero-template-card.cv-style-tech .hero-example-identity,.hero-template-card.cv-style-executive .hero-example-identity{color:#f8f7f1!important}
+.hero-template-card.is-prev .hero-example-identity,.hero-template-card.is-next .hero-example-identity{opacity:.78!important}
