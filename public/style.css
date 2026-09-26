@@ -415,3 +415,37 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
   box-shadow:0 16px 36px rgba(37,41,33,.06)!important;
 }
 .hero-template-card.is-front .cv-paper *{opacity:1;color:revert-layer}
+
+
+/* Final carousel UX: visible neighbours + clean animated lateral transitions */
+.hero-visual{position:relative}
+.template-picker-title{position:absolute;top:18px;left:50%;width:min(360px,72%);transform:translateX(-50%);text-align:center;white-space:normal;line-height:1.25;z-index:12}
+.floating-label{position:absolute;top:16px;right:18px;z-index:20;max-width:190px;white-space:nowrap}
+.hero-template-carousel{padding-top:48px}
+.hero-template-card{transition:transform .56s cubic-bezier(.2,.8,.2,1),opacity .36s ease;contain:layout paint}
+.hero-template-card.is-prev,.hero-template-card.is-next{opacity:.42!important}
+.hero-template-card.is-prev{transform:translate(-103%,-50%) rotate(-2deg) scale(.93)!important}
+.hero-template-card.is-next{transform:translate(3%,-50%) rotate(2deg) scale(.93)!important}
+.hero-template-card.is-front{transform:translate(-50%,-50%) scale(1)!important;animation:cvFocusPop .48s cubic-bezier(.2,.9,.25,1)}
+.hero-template-card.is-prev .cv-paper,.hero-template-card.is-next .cv-paper{opacity:1!important;background:#fffefa!important}
+.hero-template-card.is-prev .cv-paper *,.hero-template-card.is-next .cv-paper *{visibility:visible!important;opacity:.20!important;color:inherit!important;text-shadow:none!important}
+.hero-template-card.is-prev .sample-type,.hero-template-card.is-next .sample-type{visibility:visible!important;opacity:.34!important}
+.hero-template-card.is-front .cv-paper *{visibility:visible!important;opacity:1!important}
+.template-arrow{transition:transform .18s ease,box-shadow .18s ease}
+.template-arrow:hover{transform:scale(1.09)}
+.template-arrow:active{transform:scale(.9)}
+.template-dots i.active{animation:dotBounce .35s ease}
+@keyframes cvFocusPop{0%{opacity:.62;transform:translate(-43%,-50%) scale(.94)}70%{opacity:1;transform:translate(-51%,-50%) scale(1.012)}100%{transform:translate(-50%,-50%) scale(1)}}
+@keyframes dotBounce{0%{transform:scaleX(.55)}70%{transform:scaleX(1.12)}100%{transform:scaleX(1)}}
+@media(max-width:700px){
+ .template-picker-title{top:10px;width:64%;font-size:13px}
+ .floating-label{top:8px;right:8px;max-width:145px;font-size:11px}
+ .hero-template-carousel{padding-top:40px}
+ .hero-template-card.is-prev{transform:translate(-88%,-50%) scale(.91)!important}
+ .hero-template-card.is-next{transform:translate(-12%,-50%) scale(.91)!important}
+}
+
+.hero-template-card.is-front.slide-next{animation:cvSlideFromRight .5s cubic-bezier(.2,.9,.25,1)}
+.hero-template-card.is-front.slide-prev{animation:cvSlideFromLeft .5s cubic-bezier(.2,.9,.25,1)}
+@keyframes cvSlideFromRight{0%{opacity:.55;transform:translate(-28%,-50%) scale(.94) rotate(1deg)}70%{opacity:1;transform:translate(-52%,-50%) scale(1.012)}100%{transform:translate(-50%,-50%) scale(1)}}
+@keyframes cvSlideFromLeft{0%{opacity:.55;transform:translate(-72%,-50%) scale(.94) rotate(-1deg)}70%{opacity:1;transform:translate(-48%,-50%) scale(1.012)}100%{transform:translate(-50%,-50%) scale(1)}}
