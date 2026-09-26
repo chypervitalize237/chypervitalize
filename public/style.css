@@ -851,3 +851,44 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
  .hero-template-card.is-next{transform:translate(-21%,-50%) translateZ(-70px) rotateY(-20deg) scale(.86)!important}
 }
 @media(prefers-reduced-motion:reduce){.hero-template-card{transition:none!important}.hero-template-card.orbit-exit-left,.hero-template-card.orbit-exit-right{animation:none!important}}
+
+
+/* Fix hero CV header: readable full name, contained inside card */
+.hero-template-card .cv-head{
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  padding:16px 18px 11px!important;
+}
+.hero-template-card .cv-head h2{
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:100%!important;
+  margin:0 0 5px!important;
+  padding:0!important;
+  font-size:17px!important;
+  line-height:1.08!important;
+  letter-spacing:-.02em!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+}
+.hero-template-card.cv-style-tech .cv-head,
+.hero-template-card.cv-style-executive .cv-head{
+  background:#223038!important;
+}
+.hero-template-card.cv-style-tech .cv-head h2,
+.hero-template-card.cv-style-executive .cv-head h2,
+.hero-template-card.cv-style-tech .cv-head .cv-title,
+.hero-template-card.cv-style-executive .cv-head .cv-title,
+.hero-template-card.cv-style-tech .cv-head .cv-contact,
+.hero-template-card.cv-style-executive .cv-head .cv-contact{
+  color:#f8f7f1!important;
+  opacity:1!important;
+}
+.hero-template-card.cv-style-tech .cv-head h2,
+.hero-template-card.cv-style-executive .cv-head h2{
+  text-shadow:0 1px 0 rgba(0,0,0,.15)!important;
+}
+.hero-template-card.is-front .cv-head *{opacity:1!important}
