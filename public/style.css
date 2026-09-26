@@ -1332,3 +1332,30 @@ button.primary:hover,.primary:hover,.hero-reference .hero-cta:hover{background:v
 .basic-cv .basic-body>aside{background:color-mix(in srgb,var(--basic-accent-2,var(--basic-accent,#e8f0df)),#fff 28%)!important}
 .cv-paper:not(.basic-cv) .cv-head{background:color-mix(in srgb,var(--template-accent,#74866b),#000 var(--template-shade,0%))!important}
 .cv-paper:not(.basic-cv) .cv-body>aside{background:color-mix(in srgb,var(--template-accent-2,var(--template-accent,#74866b)),#fff 22%)!important}
+
+
+/* v20 — example CV identity must stay readable above portrait/layout */
+.hero-reference .hero-template-card .hero-cv-name{
+ display:block!important;visibility:visible!important;opacity:1!important;
+ z-index:80!important;pointer-events:none!important;
+}
+.hero-reference .hero-template-card .hero-cv-name strong,
+.hero-reference .hero-template-card .hero-cv-name small{
+ display:block!important;visibility:visible!important;opacity:1!important;
+ overflow:visible!important;text-overflow:clip!important;
+}
+.hero-reference .hero-style-ats .hero-cv-name,
+.hero-reference .hero-style-tech .hero-cv-name,
+.hero-reference .hero-style-creative .hero-cv-name{
+ left:145px!important;right:18px!important;top:28px!important;
+}
+.hero-reference .hero-style-executive .hero-cv-name,
+.hero-reference .hero-style-elegant .hero-cv-name{
+ top:105px!important;left:20px!important;right:20px!important;text-align:center!important;
+}
+.hero-reference .hero-style-basic .hero-cv-name,
+.hero-reference .hero-style-minimal .hero-cv-name,
+.hero-reference .hero-style-professional .hero-cv-name,
+.hero-reference .hero-style-compact .hero-cv-name{
+ left:128px!important;right:16px!important;top:30px!important;
+}
