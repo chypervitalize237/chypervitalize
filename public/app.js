@@ -103,17 +103,17 @@ async function verifyPayment(){
 function home(){
  const hu=state.lang==='hu';
  const cards=[
-  ['basic','Basic','Nagy Dóra','HR specialista'],
-  ['ats','ATS','Tóth Bence','Marketing specialista'],
-  ['executive','Executive','Kovács Márk','Szoftverfejlesztő'],
-  ['minimal','Minimal','Kiss Laura','Projektmenedzser'],
-  ['creative','Creative','Horváth Ádám','UX designer'],
-  ['professional','Professional','Farkas Lili','Pénzügyi elemző'],
-  ['compact','Compact','Molnár Dávid','Értékesítési vezető'],
-  ['elegant','Elegant','Balogh Nóra','Kommunikációs szakértő'],
-  ['tech','Tech','Szabó Máté','Frontend fejlesztő']
+  ['basic','Basic','Varga Anna','HR specialista','/chypermax_portraits_9/person-1.png'],
+  ['ats','ATS','Tóth Bence','Marketing specialista','/chypermax_portraits_9/person-2.png'],
+  ['executive','Executive','Kovács Márk','Szoftverfejlesztő','/chypermax_portraits_9/person-3.png'],
+  ['minimal','Minimal','Kiss Laura','Projektmenedzser','/chypermax_portraits_9/person-4.png'],
+  ['creative','Creative','Horváth Ádám','UX designer','/chypermax_portraits_9/person-5.png'],
+  ['professional','Professional','Farkas Lili','Pénzügyi elemző','/chypermax_portraits_9/person-6.png'],
+  ['compact','Compact','Molnár Dávid','Értékesítési vezető','/chypermax_portraits_9/person-7.png'],
+  ['elegant','Elegant','Balogh Nóra','Kommunikációs szakértő','/chypermax_portraits_9/person-8.png'],
+  ['tech','Tech','Szabó Máté','Frontend fejlesztő','/chypermax_portraits_9/person-9.png']
  ];
- const cardHtml=cards.map((x,i)=>{const d={...sample(),name:x[2],title:x[3],photo:''};const cv=x[0]==='basic'?basicCvMarkup(d,state.lang,true):cvMarkup(d,state.lang,true).replace('class="cv-paper','class="cv-paper cv-style-'+x[0]);return `<div class="sample-cv hero-template-card hero-style-${x[0]} ${i===1?'is-front':i===0?'is-prev':i===2?'is-next':''}" data-template-index="${i}" data-action="hero-template-open"><span class="sample-type">Chypermax ${i+1} · ${x[1]}</span>${cv}</div>`}).join('');
+ const cardHtml=cards.map((x,i)=>{const d={...sample(),name:x[2],title:x[3],photo:x[4]};const cv=x[0]==='basic'?basicCvMarkup(d,state.lang,true):cvMarkup(d,state.lang,true).replace('class="cv-paper','class="cv-paper cv-style-'+x[0]);return `<div class="sample-cv hero-template-card hero-style-${x[0]} ${i===1?'is-front':i===0?'is-prev':i===2?'is-next':''}" data-template-index="${i}" data-action="hero-template-open"><span class="sample-type">Chypermax ${i+1} · ${x[1]}</span>${cv}</div>`}).join('');
  return `<section class="hero hero-reference"><div class="hero-copy"><p class="eyebrow">${t('tag')}</p><h1>${t('hero1')}<br><em>${t('hero2')}</em></h1><p class="intro">${t('intro')}</p><p class="hero-price"><strong>${hu?'Első hét':'First week'}: ${money('day')}</strong> · ${t('proof1')}</p>${button(t('start'),'start')}<div class="hero-proof"><span>${icon('check')}${t('proof1')}</span><span>${icon('check')}${t('proof2')}</span></div></div><div class="hero-visual hero-reference-visual"><div class="hero-template-carousel"><div class="hero-cv-examples">${cardHtml}</div><button class="template-arrow template-prev" data-action="hero-template-prev" aria-label="Previous CV">‹</button><button class="template-arrow template-next" data-action="hero-template-next" aria-label="Next CV">›</button><div class="template-dots">${Array.from({length:9},(_,i)=>`<i class="${i===1?'active':''}"></i>`).join('')}</div></div><span class="sample-caption">${t('sample')}</span></div></section><div class="promise-strip"><span>${icon('file')}${t('proof1')}</span><i></i><span>${icon('user')}${t('proof2')}</span><i></i><span>${icon('download')}${t('proof3')}</span></div><section class="how"><div class="section-heading"><p class="eyebrow">CHYPERMAX / 01</p><h2>${t('how')}</h2></div><div class="steps">${[1,2,3].map(i=>`<div><span class="step-number">0${i}</span><h3>${t('how'+i)}</h3><p>${t('howDesc'+i)}</p></div>`).join('')}</div></section><section class="pricing" id="pricing"><p class="eyebrow">CHYPERMAX / 02</p><h2>${t('pricing')}</h2><p>${t('priceDesc')}</p><div class="price-grid">${['day','month'].map(p=>`<article class="price-card ${p==='month'?'recommended':''}">${p==='month'?`<span class="ribbon">${t('best')}</span>`:''}<h3>${planLabel(p)}</h3><strong>${money(p)}</strong><p>${p==='day'?(hu?'Az első 7 nap $2.99, utána automatikusan $12.49/hó. Bármikor lemondható.':'First 7 days $2.99, then automatically $12.49/month. Cancel anytime.'):(hu?'$12.49/hó. Automatikusan megújul, bármikor lemondható.':'$12.49/month. Renews automatically, cancel anytime.')}</p>${button(t('choose'),'plan-'+p,p==='day'?'primary':'secondary','arrow')}</article>`).join('')}</div></section>`;
 }
 function resumeChooser(){
