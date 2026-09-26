@@ -1583,3 +1583,40 @@ body,.page,.hero-reference{background:#F3EBDD!important;color:#241F1C!important}
  white-space:nowrap!important;
  overflow:visible!important;
 }
+
+
+/* v27 — stable sample-card system: no conflicting identity positions/colors */
+.hero-reference .hero-template-card{
+ --card-head:#5b493c;--card-side:#d8c9b5;--card-name:#fffaf2;--card-role:#e8ded2;
+}
+.hero-reference .hero-style-basic{--card-head:#6b4a36;--card-side:#d9c6a5}
+.hero-reference .hero-style-ats{--card-head:#252321;--card-side:#aaa59e}
+.hero-reference .hero-style-executive{--card-head:#6e3038;--card-side:#d8c8b6}
+.hero-reference .hero-style-minimal{--card-head:#68745a;--card-side:#d7d3c6}
+.hero-reference .hero-style-creative{--card-head:#704c3a;--card-side:#cbb79c}
+.hero-reference .hero-style-professional{--card-head:#4f5b45;--card-side:#c8c9bc}
+.hero-reference .hero-style-compact{--card-head:#57534e;--card-side:#d3c8b8}
+.hero-reference .hero-style-elegant{--card-head:#6e3038;--card-side:#dcc9b1}
+.hero-reference .hero-style-tech{--card-head:#252321;--card-side:#a6a29c}
+.hero-reference .hero-template-card .cv-head,
+.hero-reference .hero-template-card .basic-head{background:var(--card-head)!important;color:var(--card-name)!important}
+.hero-reference .hero-template-card .cv-body>aside,
+.hero-reference .hero-template-card .basic-body>aside{background:var(--card-side)!important;color:#302923!important}
+.hero-reference .hero-template-card .hero-cv-name{z-index:100!important;visibility:visible!important;opacity:1!important;color:var(--card-name)!important}
+.hero-reference .hero-template-card .hero-cv-name strong{color:var(--card-name)!important;text-shadow:none!important}
+.hero-reference .hero-template-card .hero-cv-name small{color:var(--card-role)!important;text-shadow:none!important}
+.hero-reference .hero-style-basic .hero-cv-name,
+.hero-reference .hero-style-minimal .hero-cv-name,
+.hero-reference .hero-style-professional .hero-cv-name,
+.hero-reference .hero-style-compact .hero-cv-name,
+.hero-reference .hero-style-ats .hero-cv-name,
+.hero-reference .hero-style-creative .hero-cv-name,
+.hero-reference .hero-style-tech .hero-cv-name{
+ top:30px!important;left:145px!important;right:14px!important;text-align:left!important;
+}
+.hero-reference .hero-style-executive .hero-cv-name,
+.hero-reference .hero-style-elegant .hero-cv-name{
+ top:105px!important;left:12px!important;right:12px!important;text-align:center!important;
+}
+.hero-reference .hero-template-card img.cv-photo,
+.hero-reference .hero-template-card img.basic-photo{z-index:40!important;object-fit:cover!important;object-position:50% 18%!important}
