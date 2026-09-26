@@ -751,3 +751,38 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
  .hero-template-card.is-prev{transform:translate(-76%,-50%) rotate(-1.5deg) scale(.89)!important}
  .hero-template-card.is-next{transform:translate(-24%,-50%) rotate(1.5deg) scale(.89)!important}
 }
+
+
+/* CV preview contrast pass — keep every template readable */
+.hero-template-card .cv-paper{color:#252921!important}
+.hero-template-card .cv-paper h1,
+.hero-template-card .cv-paper h2,
+.hero-template-card .cv-paper h3,
+.hero-template-card .cv-paper strong{color:#20251f!important}
+.hero-template-card .cv-paper p,
+.hero-template-card .cv-paper small,
+.hero-template-card .cv-paper span,
+.hero-template-card .cv-paper .cv-contact,
+.hero-template-card .cv-paper .cv-title{color:#4b5149!important}
+
+/* Dark headers need light text */
+.hero-template-card .cv-head[style*="background"],
+.hero-template-card .basic-head{color:#20251f}
+.hero-template-card.cv-style-tech .cv-head,
+.hero-template-card.cv-style-executive .cv-head{background:#26322f!important}
+.hero-template-card.cv-style-tech .cv-head *,
+.hero-template-card.cv-style-executive .cv-head *{color:#f7f5ee!important}
+.hero-template-card.cv-style-tech .cv-head h2,
+.hero-template-card.cv-style-executive .cv-head h2{color:#fff!important}
+
+/* Sidebar templates: stronger contrast instead of washed-out gray */
+.hero-template-card .basic-body aside{background:#e7ebe2!important;color:#293029!important}
+.hero-template-card .basic-body aside *{color:#293029!important}
+.hero-template-card .basic-body main{background:#fffefa!important;color:#252921!important}
+
+/* Neighbor cards remain faded as cards, but their text stays readable */
+.hero-template-card.is-prev,.hero-template-card.is-next{opacity:.66!important}
+.hero-template-card.is-prev .cv-paper *,
+.hero-template-card.is-next .cv-paper *{opacity:.88!important}
+.hero-template-card.is-prev .cv-paper,
+.hero-template-card.is-next .cv-paper{filter:saturate(.82) contrast(.96)}
