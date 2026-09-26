@@ -969,3 +969,10 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
 .hero-template-card.cv-style-modern .cv-head .cv-contact{color:#596057!important}
 
 .hero-template-card{cursor:pointer}.hero-template-card.is-front:hover{filter:brightness(1.015);transform:translate(-50%,-50%) translateZ(96px) rotateY(0deg) scale(1.012)!important}
+
+/* v4: keep example identity visible on every carousel CV */
+.hero-template-card .cv-head{min-height:104px!important;max-height:104px!important;padding:16px 18px 12px!important;z-index:3!important}
+.hero-template-card .cv-head h2{display:block!important;visibility:visible!important;opacity:1!important;font-size:18px!important;line-height:1.12!important;margin:0 0 6px!important;white-space:nowrap!important;text-overflow:ellipsis!important}
+.hero-template-card .cv-head .cv-title{display:block!important;visibility:visible!important;opacity:1!important;font-size:6.5px!important;margin:0 0 4px!important}
+.hero-template-card .cv-head .cv-contact{display:block!important;visibility:visible!important;opacity:1!important;font-size:5px!important}
+.hero-template-card.cv-style-minimal .cv-head h2,.hero-template-card.cv-style-elegant .cv-head h2,.hero-template-card.cv-style-professional .cv-head h2,.hero-template-card.cv-style-compact .cv-head h2,.hero-template-card.cv-style-ats .cv-head h2,.hero-template-card.cv-style-modern .cv-head h2{color:#252921!important}
