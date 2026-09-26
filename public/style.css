@@ -1020,3 +1020,13 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
 }
 .hero-template-card.cv-style-tech .hero-example-identity,.hero-template-card.cv-style-executive .hero-example-identity{color:#f8f7f1!important}
 .hero-template-card.is-prev .hero-example-identity,.hero-template-card.is-next .hero-example-identity{opacity:.78!important}
+
+/* v7: one contained name only; template header must never overflow */
+.hero-template-card .hero-example-identity{display:none!important}
+.hero-template-card .cv-paper,.hero-template-card .cv-head,.hero-template-card .basic-head{overflow:hidden!important}
+.hero-template-card .cv-head h2,.hero-template-card .basic-head h2{
+ max-width:100%!important;width:auto!important;box-sizing:border-box!important;
+ overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;
+ margin-left:0!important;margin-right:0!important;transform:none!important;
+}
+.hero-template-card .cv-head,.hero-template-card .basic-head{box-sizing:border-box!important;max-width:100%!important}
