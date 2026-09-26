@@ -1238,3 +1238,10 @@ body{background:#f7f5ed!important}
 .hero-reference .template-dots button.active{width:32px!important;background:#748569!important}
 .hero-reference .sample-caption{bottom:-42px!important}
 }
+
+/* v12 — guarantee generated portraits are visible in homepage CV examples */
+.hero-reference .hero-template-card .cv-head{position:relative!important;overflow:hidden!important}
+.hero-reference .hero-template-card .cv-photo{display:block!important;visibility:visible!important;opacity:1!important;position:absolute!important;z-index:20!important;left:-28px!important;top:-31px!important;width:145px!important;height:150px!important;object-fit:cover!important;object-position:center 18%!important;background:#e6e6df!important}
+.hero-reference .hero-template-card .basic-head{position:relative!important;overflow:hidden!important}
+.hero-reference .hero-template-card .basic-photo{display:block!important;visibility:visible!important;opacity:1!important;width:105px!important;height:122px!important;object-fit:cover!important;object-position:center 18%!important;flex:0 0 105px!important;z-index:20!important}
+@media(max-width:1050px){.hero-reference .hero-template-card .cv-photo{left:-18px!important;top:-20px!important;width:105px!important;height:115px!important}.hero-reference .hero-template-card .basic-photo{width:76px!important;height:88px!important;flex-basis:76px!important}}
