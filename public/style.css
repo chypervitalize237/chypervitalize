@@ -359,3 +359,15 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
 .hero-template-card:not(.is-front):not(.is-prev):not(.is-next){visibility:hidden;opacity:0}
 .hero-template-card.is-front{opacity:1}
 .hero-template-card.is-front .cv-paper{opacity:1}
+
+
+/* Carousel side cards: keep overlap, remove text ghosting */
+.hero-template-card.is-prev,.hero-template-card.is-next{opacity:.24}
+.hero-template-card.is-prev .cv-paper,.hero-template-card.is-next .cv-paper{opacity:1}
+.hero-template-card.is-prev .cv-paper>*,
+.hero-template-card.is-next .cv-paper>*{visibility:hidden}
+.hero-template-card.is-prev .cv-paper,
+.hero-template-card.is-next .cv-paper{background:#fffefa}
+.hero-template-card.is-prev .sample-type,
+.hero-template-card.is-next .sample-type{visibility:visible;opacity:.35}
+.hero-template-card.is-front .cv-paper>*{visibility:visible}
