@@ -1167,3 +1167,52 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
 @media(max-width:1200px){.hero-reference{grid-template-columns:1fr 1fr!important}.hero-reference .hero-template-card{width:350px!important;height:500px!important}.hero-reference .hero-template-card.is-prev{transform:translate(-84%,-48%) translateZ(-70px) rotateY(8deg) scale(.88)!important}.hero-reference .hero-template-card.is-next{transform:translate(-16%,-48%) translateZ(-70px) rotateY(-8deg) scale(.88)!important}}
 @media(max-width:1050px){.hero-reference{grid-template-columns:1fr!important}.hero-reference .hero-copy{max-width:720px!important}.hero-reference-visual{height:590px!important}}
 @media(max-width:650px){.hero-reference h1{font-size:50px!important}.hero-reference-visual{height:470px!important}.hero-reference .hero-template-card{width:270px!important;height:390px!important}.hero-reference .hero-template-card .cv-head{min-height:104px!important;max-height:104px!important;padding-left:94px!important}.hero-reference .hero-template-card .cv-photo{width:94px!important;height:104px!important}.hero-reference .hero-template-card .cv-head h2{font-size:20px!important}.hero-reference .hero-template-card.is-prev{transform:translate(-76%,-48%) rotateY(7deg) scale(.84)!important}.hero-reference .hero-template-card.is-next{transform:translate(-24%,-48%) rotateY(-7deg) scale(.84)!important}}
+
+
+/* 2026-09-26 supplied 1648x928 prototype — desktop pixel-match pass */
+@media(min-width:1051px){
+ body{background:#f7f5ed}
+ header{height:91px;background:#f7f5ed;border-bottom:1px solid #dfded6}
+ .nav{max-width:1435px;padding:0;height:91px}
+ .wordmark{font-size:34px;letter-spacing:-2.2px}
+ .brand-dot,.wordmark>span{font-size:27px;color:#7d9d67}
+ .nav-right{gap:35px}
+ .language select{font-size:14px;width:106px}
+ .login{font-size:14px}
+ .page{max-width:1435px;padding:0}
+ .hero-reference{grid-template-columns:620px 1fr!important;gap:45px!important;min-height:837px!important;height:calc(100vh - 91px);max-height:880px;padding:82px 0 66px!important;align-items:center!important}
+ .hero-reference .hero-copy{max-width:620px!important;align-self:center!important;transform:translateY(-7px)}
+ .hero-reference .hero-copy .eyebrow{font-size:13px;letter-spacing:2px;color:#70756d;margin-bottom:36px}
+ .hero-reference h1{font-size:78px!important;line-height:1.08!important;letter-spacing:-2.6px!important;margin:0 0 36px!important}
+ .hero-reference h1 em{color:#7b8371!important}
+ .hero-reference .intro{font-size:19px!important;line-height:1.75!important;max-width:545px!important;margin:0 0 34px!important;color:#6d7068}
+ .hero-reference .hero-price{font-size:18px!important;line-height:1.4!important;margin:0 0 9px!important}
+ .hero-reference .primary{width:338px!important;height:70px!important;min-height:70px!important;border-radius:9px!important;font-size:19px!important;justify-content:space-between!important;padding:0 38px!important;background:#c9efa9!important}
+ .hero-reference .hero-proof{margin-top:27px!important;gap:31px!important;font-size:14px!important;color:#747971}
+ .hero-reference .hero-proof svg{width:14px;height:14px}
+ .hero-reference-visual{height:690px!important;align-self:center!important;transform:translate(7px,4px)}
+ .hero-reference .hero-template-carousel{width:760px!important;max-width:none!important;height:650px!important}
+ .hero-reference .hero-cv-examples{height:615px!important;margin-top:0!important;-webkit-mask-image:none!important;mask-image:none!important}
+ .hero-reference .hero-template-card{width:420px!important;height:600px!important;max-width:420px!important;max-height:600px!important;top:49%!important}
+ .hero-reference .hero-template-card.is-front{left:50%!important;transform:translate(-50%,-49%) translateZ(110px) scale(1)!important}
+ .hero-reference .hero-template-card.is-prev{left:25%!important;transform:translate(-50%,-49%) rotateY(7deg) scale(.81)!important;opacity:.48!important;filter:saturate(.72) brightness(1.04)!important}
+ .hero-reference .hero-template-card.is-next{left:75%!important;transform:translate(-50%,-49%) rotateY(-7deg) scale(.81)!important;opacity:.48!important;filter:saturate(.72) brightness(1.04)!important}
+ .hero-reference .hero-template-card .cv-paper{padding:31px 28px 25px!important}
+ .hero-reference .hero-template-card .cv-head{min-height:150px!important;max-height:150px!important;padding:0 0 18px 145px!important}
+ .hero-reference .hero-template-card .cv-photo{left:-28px!important;top:-31px!important;width:145px!important;height:150px!important}
+ .hero-reference .hero-template-card .cv-head h2{font-size:31px!important}
+ .hero-reference .template-arrow{width:61px!important;height:61px!important;font-size:34px!important;background:#f7f5edeb!important;border:1px solid #deddd4!important;box-shadow:0 8px 25px rgba(42,48,38,.06)!important}
+ .hero-reference .template-prev{left:1.8%!important;top:49%!important}
+ .hero-reference .template-next{right:1.8%!important;top:49%!important}
+ .hero-reference .template-dots{bottom:-1px!important;gap:9px!important;padding:9px 14px;border-radius:20px;background:rgba(255,255,255,.34)}
+ .hero-reference .template-dots i{width:10px;height:10px;background:#c6c6bd}
+ .hero-reference .template-dots i.active{width:32px;background:#748569}
+ .hero-reference .sample-caption{bottom:-42px!important;font-size:16px!important;color:#878b82}
+ .promise-strip{margin-top:0}
+}
+@media(min-width:1051px) and (max-width:1500px){
+ .nav,.page{max-width:calc(100% - 96px)}
+ .hero-reference{grid-template-columns:minmax(500px,44%) minmax(0,56%)!important}
+ .hero-reference h1{font-size:clamp(64px,5.05vw,78px)!important}
+ .hero-reference .hero-template-carousel{width:100%!important}
+}
