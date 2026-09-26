@@ -1038,3 +1038,24 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
  font-size:clamp(18px,2vw,28px);font-weight:650;letter-spacing:-.02em;
  border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)
 }
+
+/* v8 homepage samples: one guaranteed finished-CV identity */
+.hero-template-card{position:absolute!important;overflow:hidden!important}
+.hero-template-card .hero-cv-name{
+ position:absolute!important;z-index:40!important;top:28px!important;left:18px!important;right:18px!important;
+ display:block!important;box-sizing:border-box!important;overflow:hidden!important;pointer-events:none!important;
+ color:#252921!important;text-align:left!important
+}
+.hero-template-card .hero-cv-name strong{
+ display:block!important;width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;
+ font:700 16px/1.12 Arial,Helvetica,sans-serif!important;letter-spacing:-.02em!important;
+ white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;color:inherit!important
+}
+.hero-template-card .hero-cv-name small{
+ display:block!important;margin-top:3px!important;font:600 6px/1.2 Arial,Helvetica,sans-serif!important;
+ white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;color:inherit!important;opacity:.72!important
+}
+.hero-template-card.hero-style-tech .hero-cv-name,
+.hero-template-card.hero-style-executive .hero-cv-name{color:#f7f6ef!important}
+.hero-template-card.is-prev .hero-cv-name,.hero-template-card.is-next .hero-cv-name{opacity:.82!important}
+.hero-template-card .cv-head h2,.hero-template-card .basic-head h2{display:none!important}
