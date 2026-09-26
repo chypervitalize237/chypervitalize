@@ -470,3 +470,19 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
  .hero-template-card.is-prev{transform:translate(-100%,-50%) scale(.88)!important}
  .hero-template-card.is-next{transform:translate(0%,-50%) scale(.88)!important}
 }
+
+
+/* Premium rounded CV showcase */
+.hero-template-card,.hero-template-card .cv-paper{border-radius:24px!important}
+.hero-template-card{box-shadow:0 18px 50px rgba(37,41,33,.09);transition:transform .56s cubic-bezier(.16,1,.3,1),opacity .32s ease,box-shadow .32s ease}
+.hero-template-card .cv-paper{clip-path:inset(0 round 24px);overflow:hidden!important}
+.hero-template-card.is-front{box-shadow:0 28px 70px rgba(37,41,33,.16)}
+.hero-template-card.is-front:hover{transform:translate(-50%,-51.5%) scale(1.018)!important;box-shadow:0 34px 78px rgba(37,41,33,.19)}
+.hero-template-card.is-prev:hover{transform:translate(-116%,-51%) rotate(-1.5deg) scale(.925)!important}
+.hero-template-card.is-next:hover{transform:translate(16%,-51%) rotate(1.5deg) scale(.925)!important}
+.hero-template-card .sample-type{border-radius:999px!important;transition:transform .28s ease,opacity .28s ease}
+.hero-template-card.is-front .sample-type{animation:templatePillIn .42s .08s both cubic-bezier(.16,1,.3,1)}
+.template-arrow{border-radius:16px!important}.template-arrow:hover{border-radius:50%!important}
+.template-dots{border-radius:999px!important}
+@keyframes templatePillIn{from{opacity:0;transform:translateY(-8px) scale(.92)}to{opacity:1;transform:none}}
+@media(max-width:700px){.hero-template-card,.hero-template-card .cv-paper{border-radius:18px!important}.hero-template-card .cv-paper{clip-path:inset(0 round 18px)}}
