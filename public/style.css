@@ -1304,3 +1304,26 @@ body{background:#f7f5ed!important}
   .impact-strip{transition:none!important}
   .impact-strip:hover{transform:none!important}
 }
+
+
+/* v17 — autumn palette: warm, elegant, cohesive */
+:root{
+ --bg:#F3EBDD!important;
+ --surface:#FBF6EC!important;
+ --ink:#302A22!important;
+ --muted:#786B5A!important;
+ --line:#D8C7AE!important;
+ --green:#65734B!important;
+ --green-dark:#465238!important;
+ --green-soft:#DCE2C7!important;
+ --autumn-rust:#A65F3F!important;
+ --autumn-amber:#C68B45!important;
+ --autumn-brown:#6E5038!important;
+}
+body,.page{background:var(--bg)!important;color:var(--ink)!important}
+.site-header,header#header,.footer-shell{background:var(--surface)!important}
+.impact-strip{background:var(--green-dark)!important;color:#FFF9EE!important}
+.price-card.recommended,.pricing-card.recommended{background:#E7E2CB!important;border-color:#8C9A68!important}
+button.primary,.primary,.hero-reference .hero-cta{background:var(--green)!important;color:#fff!important}
+button.primary:hover,.primary:hover,.hero-reference .hero-cta:hover{background:var(--green-dark)!important}
+.hero-reference .hero-copy .eyebrow,.brand-dot,.wordmark span{color:var(--autumn-rust)!important}
