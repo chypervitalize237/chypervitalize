@@ -1417,3 +1417,38 @@ button.primary:hover,.primary:hover,.hero-reference .hero-cta:hover{background:#
 .hero-reference .hero-style-tech img.cv-photo{border-radius:10px!important}
 .hero-reference .hero-style-executive img.cv-photo,
 .hero-reference .hero-style-elegant img.cv-photo{border-radius:50%!important}
+
+
+/* v23 — bone base, warmer brown/yellow autumn accents, readable sample identities */
+:root{
+ --bg:#F7F2E7!important;
+ --surface:#FCF8EF!important;
+ --ink:#3A2A20!important;
+ --muted:#7B6755!important;
+ --line:#DDC9AA!important;
+ --autumn-rust:#B96532!important;
+ --autumn-amber:#D69A42!important;
+ --autumn-brown:#70462F!important;
+}
+body,.page{background:#F7F2E7!important;color:#3A2A20!important}
+.site-header,header#header,.footer-shell{background:#FCF8EF!important}
+.hero-reference{background:#F7F2E7!important}
+.hero-reference h1{color:#3F2D22!important}
+.hero-reference h1 em{color:#C46E32!important}
+.hero-reference .hero-copy .eyebrow{color:#B55E30!important}
+.hero-reference .hero-copy .intro,.hero-reference .hero-price,.hero-reference .hero-proof{color:#715D4B!important}
+.hero-reference .hero-cta{background:#B96836!important;border-color:#A9582D!important;color:#FFF9EF!important}
+.hero-reference .hero-template-card{--card-head:#70472f;--card-side:#e5c99e;--card-text:#fff8ed}
+.hero-reference .hero-style-basic{--card-head:#B96836;--card-side:#F0D39B}
+.hero-reference .hero-style-ats{--card-head:#76503A;--card-side:#D9B783}
+.hero-reference .hero-style-executive{--card-head:#5E4635;--card-side:#E0C89E}
+.hero-reference .hero-style-minimal{--card-head:#C47A3A;--card-side:#F0D7A6}
+.hero-reference .hero-style-creative{--card-head:#A9552D;--card-side:#E9B86F}
+.hero-reference .hero-style-professional{--card-head:#70462F;--card-side:#DAB88C}
+.hero-reference .hero-style-compact{--card-head:#8A5A36;--card-side:#E7C88F}
+.hero-reference .hero-style-elegant{--card-head:#B66836;--card-side:#F0D09A}
+.hero-reference .hero-style-tech{--card-head:#5A4335;--card-side:#D5B57D}
+.hero-reference .hero-template-card .hero-cv-name{z-index:120!important;display:block!important;visibility:visible!important;opacity:1!important}
+.hero-reference .hero-template-card .hero-cv-name strong{font-size:17px!important;line-height:1.08!important;color:#FFF8ED!important;text-shadow:0 2px 4px rgba(38,24,16,.42)!important}
+.hero-reference .hero-template-card .hero-cv-name small{font-size:7px!important;line-height:1.2!important;color:#FFE4B8!important;text-shadow:0 1px 3px rgba(38,24,16,.38)!important}
+.hero-reference .hero-style-executive .hero-cv-name,.hero-reference .hero-style-elegant .hero-cv-name{top:112px!important}
