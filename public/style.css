@@ -1079,3 +1079,24 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
 .hero-template-card .cv-title,.hero-template-card .basic-title{
  white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:100%!important
 }
+
+/* v10 keep long sample names fully inside dark/colored headers */
+.hero-template-card .cv-head h2,
+.hero-template-card .basic-head h2{
+ box-sizing:border-box!important;
+ width:100%!important;
+ max-width:100%!important;
+ padding-left:8px!important;
+ padding-right:8px!important;
+ font-size:14px!important;
+ line-height:1.1!important;
+ white-space:nowrap!important;
+ overflow:hidden!important;
+ text-overflow:ellipsis!important;
+}
+.hero-template-card .cv-head,
+.hero-template-card .basic-head{
+ box-sizing:border-box!important;
+ padding-left:10px!important;
+ padding-right:10px!important;
+}
