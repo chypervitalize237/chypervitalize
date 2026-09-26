@@ -449,3 +449,24 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
 .hero-template-card.is-front.slide-prev{animation:cvSlideFromLeft .5s cubic-bezier(.2,.9,.25,1)}
 @keyframes cvSlideFromRight{0%{opacity:.55;transform:translate(-28%,-50%) scale(.94) rotate(1deg)}70%{opacity:1;transform:translate(-52%,-50%) scale(1.012)}100%{transform:translate(-50%,-50%) scale(1)}}
 @keyframes cvSlideFromLeft{0%{opacity:.55;transform:translate(-72%,-50%) scale(.94) rotate(-1deg)}70%{opacity:1;transform:translate(-48%,-50%) scale(1.012)}100%{transform:translate(-50%,-50%) scale(1)}}
+
+
+/* Restore clearly visible neighbouring CVs */
+.hero-template-carousel .hero-cv-examples{overflow:visible!important}
+.hero-template-carousel{overflow:visible!important}
+.hero-visual{overflow:hidden!important}
+.hero-template-card.is-prev,.hero-template-card.is-next{opacity:.62!important}
+.hero-template-card.is-prev{transform:translate(-118%,-50%) rotate(-2.5deg) scale(.91)!important}
+.hero-template-card.is-next{transform:translate(18%,-50%) rotate(2.5deg) scale(.91)!important}
+.hero-template-card.is-prev .cv-paper,.hero-template-card.is-next .cv-paper{opacity:1!important}
+.hero-template-card.is-prev .cv-paper *,.hero-template-card.is-next .cv-paper *{visibility:visible!important;opacity:.48!important}
+.hero-template-card.is-prev .sample-type,.hero-template-card.is-next .sample-type{visibility:visible!important;opacity:.7!important}
+@media(max-width:1050px){
+ .hero-template-card.is-prev{transform:translate(-112%,-50%) rotate(-2deg) scale(.9)!important}
+ .hero-template-card.is-next{transform:translate(12%,-50%) rotate(2deg) scale(.9)!important}
+}
+@media(max-width:700px){
+ .hero-template-card.is-prev,.hero-template-card.is-next{opacity:.48!important}
+ .hero-template-card.is-prev{transform:translate(-100%,-50%) scale(.88)!important}
+ .hero-template-card.is-next{transform:translate(0%,-50%) scale(.88)!important}
+}
