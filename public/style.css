@@ -1059,3 +1059,23 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
 .hero-template-card.hero-style-executive .hero-cv-name{color:#f7f6ef!important}
 .hero-template-card.is-prev .hero-cv-name,.hero-template-card.is-next .hero-cv-name{opacity:.82!important}
 .hero-template-card .cv-head h2,.hero-template-card .basic-head h2{display:none!important}
+
+/* v9 sample identity fix: use the CV's real header, never an overlay */
+.hero-template-card .hero-cv-name{display:none!important}
+.hero-template-card .cv-head h2,
+.hero-template-card .basic-head h2{
+ display:block!important;position:static!important;visibility:visible!important;opacity:1!important;
+ max-width:100%!important;width:auto!important;margin:0 0 3px!important;padding:0!important;
+ white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;
+ font-family:Arial,Helvetica,sans-serif!important;font-size:16px!important;line-height:1.12!important;
+ font-weight:700!important;letter-spacing:-.02em!important;transform:none!important
+}
+.hero-template-card .cv-head,
+.hero-template-card .basic-head{overflow:hidden!important;max-width:100%!important}
+.hero-template-card .cv-head h2,.hero-template-card .basic-head h2{color:#252921!important}
+.hero-template-card .cv-style-modern .cv-head h2,
+.hero-template-card .cv-style-creative .cv-head h2,
+.hero-template-card .cv-style-tech .cv-head h2{color:#f7f6ef!important}
+.hero-template-card .cv-title,.hero-template-card .basic-title{
+ white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;max-width:100%!important
+}
