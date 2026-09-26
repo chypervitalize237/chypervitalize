@@ -967,3 +967,5 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
 .hero-template-card.cv-style-compact .cv-head .cv-contact,
 .hero-template-card.cv-style-ats .cv-head .cv-contact,
 .hero-template-card.cv-style-modern .cv-head .cv-contact{color:#596057!important}
+
+.hero-template-card{cursor:pointer}.hero-template-card.is-front:hover{filter:brightness(1.015);transform:translate(-50%,-50%) translateZ(96px) rotateY(0deg) scale(1.012)!important}
