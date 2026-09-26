@@ -1327,3 +1327,8 @@ body,.page{background:var(--bg)!important;color:var(--ink)!important}
 button.primary,.primary,.hero-reference .hero-cta{background:var(--green)!important;color:#fff!important}
 button.primary:hover,.primary:hover,.hero-reference .hero-cta:hover{background:var(--green-dark)!important}
 .hero-reference .hero-copy .eyebrow,.brand-dot,.wordmark span{color:var(--autumn-rust)!important}
+
+/* v19 — independent top and side CV accent colors */
+.basic-cv .basic-body>aside{background:color-mix(in srgb,var(--basic-accent-2,var(--basic-accent,#e8f0df)),#fff 28%)!important}
+.cv-paper:not(.basic-cv) .cv-head{background:color-mix(in srgb,var(--template-accent,#74866b),#000 var(--template-shade,0%))!important}
+.cv-paper:not(.basic-cv) .cv-body>aside{background:color-mix(in srgb,var(--template-accent-2,var(--template-accent,#74866b)),#fff 22%)!important}
