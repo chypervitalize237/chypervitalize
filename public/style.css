@@ -892,3 +892,78 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
   text-shadow:0 1px 0 rgba(0,0,0,.15)!important;
 }
 .hero-template-card.is-front .cv-head *{opacity:1!important}
+
+
+/* v3 hard fix: header must stay inside the CV and name must always be visible */
+.hero-template-card .cv-paper{
+  position:relative!important;
+  overflow:hidden!important;
+}
+.hero-template-card .cv-head{
+  position:relative!important;
+  inset:auto!important;
+  transform:none!important;
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:82px!important;
+  max-height:96px!important;
+  box-sizing:border-box!important;
+  padding:15px 17px 10px!important;
+  overflow:hidden!important;
+}
+.hero-template-card .cv-head h2{
+  position:static!important;
+  transform:none!important;
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  margin:0 0 5px!important;
+  padding:0!important;
+  font-size:16px!important;
+  line-height:1.1!important;
+  font-weight:700!important;
+  writing-mode:horizontal-tb!important;
+  text-orientation:mixed!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  color:#fff!important;
+}
+.hero-template-card .cv-head .cv-title,
+.hero-template-card .cv-head .cv-contact{
+  position:static!important;
+  transform:none!important;
+  display:block!important;
+  max-width:100%!important;
+  color:rgba(255,255,255,.92)!important;
+  opacity:1!important;
+}
+.hero-template-card .cv-head .cv-contact{font-size:5px!important;line-height:1.3!important}
+.hero-template-card .cv-head .cv-title{font-size:6px!important;line-height:1.25!important}
+.hero-template-card.cv-style-minimal .cv-head,
+.hero-template-card.cv-style-elegant .cv-head,
+.hero-template-card.cv-style-professional .cv-head,
+.hero-template-card.cv-style-compact .cv-head,
+.hero-template-card.cv-style-ats .cv-head,
+.hero-template-card.cv-style-modern .cv-head{
+  background:#f8f7f1!important;
+}
+.hero-template-card.cv-style-minimal .cv-head h2,
+.hero-template-card.cv-style-elegant .cv-head h2,
+.hero-template-card.cv-style-professional .cv-head h2,
+.hero-template-card.cv-style-compact .cv-head h2,
+.hero-template-card.cv-style-ats .cv-head h2,
+.hero-template-card.cv-style-modern .cv-head h2{color:#252921!important}
+.hero-template-card.cv-style-minimal .cv-head .cv-title,
+.hero-template-card.cv-style-elegant .cv-head .cv-title,
+.hero-template-card.cv-style-professional .cv-head .cv-title,
+.hero-template-card.cv-style-compact .cv-head .cv-title,
+.hero-template-card.cv-style-ats .cv-head .cv-title,
+.hero-template-card.cv-style-modern .cv-head .cv-title,
+.hero-template-card.cv-style-minimal .cv-head .cv-contact,
+.hero-template-card.cv-style-elegant .cv-head .cv-contact,
+.hero-template-card.cv-style-professional .cv-head .cv-contact,
+.hero-template-card.cv-style-compact .cv-head .cv-contact,
+.hero-template-card.cv-style-ats .cv-head .cv-contact,
+.hero-template-card.cv-style-modern .cv-head .cv-contact{color:#596057!important}
