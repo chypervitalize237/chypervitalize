@@ -249,3 +249,43 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
 .alt-plan:first-child:before{content:none}
 .alt-plan:last-child{border-color:#9fbd8b;background:#f4faef}
 .alt-plan:last-child:before{content:'AJÁNLOTT';font-size:9px;letter-spacing:1.2px;font-weight:700;color:#5c784b}
+
+
+/* Premium animated CV selector */
+.hero-template-carousel{perspective:1400px}
+.hero-template-carousel .hero-cv-examples{perspective:1400px}
+.hero-template-card{
+  will-change:transform,opacity,filter;
+  transform-style:preserve-3d;
+  transition:transform .72s cubic-bezier(.22,1,.36,1),opacity .5s ease,filter .5s ease,box-shadow .5s ease;
+}
+.hero-template-card.is-front{
+  animation:cvFrontArrival .72s cubic-bezier(.22,1,.36,1);
+  box-shadow:0 28px 60px rgba(37,41,33,.16);
+}
+.hero-template-card.is-prev{filter:blur(1.1px) saturate(.72) brightness(.98);opacity:.30;transform:translate(-108%,-50%) rotateY(13deg) rotateZ(-1.4deg) scale(.94)}
+.hero-template-card.is-next{filter:blur(1.1px) saturate(.72) brightness(.98);opacity:.30;transform:translate(8%,-50%) rotateY(-13deg) rotateZ(1.4deg) scale(.94)}
+.hero-template-card.is-front:hover{transform:translate(-50%,-52%) rotateX(1.5deg) scale(1.018);box-shadow:0 34px 70px rgba(37,41,33,.20)}
+.hero-template-card.is-front .sample-type{animation:cvLabelPop .55s .12s both cubic-bezier(.22,1,.36,1)}
+.template-arrow{transition:transform .25s ease,background .25s ease,box-shadow .25s ease}
+.template-arrow:hover{transform:scale(1.12);background:#fffefa;box-shadow:0 9px 24px rgba(37,41,33,.12)}
+.template-arrow:active{transform:scale(.94)}
+.template-dots i{transition:width .42s cubic-bezier(.22,1,.36,1),transform .35s ease,background .35s ease}
+.template-dots i.active{transform:scaleY(1.18)}
+.hero-template-carousel:before{content:"";position:absolute;left:50%;bottom:42px;width:310px;height:46px;transform:translateX(-50%);border-radius:50%;background:rgba(37,41,33,.09);filter:blur(24px);z-index:0;pointer-events:none;animation:cvShadowBreath 4.2s ease-in-out infinite}
+@keyframes cvFrontArrival{0%{opacity:.55;filter:blur(5px);transform:translate(-50%,-47%) scale(.93) rotateY(-5deg)}65%{opacity:1;filter:blur(0);transform:translate(-50%,-51%) scale(1.015) rotateY(1deg)}100%{transform:translate(-50%,-50%) scale(1) rotateY(0)}}
+@keyframes cvLabelPop{0%{opacity:0;transform:translateY(-7px) scale(.94)}100%{opacity:1;transform:none}}
+@keyframes cvShadowBreath{0%,100%{opacity:.55;transform:translateX(-50%) scale(.94)}50%{opacity:.85;transform:translateX(-50%) scale(1.04)}}
+@media(max-width:1050px){
+ .hero-template-card.is-prev{transform:translate(-104%,-50%) rotateY(11deg) rotateZ(-1deg) scale(.94)}
+ .hero-template-card.is-next{transform:translate(4%,-50%) rotateY(-11deg) rotateZ(1deg) scale(.94)}
+}
+@media(max-width:700px){
+ .hero-template-card.is-prev{transform:translate(-92%,-50%) rotateY(8deg) scale(.92)}
+ .hero-template-card.is-next{transform:translate(-8%,-50%) rotateY(-8deg) scale(.92)}
+ .hero-template-card.is-front:hover{transform:translate(-50%,-50%) scale(1)}
+}
+@media(prefers-reduced-motion:reduce){
+ .hero-template-card,.template-arrow,.template-dots i{transition:none!important;animation:none!important}
+ .hero-template-carousel:before{animation:none!important}
+}
