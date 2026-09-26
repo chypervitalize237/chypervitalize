@@ -565,3 +565,53 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
 .hero-template-card.cv-style-tech .cv-paper,.cv-style-tech{--template-accent:#6d8f86}
 @media(max-width:1050px){.hero-template-card{width:230px!important;height:326px!important}}
 @media(max-width:700px){.hero-template-card{width:205px!important;height:290px!important}.hero-template-card.is-prev{transform:translate(-94%,-50%) scale(.88)!important}.hero-template-card.is-next{transform:translate(-6%,-50%) scale(.88)!important}}
+
+
+/* Showcase v4 — balanced typography and two clearly visible neighbours */
+.hero-template-card{width:232px!important;height:328px!important}
+.hero-template-card .cv-paper{font-size:6.5px!important;line-height:1.25!important}
+.hero-template-card .cv-head{padding:15px 17px 9px!important;text-align:left!important}
+.hero-template-card .cv-head h2{
+  font-size:17px!important;line-height:1.08!important;margin:0 0 4px!important;
+  max-width:100%!important;white-space:normal!important;overflow-wrap:normal!important;word-break:normal!important;
+}
+.hero-template-card .cv-title{font-size:6.8px!important;margin:0 0 4px!important}
+.hero-template-card .cv-contact{font-size:5.3px!important;line-height:1.25!important;white-space:normal!important}
+.hero-template-card .cv-paper>section{padding:7px 17px!important}
+.hero-template-card .cv-paper section h3{font-size:6.4px!important;margin:0 0 4px!important;padding-bottom:3px!important}
+.hero-template-card .cv-paper section p{font-size:5.7px!important;line-height:1.27!important}
+.hero-template-card .cv-entry{margin-bottom:5px!important}
+.hero-template-card .cv-entry strong{font-size:5.9px!important}
+.hero-template-card .cv-entry small,.hero-template-card .cv-org{font-size:5.1px!important}
+.hero-template-card.cv-style-elegant .cv-head h2,
+.hero-template-card.cv-style-executive .cv-head h2{font-size:16px!important;font-style:normal!important;letter-spacing:0!important}
+.hero-template-card .basic-head h2{font-size:16px!important;line-height:1.08!important;word-break:normal!important}
+.hero-template-card .basic-head{padding:14px 16px!important}
+.hero-template-card .basic-body aside,.hero-template-card .basic-body main{padding:9px!important}
+.hero-template-card .basic-body h3{font-size:6px!important}
+.hero-template-card .basic-body p,.hero-template-card .basic-entry{font-size:5.4px!important;line-height:1.25!important}
+
+/* left and right preview cards sit behind the selected CV */
+.hero-template-card.is-prev,.hero-template-card.is-next{
+  display:block!important;visibility:visible!important;opacity:.56!important;z-index:3!important;
+  pointer-events:auto!important;
+}
+.hero-template-card.is-prev{transform:translate(-126%,-50%) rotate(-2.2deg) scale(.88)!important}
+.hero-template-card.is-next{transform:translate(26%,-50%) rotate(2.2deg) scale(.88)!important}
+.hero-template-card.is-prev .cv-paper,.hero-template-card.is-next .cv-paper{opacity:1!important}
+.hero-template-card.is-prev .cv-paper *,.hero-template-card.is-next .cv-paper *{visibility:visible!important;opacity:.62!important}
+.hero-template-card.is-prev .sample-type,.hero-template-card.is-next .sample-type{visibility:visible!important;opacity:.8!important}
+.hero-template-card.is-front{z-index:7!important}
+.hero-cv-examples{overflow:visible!important;min-width:560px}
+.hero-template-carousel{overflow:visible!important}
+@media(max-width:1050px){
+ .hero-template-card{width:220px!important;height:311px!important}
+ .hero-template-card.is-prev{transform:translate(-118%,-50%) scale(.87)!important}
+ .hero-template-card.is-next{transform:translate(18%,-50%) scale(.87)!important}
+}
+@media(max-width:700px){
+ .hero-cv-examples{min-width:390px}
+ .hero-template-card{width:190px!important;height:269px!important}
+ .hero-template-card.is-prev{transform:translate(-103%,-50%) scale(.84)!important}
+ .hero-template-card.is-next{transform:translate(3%,-50%) scale(.84)!important}
+}
