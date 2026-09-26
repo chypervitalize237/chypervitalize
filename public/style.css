@@ -1275,3 +1275,15 @@ body{background:#f7f5ed!important}
 /* Tech: portrait sits inside the dark technical header */
 .hero-reference .hero-style-tech .cv-head{position:relative!important;padding-left:132px!important;min-height:132px!important;text-align:left!important}
 .hero-reference .hero-style-tech .cv-photo{position:absolute!important;left:22px!important;top:18px!important;width:88px!important;height:98px!important;border-radius:4px!important}
+
+/* v15 — generated people occupy each template's native photo slot */
+.hero-reference .hero-template-card img.cv-photo,.hero-reference .hero-template-card img.basic-photo{display:block!important;visibility:visible!important;opacity:1!important;background:transparent!important;object-fit:cover!important;object-position:50% 22%!important;color:transparent!important}
+.hero-reference .hero-style-basic img.basic-photo{position:static!important;width:105px!important;height:118px!important;flex:0 0 105px!important}
+.hero-reference .hero-style-ats img.cv-photo{left:-28px!important;top:-31px!important;width:145px!important;height:150px!important}
+.hero-reference .hero-style-executive img.cv-photo{position:static!important;width:82px!important;height:82px!important;border-radius:50%!important;margin:0 auto 8px!important}
+.hero-reference .hero-style-minimal img.cv-photo{left:0!important;top:0!important;width:84px!important;height:100px!important}
+.hero-reference .hero-style-creative img.cv-photo{left:22px!important;top:20px!important;width:94px!important;height:110px!important;border-radius:12px!important}
+.hero-reference .hero-style-professional img.cv-photo{left:0!important;top:0!important;width:92px!important;height:108px!important}
+.hero-reference .hero-style-compact img.cv-photo{left:0!important;top:0!important;width:70px!important;height:82px!important}
+.hero-reference .hero-style-elegant img.cv-photo{position:static!important;width:86px!important;height:86px!important;border-radius:50%!important;margin:0 auto 9px!important}
+.hero-reference .hero-style-tech img.cv-photo{left:22px!important;top:18px!important;width:88px!important;height:98px!important;border-radius:4px!important}
