@@ -402,3 +402,16 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
  .sample-caption{animation:none}
  .steps>div:hover,.price-card:hover{transform:none}
 }
+
+
+/* Definitive fix: side CVs are visual silhouettes only, never render ghost text */
+.hero-template-card.is-prev .cv-paper *,
+.hero-template-card.is-next .cv-paper *{opacity:0!important;color:transparent!important;text-shadow:none!important;border-color:transparent!important}
+.hero-template-card.is-prev .sample-type,
+.hero-template-card.is-next .sample-type{opacity:0!important}
+.hero-template-card.is-prev .cv-paper,
+.hero-template-card.is-next .cv-paper{
+  background:#fffefa!important;
+  box-shadow:0 16px 36px rgba(37,41,33,.06)!important;
+}
+.hero-template-card.is-front .cv-paper *{opacity:1;color:revert-layer}
