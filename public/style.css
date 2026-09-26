@@ -1100,3 +1100,39 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
  padding-left:10px!important;
  padding-right:10px!important;
 }
+
+
+/* Approved Chypermax reference hero */
+.hero-reference{grid-template-columns:1.05fr 1fr;gap:70px;min-height:720px;padding:76px 0 64px}
+.hero-reference .hero-copy{align-self:center}
+.hero-reference h1{font-family:'Libre Caslon Display',Georgia,serif;font-size:clamp(58px,5.15vw,82px);font-weight:400;line-height:1.04;letter-spacing:-2.4px;margin:30px 0 34px}
+.hero-reference h1 em{color:#78816f}
+.hero-reference .intro{max-width:530px;font-size:18px;line-height:1.75;margin-bottom:30px}
+.hero-reference .hero-price{font-size:16px;margin:0 0 10px}
+.hero-reference .primary{min-width:225px;border-radius:8px;background:#c8eca9;color:#23301f;font-weight:650}
+.hero-reference-visual{height:620px;padding:0;display:flex;align-items:center;justify-content:center}
+.hero-reference .hero-template-carousel{position:relative;width:100%;height:555px}
+.hero-reference .hero-cv-examples{position:absolute;inset:0;perspective:1200px;overflow:visible}
+.hero-reference .hero-template-card{position:absolute;left:50%;top:47%;width:390px;height:540px;border-radius:22px!important;overflow:hidden!important;border:1px solid rgba(64,75,55,.12);box-shadow:0 24px 65px rgba(38,45,31,.12);background:#fffefa}
+.hero-reference .hero-template-card .sample-type{display:none!important}
+.hero-reference .hero-template-card .cv-paper{width:100%;height:100%;min-height:0;padding:30px 28px 24px;border-radius:22px!important;box-shadow:none;overflow:hidden}
+.hero-reference .hero-template-card .cv-head{position:relative;text-align:left;padding:0 0 20px 138px;min-height:126px;border-bottom:0}
+.hero-reference .hero-template-card .cv-head h2{font-size:30px;line-height:1.05;margin:0 0 9px}
+.hero-reference .hero-template-card .cv-title{font-size:11px!important;margin:0 0 9px}
+.hero-reference .hero-template-card .cv-contact{font-size:7px!important;line-height:1.65!important}
+.hero-reference .hero-template-card .cv-photo{position:absolute;left:-28px;top:-30px;width:140px;height:156px;object-fit:cover;border-radius:0}
+.hero-reference .hero-template-card .cv-paper section{margin:0}
+.hero-reference .hero-template-card .cv-paper h3{text-align:left;font-size:8px;margin:13px 0 7px;padding-bottom:6px;letter-spacing:1.4px;color:#4f6447;border-color:#b9c6b1}
+.hero-reference .hero-template-card .cv-paper p{font-size:7px;line-height:1.48}
+.hero-reference .hero-template-card .cv-entry{margin-bottom:7px}
+.hero-reference .hero-template-card .cv-entry strong{font-size:7.5px}
+.hero-reference .hero-template-card .cv-entry small{font-size:6.5px}
+.hero-reference .hero-template-card.is-front{transform:translate(-50%,-47%) translateZ(90px) rotateY(0) scale(1)!important;opacity:1!important}
+.hero-reference .hero-template-card.is-prev{transform:translate(-94%,-47%) translateZ(-95px) rotateY(15deg) scale(.86)!important;opacity:.58!important}
+.hero-reference .hero-template-card.is-next{transform:translate(-6%,-47%) translateZ(-95px) rotateY(-15deg) scale(.86)!important;opacity:.58!important}
+.hero-reference .hero-template-card.is-prev .cv-paper,.hero-reference .hero-template-card.is-next .cv-paper{filter:saturate(.75)}
+.hero-reference .template-prev{left:4%;top:48%}.hero-reference .template-next{right:4%;top:48%}
+.hero-reference .template-dots{position:absolute;left:50%;bottom:-2px;transform:translateX(-50%);z-index:30}
+.hero-reference .sample-caption{position:absolute;left:0;right:0;bottom:-28px;margin:0;text-align:center}
+@media(max-width:1050px){.hero-reference{grid-template-columns:1fr;gap:20px}.hero-reference-visual{height:590px}.hero-reference .hero-template-carousel{max-width:700px}.hero-reference h1{font-size:64px}}
+@media(max-width:650px){.hero-reference{padding-top:45px}.hero-reference h1{font-size:50px}.hero-reference-visual{height:500px}.hero-reference .hero-template-card{width:285px;height:410px}.hero-reference .hero-template-card .cv-paper{padding:22px 20px}.hero-reference .hero-template-card.is-prev{transform:translate(-82%,-47%) translateZ(-70px) rotateY(12deg) scale(.82)!important}.hero-reference .hero-template-card.is-next{transform:translate(-18%,-47%) translateZ(-70px) rotateY(-12deg) scale(.82)!important}}
