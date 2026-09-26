@@ -731,3 +731,15 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
  .hero-template-card.is-next{transform:translate(-18%,-50%) rotate(2deg) scale(.86)!important}
  .hero-template-card.is-prev,.hero-template-card.is-next{opacity:.34!important}
 }
+
+
+/* Make neighbouring stacked CVs a little more visible */
+.hero-template-card.is-prev,.hero-template-card.is-next{opacity:.58!important}
+.hero-template-card.is-prev{transform:translate(-98%,-50%) rotate(-3deg) scale(.92)!important}
+.hero-template-card.is-next{transform:translate(-2%,-50%) rotate(3deg) scale(.92)!important}
+.hero-template-card.is-prev .cv-paper *,.hero-template-card.is-next .cv-paper *{opacity:.70!important}
+@media(max-width:700px){
+ .hero-template-card.is-prev,.hero-template-card.is-next{opacity:.46!important}
+ .hero-template-card.is-prev{transform:translate(-88%,-50%) rotate(-2deg) scale(.87)!important}
+ .hero-template-card.is-next{transform:translate(-12%,-50%) rotate(2deg) scale(.87)!important}
+}
