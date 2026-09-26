@@ -683,3 +683,51 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
  from{opacity:0;transform:translate(-50%,7px) scale(.94)}
  to{opacity:1;transform:translate(-50%,0) scale(1)}
 }
+
+
+/* Three-card stack: adjacent CVs half-covered behind the selected CV */
+.hero-cv-examples{
+  min-width:620px!important;
+  overflow:visible!important;
+  isolation:isolate;
+}
+.hero-template-card.is-front{
+  z-index:10!important;
+  opacity:1!important;
+}
+.hero-template-card.is-prev,.hero-template-card.is-next{
+  display:block!important;
+  visibility:visible!important;
+  z-index:4!important;
+  opacity:.42!important;
+  filter:none!important;
+  pointer-events:auto!important;
+}
+.hero-template-card.is-prev{
+  transform:translate(-92%,-50%) rotate(-3deg) scale(.91)!important;
+}
+.hero-template-card.is-next{
+  transform:translate(-8%,-50%) rotate(3deg) scale(.91)!important;
+}
+.hero-template-card.is-prev .cv-paper,.hero-template-card.is-next .cv-paper{
+  opacity:1!important;
+  box-shadow:0 16px 40px rgba(37,41,33,.08)!important;
+}
+.hero-template-card.is-prev .cv-paper *,.hero-template-card.is-next .cv-paper *{
+  visibility:visible!important;
+  opacity:.58!important;
+}
+.hero-template-card.is-prev .sample-type,.hero-template-card.is-next .sample-type{
+  opacity:.62!important;
+}
+@media(max-width:1050px){
+ .hero-cv-examples{min-width:540px!important}
+ .hero-template-card.is-prev{transform:translate(-88%,-50%) rotate(-2.5deg) scale(.89)!important}
+ .hero-template-card.is-next{transform:translate(-12%,-50%) rotate(2.5deg) scale(.89)!important}
+}
+@media(max-width:700px){
+ .hero-cv-examples{min-width:360px!important}
+ .hero-template-card.is-prev{transform:translate(-82%,-50%) rotate(-2deg) scale(.86)!important}
+ .hero-template-card.is-next{transform:translate(-18%,-50%) rotate(2deg) scale(.86)!important}
+ .hero-template-card.is-prev,.hero-template-card.is-next{opacity:.34!important}
+}
