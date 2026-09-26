@@ -1452,3 +1452,40 @@ body,.page{background:#F7F2E7!important;color:#3A2A20!important}
 .hero-reference .hero-template-card .hero-cv-name strong{font-size:17px!important;line-height:1.08!important;color:#FFF8ED!important;text-shadow:0 2px 4px rgba(38,24,16,.42)!important}
 .hero-reference .hero-template-card .hero-cv-name small{font-size:7px!important;line-height:1.2!important;color:#FFE4B8!important;text-shadow:0 1px 3px rgba(38,24,16,.38)!important}
 .hero-reference .hero-style-executive .hero-cv-name,.hero-reference .hero-style-elegant .hero-cv-name{top:112px!important}
+
+
+/* v24 — unified brown / beige / burgundy / black / grey / green system */
+:root{
+ --bg:#F3EBDD!important;
+ --surface:#FAF6EE!important;
+ --ink:#241F1C!important;
+ --muted:#746C64!important;
+ --line:#D6C9B9!important;
+ --brown:#6B4A36!important;
+ --beige:#D9C6A5!important;
+ --burgundy:#6E3038!important;
+ --black:#242321!important;
+ --grey:#8B8882!important;
+ --green:#68745A!important;
+ --green-dark:#4F5B45!important;
+}
+body,.page,.hero-reference{background:#F3EBDD!important;color:#241F1C!important}
+.site-header,header#header,.footer-shell{background:#FAF6EE!important}
+.hero-reference h1{color:#2D2723!important}
+.hero-reference h1 em{color:#6B4A36!important}
+.hero-reference .hero-copy .eyebrow,.brand-dot,.wordmark span{color:#6E3038!important}
+.hero-reference .hero-copy .intro,.hero-reference .hero-price,.hero-reference .hero-proof{color:#746C64!important}
+.hero-reference .hero-cta,button.primary,.primary{background:#68745A!important;border-color:#68745A!important;color:#FFFDF8!important}
+.hero-reference .hero-cta:hover,button.primary:hover,.primary:hover{background:#4F5B45!important}
+.impact-strip{background:#242321!important;color:#F3EBDD!important}
+.hero-reference .hero-style-basic{--card-head:#6B4A36;--card-side:#D9C6A5}
+.hero-reference .hero-style-ats{--card-head:#242321;--card-side:#A6A19A}
+.hero-reference .hero-style-executive{--card-head:#6E3038;--card-side:#D7C8B7}
+.hero-reference .hero-style-minimal{--card-head:#68745A;--card-side:#D8D4C8}
+.hero-reference .hero-style-creative{--card-head:#704C3A;--card-side:#CBB79C}
+.hero-reference .hero-style-professional{--card-head:#4F5B45;--card-side:#C8C9BC}
+.hero-reference .hero-style-compact{--card-head:#57534E;--card-side:#D3C8B8}
+.hero-reference .hero-style-elegant{--card-head:#6E3038;--card-side:#DCC9B1}
+.hero-reference .hero-style-tech{--card-head:#242321;--card-side:#9E9C96}
+.hero-reference .hero-template-card .hero-cv-name strong{color:#FFF9EF!important}
+.hero-reference .hero-template-card .hero-cv-name small{color:#E8DDD0!important}
