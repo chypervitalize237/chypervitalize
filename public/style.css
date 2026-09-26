@@ -289,3 +289,41 @@ dialog .hint{font-size:12px;color:var(--muted);margin-top:8px}
  .hero-template-card,.template-arrow,.template-dots i{transition:none!important;animation:none!important}
  .hero-template-carousel:before{animation:none!important}
 }
+
+
+/* Carousel polish: softer shapes, richer micro-motion, lateral flow */
+.hero-template-carousel{border-radius:30px}
+.hero-template-carousel .hero-cv-examples{border-radius:28px}
+.hero-template-card{border-radius:20px}
+.hero-template-card .cv-paper{border-radius:18px;transition:border-radius .45s ease,transform .65s cubic-bezier(.22,1,.36,1)}
+.hero-template-card.is-front .cv-paper{border-radius:22px}
+.hero-template-card.is-prev{transform:translate(-108%,-50%) rotateY(7deg) rotateZ(-1deg) scale(.96)}
+.hero-template-card.is-next{transform:translate(8%,-50%) rotateY(-7deg) rotateZ(1deg) scale(.96)}
+.hero-template-card.is-front{animation:cvSlideSoft .78s cubic-bezier(.16,1,.3,1)}
+.hero-template-card.is-front:after{content:"";position:absolute;inset:0;border-radius:22px;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.65);opacity:.9}
+.hero-template-card.is-front:before{content:"";position:absolute;inset:-35%;z-index:8;pointer-events:none;background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.34) 50%,transparent 60%);transform:translateX(-75%) rotate(7deg);animation:cvSheen .9s .08s ease-out both}
+.template-arrow{border-radius:14px;box-shadow:0 6px 18px rgba(37,41,33,.07)}
+.template-arrow:hover{border-radius:50%;transform:translateY(-2px) scale(1.08)}
+.template-picker-title{animation:selectorTitleFloat 4s ease-in-out infinite}
+.floating-label{border-radius:14px;animation:downloadBadgeFloat 3.2s ease-in-out infinite;box-shadow:0 10px 28px rgba(37,41,33,.08)}
+.round-stamp{animation:stampFloat 4.8s ease-in-out infinite}
+.sample-caption{transition:letter-spacing .35s ease,opacity .35s ease}
+.hero-template-carousel:hover~.sample-caption{letter-spacing:.02em}
+.template-dots{padding:7px 10px;border-radius:999px;background:rgba(245,243,235,.72);backdrop-filter:blur(8px)}
+.template-dots i{height:7px;width:7px}
+.template-dots i.active{width:24px}
+@keyframes cvSlideSoft{0%{opacity:.25;transform:translate(-38%,-50%) scale(.94);filter:blur(6px)}58%{opacity:1;transform:translate(-52%,-50%) scale(1.012);filter:blur(0)}100%{transform:translate(-50%,-50%) scale(1)}}
+@keyframes cvSheen{0%{transform:translateX(-80%) rotate(7deg);opacity:0}25%{opacity:1}100%{transform:translateX(80%) rotate(7deg);opacity:0}}
+@keyframes selectorTitleFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes downloadBadgeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes stampFloat{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-7px) rotate(2deg)}}
+@media(max-width:1050px){
+ .hero-template-card.is-prev{transform:translate(-104%,-50%) rotateY(6deg) scale(.96)}
+ .hero-template-card.is-next{transform:translate(4%,-50%) rotateY(-6deg) scale(.96)}
+}
+@media(max-width:700px){
+ .hero-template-carousel{border-radius:22px}.hero-template-carousel .hero-cv-examples{border-radius:20px}
+ .hero-template-card{border-radius:16px}.hero-template-card .cv-paper,.hero-template-card.is-front .cv-paper{border-radius:16px}
+ .hero-template-card.is-prev{transform:translate(-92%,-50%) rotateY(4deg) scale(.94)}
+ .hero-template-card.is-next{transform:translate(-8%,-50%) rotateY(-4deg) scale(.94)}
+}
