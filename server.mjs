@@ -2,7 +2,7 @@ import http from 'node:http';
 import {checkoutPrice,applyCheckoutPrice} from './pricing.mjs';
 import {readFileSync,mkdirSync,existsSync} from 'node:fs';
 import {join,extname} from 'node:path';
-import {randomBytes,scryptSync,timingSafeEqual} from 'node:crypto';
+import {randomBytes,scryptSync,timingSafeEqual,createHmac} from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
 import PDFDocument from 'pdfkit';
 const root=import.meta.dirname, dir=process.env.DATA_DIR||join(root,'data');mkdirSync(dir,{recursive:true});
@@ -14,10 +14,27 @@ function hasAccess(u){return !!u&&['active','trialing'].includes(String(u.subscr
 function safe(u){return u?{email:u.email,expires:u.expires,plan:u.plan,ref:u.ref,credits:hasAccess(u)?1:0,subscriptionStatus:u.subscription_status||null,accessUntil:Number(u.access_until||0)}:null;}
 function syncSubscription(uid,sub){if(!uid||!sub)return;const status=String(sub.status||''),until=Number(sub.current_period_end||sub.trial_end||0)*1000;db.prepare('UPDATE users SET stripe_customer_id=?,stripe_subscription_id=?,subscription_status=?,access_until=? WHERE id=?').run(typeof sub.customer==='string'?sub.customer:null,sub.id||null,status,until,uid);}
 async function stripeGet(path){const r=await fetch('https://api.stripe.com/v1/'+path,{headers:{Authorization:'Bearer '+process.env.STRIPE_SECRET_KEY},signal:AbortSignal.timeout(15000)});const d=await r.json();if(!r.ok)throw Error(d?.error?.message||'stripe');return d;}
-async function body(req){let v='';for await(const chunk of req){v+=chunk;if(v.length>3000000)throw Error('Request too large');}return JSON.parse(v||'{}');}
+async function rawBody(req){let v='';for await(const chunk of req){v+=chunk;if(v.length>3000000)throw Error('Request too large');}return v;}
+async function body(req){return JSON.parse((await rawBody(req))||'{}');}
+function validStripeSignature(raw,header,secret){if(!header||!secret)return false;const parts=Object.fromEntries(String(header).split(',').map(x=>x.split('=')));const t=Number(parts.t),sig=parts.v1;if(!t||!sig||Math.abs(Date.now()/1000-t)>300)return false;const expected=createHmac('sha256',secret).update(t+'.'+raw).digest('hex');try{return timingSafeEqual(Buffer.from(sig,'hex'),Buffer.from(expected,'hex'));}catch{return false;}}
 http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','same-origin');res.setHeader('X-Frame-Options','DENY');const url=new URL(req.url,'http://localhost');try{
  if(req.method==='POST'&&req.headers.origin&&new URL(req.headers.origin).host!==req.headers.host)return json(res,{error:'Origin rejected'},403);
  const u=user(req);
+ if(url.pathname==='/api/stripe-webhook'&&req.method==='POST'){
+  if(!process.env.STRIPE_WEBHOOK_SECRET)return json(res,{error:'Webhook not configured'},503);
+  const raw=await rawBody(req);
+  if(!validStripeSignature(raw,req.headers['stripe-signature'],process.env.STRIPE_WEBHOOK_SECRET))return json(res,{error:'signature'},400);
+  let event;try{event=JSON.parse(raw)}catch{return json(res,{error:'json'},400);}
+  const obj=event.data?.object||{};
+  if(event.type.startsWith('customer.subscription.')){
+   const uid=obj.metadata?.uid;
+   if(uid)syncSubscription(uid,obj);
+  }else if(event.type==='invoice.paid'||event.type==='invoice.payment_failed'){
+   const subId=typeof obj.subscription==='string'?obj.subscription:null;
+   if(subId){try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));const account=db.prepare('SELECT id FROM users WHERE stripe_subscription_id=?').get(subId);const uid=sub.metadata?.uid||account?.id;if(uid)syncSubscription(uid,sub);}catch(e){console.error('Stripe invoice sync:',e.message);}}
+  }
+  return json(res,{received:true});
+ }
  if(url.pathname==='/api/me')return json(res,{user:safe(u),ai:!!process.env.OPENAI_API_KEY,demo:process.env.DEMO_MODE!=='false'});
  if(url.pathname==='/api/auth'&&req.method==='POST'){
  const ip=req.socket.remoteAddress;const l=limits.get(ip)||{n:0,t:Date.now()};if(Date.now()-l.t>600000){l.n=0;l.t=Date.now();}limits.set(ip,l);if(++l.n>30)return json(res,{error:'rate'},429);
