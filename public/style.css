@@ -1386,3 +1386,34 @@ button.primary,.primary,.hero-reference .hero-cta{
 }
 button.primary *, .primary *, .hero-reference .hero-cta *{color:#FFF9F0!important;opacity:1!important}
 button.primary:hover,.primary:hover,.hero-reference .hero-cta:hover{background:#8C4B2B!important;color:#fff!important}
+
+
+/* v22 — polished example CV portraits, identity contrast, coherent template palettes */
+.hero-reference .hero-template-card{--card-head:#5f4a3a;--card-side:#d8c7b4;--card-text:#fffaf2}
+.hero-reference .hero-style-basic{--card-head:#76543d;--card-side:#e6d1b8}
+.hero-reference .hero-style-ats{--card-head:#4b3b32;--card-side:#b9aa9b}
+.hero-reference .hero-style-executive{--card-head:#3f4a42;--card-side:#c7cec2}
+.hero-reference .hero-style-minimal{--card-head:#80624c;--card-side:#eadbca}
+.hero-reference .hero-style-creative{--card-head:#a85f38;--card-side:#edc6a7}
+.hero-reference .hero-style-professional{--card-head:#654a39;--card-side:#d7c0aa}
+.hero-reference .hero-style-compact{--card-head:#6f5a45;--card-side:#dfcfbb}
+.hero-reference .hero-style-elegant{--card-head:#7b4c37;--card-side:#e1c4ad}
+.hero-reference .hero-style-tech{--card-head:#443d37;--card-side:#c8b8aa}
+.hero-reference .hero-template-card .cv-head,
+.hero-reference .hero-template-card .basic-head{background:var(--card-head)!important;color:var(--card-text)!important}
+.hero-reference .hero-template-card .cv-body>aside,
+.hero-reference .hero-template-card .basic-body>aside{background:var(--card-side)!important;color:#33271f!important}
+.hero-reference .hero-template-card .hero-cv-name,
+.hero-reference .hero-template-card .hero-cv-name strong,
+.hero-reference .hero-template-card .hero-cv-name small{color:var(--card-text)!important;text-shadow:0 1px 1px rgba(0,0,0,.16)!important}
+.hero-reference .hero-template-card img.cv-photo,
+.hero-reference .hero-template-card img.basic-photo{border:3px solid rgba(255,250,242,.88)!important;box-shadow:0 5px 16px rgba(37,29,23,.18)!important;object-fit:cover!important;object-position:50% 18%!important}
+.hero-reference .hero-style-basic img.basic-photo,
+.hero-reference .hero-style-minimal img.cv-photo,
+.hero-reference .hero-style-professional img.cv-photo,
+.hero-reference .hero-style-compact img.cv-photo{border-radius:8px!important}
+.hero-reference .hero-style-ats img.cv-photo,
+.hero-reference .hero-style-creative img.cv-photo,
+.hero-reference .hero-style-tech img.cv-photo{border-radius:10px!important}
+.hero-reference .hero-style-executive img.cv-photo,
+.hero-reference .hero-style-elegant img.cv-photo{border-radius:50%!important}
