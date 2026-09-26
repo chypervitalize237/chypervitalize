@@ -1359,3 +1359,30 @@ button.primary:hover,.primary:hover,.hero-reference .hero-cta:hover{background:v
 .hero-reference .hero-style-compact .hero-cv-name{
  left:128px!important;right:16px!important;top:30px!important;
 }
+
+
+/* v21 — richer autumn orange/brown palette + readable CV CTA */
+:root{
+ --bg:#F1E2CC!important;
+ --surface:#FAF0E2!important;
+ --ink:#3B291E!important;
+ --muted:#80634E!important;
+ --line:#D7B996!important;
+ --green:#9A5B32!important;
+ --green-dark:#6F3F27!important;
+ --green-soft:#E8C89F!important;
+ --autumn-rust:#B85F32!important;
+ --autumn-amber:#D58A3B!important;
+ --autumn-brown:#70452E!important;
+}
+body,.page{background:#F1E2CC!important;color:#3B291E!important}
+.site-header,header#header,.footer-shell{background:#FAF0E2!important}
+.hero-reference .hero-copy .eyebrow,.brand-dot,.wordmark span{color:#B85F32!important}
+.hero-reference h1 .muted,.hero-reference .hero-muted{color:#8B6748!important}
+.impact-strip{background:#6F3F27!important;color:#FFF8ED!important}
+button.primary,.primary,.hero-reference .hero-cta{
+ background:#B86635!important;color:#FFF9F0!important;
+ border-color:#B86635!important;font-weight:700!important;
+}
+button.primary *, .primary *, .hero-reference .hero-cta *{color:#FFF9F0!important;opacity:1!important}
+button.primary:hover,.primary:hover,.hero-reference .hero-cta:hover{background:#8C4B2B!important;color:#fff!important}
