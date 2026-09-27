@@ -1780,3 +1780,50 @@ body,.page,.hero-reference{background:#F3EBDD!important;color:#241F1C!important}
  .hero-reference .hero-style-tech .cv-photo{width:68px!important;height:78px!important}
  .hero-reference .hero-template-card .cv-head h2{font-size:17px!important}
 }
+
+
+/* Keep centered sample portraits fully separate from candidate name/title. */
+.hero-reference .hero-style-executive .cv-head,
+.hero-reference .hero-style-elegant .cv-head{
+  display:grid!important;
+  grid-template-rows:72px auto auto auto!important;
+  justify-items:center!important;
+  align-content:start!important;
+  row-gap:7px!important;
+  min-height:190px!important;
+  padding:14px 18px 12px!important;
+}
+.hero-reference .hero-style-executive .cv-photo,
+.hero-reference .hero-style-elegant .cv-photo{
+  grid-row:1!important;
+  position:static!important;
+  width:72px!important;
+  height:72px!important;
+  margin:0!important;
+  align-self:start!important;
+}
+.hero-reference .hero-style-executive .cv-head h2,
+.hero-reference .hero-style-elegant .cv-head h2{
+  grid-row:2!important;
+  position:static!important;
+  margin:0!important;
+  padding:0!important;
+  font-size:21px!important;
+  line-height:1.08!important;
+  text-align:center!important;
+  transform:none!important;
+}
+.hero-reference .hero-style-executive .cv-head .cv-title,
+.hero-reference .hero-style-elegant .cv-head .cv-title{
+  grid-row:3!important;
+  position:static!important;
+  margin:0!important;
+  text-align:center!important;
+}
+.hero-reference .hero-style-executive .cv-head .cv-contact,
+.hero-reference .hero-style-elegant .cv-head .cv-contact{
+  grid-row:4!important;
+  position:static!important;
+  margin:0!important;
+  text-align:center!important;
+}
