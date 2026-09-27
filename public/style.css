@@ -1899,3 +1899,6 @@ body>*,header,nav,main,footer,.topbar,.navbar,.site-header,.site-shell,.page,.he
 
 /* Kovács Anna homepage example: force all CV typography to black */
 .hero-reference .hero-style-ats .cv-paper,.hero-reference .hero-style-ats .cv-paper *{color:#000!important}
+
+/* Exact center for Kovacs Anna name in homepage sample */
+.hero-reference .hero-style-ats .cv-head h2{display:block!important;width:100%!important;max-width:none!important;text-align:center!important;margin:0 auto!important;padding-left:0!important;padding-right:0!important;transform:none!important;left:auto!important;right:auto!important}
