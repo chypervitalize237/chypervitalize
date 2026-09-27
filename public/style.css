@@ -1920,3 +1920,7 @@ body>*,header,nav,main,footer,.topbar,.navbar,.site-header,.site-shell,.page,.he
 
 /* Final visual alignment for Chyper 2 example name */
 .hero-reference .hero-template-card.hero-style-ats .chyper2-example-name{left:0!important;right:0!important;top:16px!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;margin:0!important;padding:0 18px!important;transform:none!important;text-align:center!important;position:absolute!important}
+
+/* Chyper 2 ATS: readable section titles and the original restrained dividers. */
+.cv-paper.cv-style-ats h3{color:#252921!important;border-color:#91a77e!important}
+.hero-template-card.hero-style-ats .cv-paper{background:#fffefa}
