@@ -1924,3 +1924,6 @@ body>*,header,nav,main,footer,.topbar,.navbar,.site-header,.site-shell,.page,.he
 /* Chyper 2 ATS: readable section titles and the original restrained dividers. */
 .cv-paper.cv-style-ats h3{color:#252921!important;border-color:#91a77e!important}
 .hero-template-card.hero-style-ats .cv-paper{background:#fffefa}
+
+/* Keep the extra-template call to action clear of the CV preview on desktop. */
+@media (min-width:1051px){.hero-reference .hero-more-wrap{transform:translateX(72px)}}
