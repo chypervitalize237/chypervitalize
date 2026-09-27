@@ -1892,3 +1892,7 @@ body>*,header,nav,main,footer,.topbar,.navbar,.site-header,.site-shell,.page,.he
 /* Kovács Anna / Chyper 2 homepage example: white decorative header */
 .hero-reference .hero-style-ats .cv-head{background:#fffefa!important;color:#252921!important}
 .hero-reference .hero-style-ats .cv-head h2,.hero-reference .hero-style-ats .cv-head .cv-title,.hero-reference .hero-style-ats .cv-head .cv-contact{color:#252921!important}
+
+/* Center Kovács Anna's name/header content in the homepage ATS example */
+.hero-reference .hero-style-ats .cv-head{text-align:center!important}
+.hero-reference .hero-style-ats .cv-head h2,.hero-reference .hero-style-ats .cv-head .cv-title,.hero-reference .hero-style-ats .cv-head .cv-contact{text-align:center!important;margin-left:auto!important;margin-right:auto!important}
