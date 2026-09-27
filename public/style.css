@@ -1863,3 +1863,17 @@ body,.page,.hero-reference{background:#F3EBDD!important;color:#241F1C!important}
 .hero-reference .hero-style-basic .basic-head p,
 .hero-reference .hero-style-basic .basic-head span,
 .hero-reference .hero-style-basic .basic-head small{color:#fffaf2!important;text-shadow:none!important}
+
+/* Chypervitalize brand palette — ivory, light green, black, restrained burgundy */
+:root{--bone:#f7f2e8;--ink:#171916;--muted:#676b63;--line:#ded8ca;--green:#c9efa9;--darkgreen:#334c2c;--white:#fffdf8;--burgundy:#7a343d}
+body{background:var(--bone)!important;color:var(--ink)!important}
+.primary{background:#c9efa9!important;color:#171916!important;border-color:#9fc77e!important}
+.primary:hover{background:#b9e996!important;color:#171916!important}
+.hero h1,.section-heading h2,.pricing h2,.wordmark,.hero-copy,.intro{color:#171916}
+.hero h1 em{color:#6f8d5e!important}
+.eyebrow{color:#7a343d!important}
+.brand-dot,.wordmark>span{color:#7a343d!important}
+.hero-proof,.sample-caption{color:#62675e!important}
+.price-card.recommended{background:#eef7e6!important;border-color:#a7c98b!important}
+.ribbon{background:#7a343d!important;color:#fffdf8!important}
+.promise-strip i{background:#8fbd72!important}
