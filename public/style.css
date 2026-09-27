@@ -1880,3 +1880,8 @@ body{background:var(--bone)!important;color:var(--ink)!important}
 
 /* Chypervitalize — continuous bone/ivory page background */
 html,body,main,.page,.site-shell,.hero,.hero-section,.section,.pricing,.reviews,.faq,.footer,.site-footer{background:#f7f2e8!important}
+
+
+/* v29 — force one continuous bone background across the entire Chypervitalize site */
+html,body{background-color:#f7f2e8!important;min-height:100%!important}
+body>*,header,nav,main,footer,.topbar,.navbar,.site-header,.site-shell,.page,.hero,.hero-section,.section,.pricing,.reviews,.faq,.footer,.site-footer{background-color:#f7f2e8!important}
