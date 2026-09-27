@@ -103,9 +103,9 @@ async function verifyPayment(){
 function home(){
  const hu=state.lang==='hu';
  const cards=[
-  ['basic','Basic','Varga Anna','HR specialista','/chypermax_portraits_9/person-1.png'],
+  ['basic','Basic','Varga Anna','HR specialista','/chypermax_portraits_9/person-2.png'],
   ['ats','ATS','Tóth Bence','Marketing specialista','/chypermax_portraits_9/person-3.png'],
-  ['executive','Executive','Kovács Márk','Szoftverfejlesztő','/chypermax_portraits_9/person-2.png'],
+  ['executive','Executive','Kovács Márk','Szoftverfejlesztő','/chypermax_portraits_9/person-1.png'],
   ['minimal','Minimal','Kiss Laura','Projektmenedzser','/chypermax_portraits_9/person-4.png'],
   ['creative','Creative','Horváth Ádám','UX designer','/chypermax_portraits_9/person-5.png'],
   ['professional','Professional','Farkas Lili','Pénzügyi elemző','/chypermax_portraits_9/person-6.png'],
