@@ -1620,3 +1620,24 @@ body,.page,.hero-reference{background:#F3EBDD!important;color:#241F1C!important}
 }
 .hero-reference .hero-template-card img.cv-photo,
 .hero-reference .hero-template-card img.basic-photo{z-index:40!important;object-fit:cover!important;object-position:50% 18%!important}
+
+
+/* Homepage portrait CVs: keep portrait and identity text from overlapping. */
+.hero-template-card .cv-head{
+  display:grid;
+  grid-template-columns:58px minmax(0,1fr);
+  grid-template-areas:
+    "photo name"
+    "photo title"
+    "contact contact";
+  column-gap:12px;
+  align-items:center;
+  text-align:left;
+}
+.hero-template-card .cv-head .cv-photo{grid-area:photo;width:52px;height:62px;margin:0;object-fit:cover;border-radius:50%}
+.hero-template-card .cv-head h2{grid-area:name;margin:0;min-width:0;line-height:1.08;font-size:22px}
+.hero-template-card .cv-head .cv-title{grid-area:title;margin-top:3px;min-width:0}
+.hero-template-card .cv-head .cv-contact{grid-area:contact;margin:9px 0 0;text-align:center}
+.hero-template-card .basic-head .basic-photo{flex:0 0 auto}
+.hero-template-card .basic-head>div{min-width:0}
+.hero-template-card .basic-head h2{overflow-wrap:normal;word-break:normal}
