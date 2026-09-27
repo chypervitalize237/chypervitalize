@@ -1902,3 +1902,7 @@ body>*,header,nav,main,footer,.topbar,.navbar,.site-header,.site-shell,.page,.he
 
 /* Exact center for Kovacs Anna name in homepage sample */
 .hero-reference .hero-style-ats .cv-head h2{display:block!important;width:100%!important;max-width:none!important;text-align:center!important;margin:0 auto!important;padding-left:0!important;padding-right:0!important;transform:none!important;left:auto!important;right:auto!important}
+
+/* Chyper 2 homepage sample: match the original centered header layout */
+.hero-reference .hero-template-card.hero-style-ats .cv-head{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important}
+.hero-reference .hero-template-card.hero-style-ats .cv-head h2,.hero-reference .hero-template-card.hero-style-ats .cv-head .cv-title,.hero-reference .hero-template-card.hero-style-ats .cv-head .cv-contact{width:100%!important;text-align:center!important;margin-left:auto!important;margin-right:auto!important}
