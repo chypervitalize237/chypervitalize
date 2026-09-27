@@ -1877,3 +1877,6 @@ body{background:var(--bone)!important;color:var(--ink)!important}
 .price-card.recommended{background:#eef7e6!important;border-color:#a7c98b!important}
 .ribbon{background:#7a343d!important;color:#fffdf8!important}
 .promise-strip i{background:#8fbd72!important}
+
+/* Chypervitalize — continuous bone/ivory page background */
+html,body,main,.page,.site-shell,.hero,.hero-section,.section,.pricing,.reviews,.faq,.footer,.site-footer{background:#f7f2e8!important}
