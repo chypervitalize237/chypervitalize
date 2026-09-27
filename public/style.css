@@ -1885,3 +1885,6 @@ html,body,main,.page,.site-shell,.hero,.hero-section,.section,.pricing,.reviews,
 /* v29 — force one continuous bone background across the entire Chypervitalize site */
 html,body{background-color:#f7f2e8!important;min-height:100%!important}
 body>*,header,nav,main,footer,.topbar,.navbar,.site-header,.site-shell,.page,.hero,.hero-section,.section,.pricing,.reviews,.faq,.footer,.site-footer{background-color:#f7f2e8!important}
+
+/* Homepage link to the previously shown template collection */
+.hero-more-wrap{text-align:center;margin-top:16px}.hero-more-label{font-size:13px;font-weight:600;color:#252921;margin:0 0 7px}.hero-more-templates{font-size:13px;font-weight:650;color:#304b2e;background:#c7e9b0;border:1px solid #a8ce8e;border-radius:7px;padding:10px 15px}.hero-more-templates:hover{background:#b7dc9d}
