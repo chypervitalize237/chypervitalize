@@ -1851,3 +1851,15 @@ body,.page,.hero-reference{background:#F3EBDD!important;color:#241F1C!important}
 .hero-reference .hero-template-card .basic-body{
   color:#1f211e!important;
 }
+
+/* v28 — high-contrast text for the two dark photo-free homepage samples */
+.hero-reference .hero-style-ats .cv-head,
+.hero-reference .hero-style-basic .basic-head{color:#fffaf2!important}
+.hero-reference .hero-style-ats .cv-head h2,
+.hero-reference .hero-style-ats .cv-head .cv-title,
+.hero-reference .hero-style-ats .cv-head .cv-contact,
+.hero-reference .hero-style-ats .cv-head .cv-contact span,
+.hero-reference .hero-style-basic .basic-head h2,
+.hero-reference .hero-style-basic .basic-head p,
+.hero-reference .hero-style-basic .basic-head span,
+.hero-reference .hero-style-basic .basic-head small{color:#fffaf2!important;text-shadow:none!important}
