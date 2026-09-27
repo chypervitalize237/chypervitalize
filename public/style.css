@@ -1827,3 +1827,27 @@ body,.page,.hero-reference{background:#F3EBDD!important;color:#241F1C!important}
   margin:0!important;
   text-align:center!important;
 }
+
+
+/* Homepage sample CVs: guarantee readable text on the dark/accent header backgrounds. */
+.hero-reference .hero-template-card .cv-head,
+.hero-reference .hero-template-card .basic-head{
+  color:#fff!important;
+}
+.hero-reference .hero-template-card .cv-head h2,
+.hero-reference .hero-template-card .cv-head .cv-title,
+.hero-reference .hero-template-card .cv-head .cv-contact,
+.hero-reference .hero-template-card .cv-head .cv-contact *,
+.hero-reference .hero-template-card .basic-head h2,
+.hero-reference .hero-template-card .basic-head .cv-title,
+.hero-reference .hero-template-card .basic-head .cv-contact,
+.hero-reference .hero-template-card .basic-head .cv-contact *,
+.hero-reference .hero-template-card .hero-cv-name,
+.hero-reference .hero-template-card .hero-cv-name strong,
+.hero-reference .hero-template-card .hero-cv-name small{
+  color:#fff!important;
+}
+.hero-reference .hero-template-card .cv-body,
+.hero-reference .hero-template-card .basic-body{
+  color:#1f211e!important;
+}
