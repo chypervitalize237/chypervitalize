@@ -1888,3 +1888,7 @@ body>*,header,nav,main,footer,.topbar,.navbar,.site-header,.site-shell,.page,.he
 
 /* Homepage link to the previously shown template collection */
 .hero-more-wrap{text-align:center;margin-top:16px}.hero-more-label{font-size:13px;font-weight:600;color:#252921;margin:0 0 7px}.hero-more-templates{font-size:13px;font-weight:650;color:#304b2e;background:#c7e9b0;border:1px solid #a8ce8e;border-radius:7px;padding:10px 15px}.hero-more-templates:hover{background:#b7dc9d}
+
+/* Kovács Anna / Chyper 2 homepage example: white decorative header */
+.hero-reference .hero-style-ats .cv-head{background:#fffefa!important;color:#252921!important}
+.hero-reference .hero-style-ats .cv-head h2,.hero-reference .hero-style-ats .cv-head .cv-title,.hero-reference .hero-style-ats .cv-head .cv-contact{color:#252921!important}
