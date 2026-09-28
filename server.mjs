@@ -13,7 +13,7 @@ function json(res,data,status=200){res.writeHead(status,{'Content-Type':'applica
 function user(req){let token=(req.headers.cookie||'').match(/(?:^|; )session=([a-f0-9]+)/)?.[1];return token?db.prepare('SELECT u.* FROM users u JOIN sessions s ON u.id=s.uid WHERE s.token=? AND s.expires>?').get(token,Date.now()):null;}
 function hasAccess(u){return !!u&&['active','trialing'].includes(String(u.subscription_status||''))&&Number(u.access_until||0)>Date.now();}
 function safe(u){return u?{email:u.email,expires:u.expires,plan:u.plan,ref:u.ref,credits:hasAccess(u)?1:0,subscriptionStatus:u.subscription_status||null,accessUntil:Number(u.access_until||0)}:null;}
-function syncSubscription(uid,sub){if(!uid||!sub)return;const status=String(sub.status||''),until=Number(sub.current_period_end||sub.trial_end||0)*1000;db.prepare('UPDATE users SET stripe_customer_id=?,stripe_subscription_id=?,subscription_status=?,access_until=? WHERE id=?').run(typeof sub.customer==='string'?sub.customer:null,sub.id||null,status,until,uid);}
+function syncSubscription(uid,sub){if(!uid||!sub)return;const status=String(sub.status||''),periods=(sub.items?.data||[]).map(x=>Number(x.current_period_end)).filter(Number.isFinite),periodEnd=periods.length?Math.min(...periods):Number(sub.current_period_end||sub.trial_end||0),until=periodEnd*1000;db.prepare('UPDATE users SET stripe_customer_id=?,stripe_subscription_id=?,subscription_status=?,access_until=? WHERE id=?').run(typeof sub.customer==='string'?sub.customer:null,sub.id||null,status,until,uid);}
 async function stripeGet(path){const r=await fetch('https://api.stripe.com/v1/'+path,{headers:{Authorization:'Bearer '+process.env.STRIPE_SECRET_KEY},signal:AbortSignal.timeout(15000)});const d=await r.json();if(!r.ok)throw Error(d?.error?.message||'stripe');return d;}
 async function rawBody(req){let v='';for await(const chunk of req){v+=chunk;if(v.length>3000000)throw Error('Request too large');}return v;}
 async function body(req){return JSON.parse((await rawBody(req))||'{}');}
@@ -36,6 +36,9 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   if(event.type.startsWith('customer.subscription.')){
    const uid=obj.metadata?.uid;
    if(uid)syncSubscription(uid,obj);
+  }else if(event.type==='checkout.session.completed'||event.type==='checkout.session.async_payment_succeeded'){
+   const uid=obj.metadata?.uid||obj.client_reference_id,subId=typeof obj.subscription==='string'?obj.subscription:null;
+   if(uid&&subId){try{syncSubscription(uid,await stripeGet('subscriptions/'+encodeURIComponent(subId)));}catch(e){console.error('Stripe checkout sync:',e.message);}}
   }else if(event.type==='invoice.paid'||event.type==='invoice.payment_failed'){
    const subId=typeof obj.subscription==='string'?obj.subscription:null;
    if(subId){try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));const account=db.prepare('SELECT id FROM users WHERE stripe_subscription_id=?').get(subId);const uid=sub.metadata?.uid||account?.id;if(uid)syncSubscription(uid,sub);}catch(e){console.error('Stripe invoice sync:',e.message);}}
@@ -44,8 +47,8 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
  }
  if(url.pathname==='/api/me')return json(res,{user:safe(u),ai:!!process.env.OPENAI_API_KEY,demo:process.env.DEMO_MODE!=='false'});
  if(url.pathname==='/api/auth'&&req.method==='POST'){
- const ip=req.socket.remoteAddress;const l=limits.get(ip)||{n:0,t:Date.now()};if(Date.now()-l.t>600000){l.n=0;l.t=Date.now();}limits.set(ip,l);if(++l.n>30)return json(res,{error:'rate'},429);
  const b=await body(req),email=String(b.email||'').trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||(String(b.password||'').length<10||String(b.password||'').length>200))return json(res,{error:'credentials'},400);
+ const ip=String(req.headers['x-forwarded-for']||req.socket.remoteAddress||'').split(',')[0].trim(),rateKey='auth:'+ip+':'+email,l=limits.get(rateKey)||{n:0,t:Date.now()};if(Date.now()-l.t>600000){l.n=0;l.t=Date.now();}limits.set(rateKey,l);if(++l.n>12)return json(res,{error:'rate'},429);
  let account=db.prepare('SELECT * FROM users WHERE email=?').get(email);
  if(b.mode==='register'){if(account)return json(res,{error:'exists'},409);const salt=randomBytes(16).toString('hex'),id=randomBytes(16).toString('hex');db.prepare('INSERT INTO users(id,email,hash,salt,ref,referred) VALUES(?,?,?,?,?,?)').run(id,email,scryptSync(b.password,salt,64).toString('hex'),salt,randomBytes(8).toString('hex'),String(b.ref||'').slice(0,32));account=db.prepare('SELECT * FROM users WHERE id=?').get(id);}else if(!account||!timingSafeEqual(Buffer.from(account.hash,'hex'),scryptSync(b.password,account.salt,64)))return json(res,{error:'credentials'},401);
  const token=randomBytes(32).toString('hex');db.prepare('INSERT INTO sessions VALUES(?,?,?)').run(token,account.id,Date.now()+30*86400000);res.setHeader('Set-Cookie',`session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=2592000${process.env.NODE_ENV==='production'?'; Secure':''}`);return json(res,{user:safe(account)});}
