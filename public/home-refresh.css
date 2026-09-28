@@ -307,19 +307,6 @@ body:has(.hero-reference){
  background-attachment:fixed!important;
  isolation:isolate;
 }
-/* Show the full photograph on wider screens; the cover layer fills its feathered margins. */
-@media(min-width:701px){
- body:has(.hero-reference)::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  z-index:-1;
-  pointer-events:none;
-  background:linear-gradient(180deg,rgba(12,32,24,.24),rgba(12,32,24,.39)),url('./nature-landscape-4k.jpg') center calc(50% + var(--landscape-shift,0px)) / contain no-repeat;
-  mask-image:linear-gradient(90deg,transparent,#000 19%,#000 81%,transparent),linear-gradient(180deg,transparent,#000 16%,#000 84%,transparent);
-  mask-composite:intersect;
- }
-}
 body:has(.hero-reference) main,
 body:has(.hero-reference) .page{background:transparent!important}
 body:has(.hero-reference) #header{background:rgba(18,41,32,.83)!important;backdrop-filter:blur(14px)}
@@ -336,6 +323,17 @@ body:has(.hero-reference) #header{background:rgba(18,41,32,.83)!important;backdr
  background-size:100% 100%,30px 30px;
  mask-image:linear-gradient(90deg,transparent,#000 13%,#000 87%,transparent);
  animation:none;
+}
+/* A single fixed photograph spans the viewport; the hero only adds a faint texture. */
+@media(min-width:701px){
+ body:has(.hero-reference){
+  background-image:linear-gradient(90deg,rgba(12,32,24,.72),rgba(12,32,24,.58) 42%,rgba(12,32,24,.35)),url('./nature-landscape-4k.jpg')!important;
+  background-size:cover,max(100vw,177.8vh) auto!important;
+ }
+ .page .hero-reference::before{
+  background-image:radial-gradient(rgba(228,242,218,.1) 1px,transparent 1px);
+  opacity:.15;
+ }
 }
 .page .example-collection{background:rgba(21,48,36,.76)!important;backdrop-filter:blur(12px)}
 .page .promise-strip{background:rgba(18,41,31,.72)!important;backdrop-filter:blur(9px)}
