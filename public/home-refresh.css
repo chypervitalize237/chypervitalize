@@ -133,7 +133,8 @@ body:has(.hero-reference) .nav .wordmark{transition:transform .25s ease}
 body:has(.hero-reference) .nav .wordmark:hover{transform:translateY(-3px)}
 body:has(.hero-reference) .nav .login{transition:transform .25s ease,color .25s ease}
 body:has(.hero-reference) .nav .login:hover{transform:translateY(-3px);color:#d4f09b!important}
-.page .hero-reference{isolation:isolate;color:#f7f3e8;background:linear-gradient(90deg,rgba(14,34,27,.94) 0%,rgba(14,34,27,.78) 41%,rgba(13,34,27,.53) 100%),url('./future-landscape.jpg') center 52% / cover no-repeat!important;animation:homeLandscapeDrift 26s ease-in-out infinite alternate}
+/* Real landscape photograph from Unsplash, image ID photo-1759322647929-5a9df179e847. */
+.page .hero-reference{isolation:isolate;color:#f7f3e8;background:linear-gradient(90deg,rgba(14,34,27,.91) 0%,rgba(14,34,27,.68) 41%,rgba(13,34,27,.34) 100%),url('./nature-landscape.jpg') center 52% / cover no-repeat!important;animation:homeLandscapeDrift 26s ease-in-out infinite alternate}
 .page .hero-reference::before{content:"";position:absolute;z-index:-1;inset:-35px -6%;opacity:.14;pointer-events:none;background-image:radial-gradient(#e4f2da 1px,transparent 1px);background-size:30px 30px;mask-image:linear-gradient(90deg,transparent,#000 30%,#000 85%,transparent);animation:homeGridDrift 48s linear infinite}
 .page .hero-reference::after{content:"";position:absolute;z-index:-1;top:10%;right:1%;width:clamp(360px,47vw,720px);aspect-ratio:1;border:1px solid rgba(212,240,155,.13);border-radius:50%;pointer-events:none;box-shadow:0 0 0 70px rgba(212,240,155,.025),0 0 0 150px rgba(212,240,155,.018);animation:homeOrbit 18s ease-in-out infinite alternate}
 .page .hero-reference .hero-copy .eyebrow{color:#d4f09b!important}
@@ -205,7 +206,7 @@ body:has(.hero-reference) .nav .login:hover{transform:translateY(-3px);color:#d4
  .page .hero-reference .hero-more-wrap{margin-top:12px}
 }
 @media(max-width:700px){
- .page .hero-reference{background:linear-gradient(180deg,rgba(14,34,27,.90),rgba(14,34,27,.77) 50%,rgba(14,34,27,.60)),url('./future-landscape.jpg') 67% center / cover no-repeat!important}
+ .page .hero-reference{background:linear-gradient(180deg,rgba(14,34,27,.87),rgba(14,34,27,.73) 50%,rgba(14,34,27,.57)),url('./nature-landscape.jpg') 67% center / cover no-repeat!important}
  .page .hero-reference::before{inset:0 -21px}
  .page .hero-reference::after{top:25%;right:-50%;width:440px}
  .page .hero-reference .hero-live-label{padding:0 14px}
