@@ -674,3 +674,39 @@ body:has(#app.workspace) #footer .footer-bottom{color:#d3e4df!important}
  text-align:center;
 }
 .page .visitor-proof:empty{display:none}
+
+/* Benefits bridge the process and pricing sections with the same alpine-green editorial palette. */
+.page .why{position:relative;isolation:isolate;overflow:hidden;padding:68px clamp(24px,5vw,72px) 54px;color:#f5f5e9;background:rgba(20,45,34,.77);border:1px solid rgba(201,232,169,.23);border-top:0;border-bottom:0;backdrop-filter:blur(14px)}
+.why::before{content:"";position:absolute;z-index:-1;inset:0;pointer-events:none;opacity:.75;background:radial-gradient(ellipse at 94% 2%,rgba(155,193,120,.18),transparent 33%),linear-gradient(128deg,transparent 54%,rgba(225,238,201,.025))}
+.why-heading{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(250px,.65fr);gap:38px;align-items:end;margin-bottom:34px}
+.why-heading .eyebrow{color:#d4f09b!important;margin-bottom:10px}
+.why-heading h2{max-width:720px;font-size:clamp(39px,4.2vw,58px);line-height:1.07;letter-spacing:-.035em;color:#f7f8ee}
+.why-heading>p{max-width:380px;padding-bottom:4px;color:#d0dfcf;font-size:14px;line-height:1.75}
+.why-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+.why-card{position:relative;min-height:174px;display:flex;flex-direction:column;justify-content:space-between;gap:20px;padding:20px 21px 19px;border:1px solid rgba(212,240,155,.17);border-radius:12px;background:rgba(32,62,46,.77);color:#f5f5e9;box-shadow:0 12px 26px rgba(4,24,15,.11);transition:transform .28s ease,background .28s ease;animation:whyArrive .65s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--why-index)*65ms)}
+.why-card{grid-column:span 1}
+.why-card:hover{transform:translateY(-4px);background:rgba(45,78,56,.92)}
+.why-icon{display:grid;place-items:center;width:38px;height:38px;border:1px solid rgba(212,240,155,.35);border-radius:10px;color:#d4f09b;background:rgba(212,240,155,.07)}
+.why-icon svg{width:19px;height:19px}
+.why-card h3{max-width:280px;margin:0 0 8px;color:#f7f8ee;font-size:16px;line-height:1.3;font-weight:600;letter-spacing:-.015em}
+.why-card p{max-width:390px;color:#c8d7c5;font-size:12px;line-height:1.65}
+.why-mark{position:absolute;top:22px;right:20px;color:#b4c7a6;font:12px 'DM Sans',sans-serif;letter-spacing:.08em;opacity:.8}
+.why-footnote{margin:17px 2px 0;color:#c0d0bc;font-size:11px;line-height:1.6}
+@keyframes whyArrive{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:900px){
+ .why-heading{grid-template-columns:minmax(0,1fr) minmax(220px,.7fr);gap:25px}
+ .why-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .why-card:nth-child(n){grid-column:span 1}
+}
+@media(max-width:700px){
+ .page .why{padding:48px 22px 35px;margin:0 -21px}
+ .why-heading{grid-template-columns:1fr;gap:13px;margin-bottom:24px}
+ .why-heading h2{font-size:42px}
+ .why-heading>p{font-size:13px}
+ .why-grid{grid-template-columns:1fr;gap:10px}
+ .why-card:nth-child(n){grid-column:1;min-height:0;gap:14px;padding:17px 17px}
+ .why-card h3{font-size:15px}
+ .why-card p{font-size:12px}
+ .why-mark{top:19px;right:17px}
+}
+@media(prefers-reduced-motion:reduce){.why-card{transition:none!important;animation:none!important}}
