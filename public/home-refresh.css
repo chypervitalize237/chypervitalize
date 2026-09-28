@@ -416,3 +416,144 @@ body:has(.hero-reference) #footer .footer-socials span{background:#d4f09b;color:
  .page .how,.page .pricing{background:rgba(20,45,34,.76)!important}
  body:has(.hero-reference) #footer .footer-shell{padding:24px 20px}
 }
+
+/* Price comparison and clearly dated, indicative currency conversion. */
+.page .pricing .sale-label{
+ display:inline-flex;
+ align-self:flex-start;
+ margin:12px 0 2px;
+ padding:5px 10px;
+ border:1px solid rgba(181,41,53,.26);
+ border-radius:5px;
+ background:rgba(181,41,53,.1);
+ color:#b52935;
+ font-size:13px;
+ font-weight:800;
+ letter-spacing:.13em;
+}
+.page .pricing .old-price{
+ display:block;
+ color:#65736a;
+ font-size:19px;
+ line-height:1.3;
+ text-decoration:line-through;
+ text-decoration-thickness:2px;
+}
+.page .pricing .price-card .current-price{margin:5px 0 14px}
+.page .pricing .price-card:not(.recommended) .current-price{margin-top:23px}
+.page .pricing .fx-note{
+ max-width:660px;
+ margin:12px auto 0;
+ font-size:12px;
+ line-height:1.6;
+ color:#dce9df!important;
+ text-align:center;
+}
+dialog .fx-note{font-size:12px;line-height:1.55;color:#596b67;margin:12px 0}
+
+/* Editor chrome only: the editable CV sheet keeps its own document colors. */
+body:has(#app.workspace){
+ background:#dce9e8!important;
+ background-image:linear-gradient(125deg,#e8f3ee 0%,#dceae9 55%,#d9e5eb 100%)!important;
+ color:#233e3e!important;
+}
+body:has(#app.workspace) #header{
+ background:rgba(19,48,47,.94)!important;
+ color:#f4f9f7!important;
+ backdrop-filter:blur(14px);
+}
+body:has(#app.workspace) #header .wordmark,
+body:has(#app.workspace) #header .nav-right{color:#f4f9f7!important}
+body:has(#app.workspace) #header .brand-dot{color:#bde4b2!important}
+body:has(#app.workspace) #app.workspace{background:transparent!important}
+body:has(#app.workspace) .editor-top h1{color:#193c3c!important}
+body:has(#app.workspace) .editor-top .eyebrow,
+body:has(#app.workspace) .form-head .eyebrow{color:#397578!important}
+body:has(#app.workspace) .editor-top .save-label{color:#37675b!important}
+body:has(#app.workspace) .section-nav{
+ background:rgba(247,251,249,.77)!important;
+ border:1px solid rgba(73,117,111,.2);
+ border-radius:16px;
+ padding:14px 12px;
+ box-shadow:0 12px 32px rgba(35,72,67,.08);
+ backdrop-filter:blur(16px);
+}
+body:has(#app.workspace) .section-nav .nav-title,
+body:has(#app.workspace) .section-nav .nav-note{color:#607878!important}
+body:has(#app.workspace) .section-link{color:#375353}
+body:has(#app.workspace) .section-link:hover{background:rgba(85,145,137,.13)!important}
+body:has(#app.workspace) .section-link.active{
+ background:linear-gradient(115deg,rgba(150,197,168,.32),rgba(150,198,207,.26))!important;
+ color:#17483e!important;
+}
+body:has(#app.workspace) .section-link .nav-num{color:#458475}
+body:has(#app.workspace) .review-button{border-top-color:rgba(73,117,111,.22);color:#285c5c}
+body:has(#app.workspace) .form-panel{
+ background:rgba(255,255,255,.86)!important;
+ border:1px solid rgba(87,129,125,.23)!important;
+ border-radius:16px;
+ box-shadow:0 18px 45px rgba(34,76,72,.1);
+ backdrop-filter:blur(18px);
+ color:#233e3e!important;
+}
+body:has(#app.workspace) .form-head h2{color:#193e3e!important}
+body:has(#app.workspace) .form-panel .field input,
+body:has(#app.workspace) .form-panel .field select,
+body:has(#app.workspace) .form-panel .field textarea{
+ background:#fcfefd!important;
+ border:1px solid #cbd9d8!important;
+ color:#234142!important;
+}
+body:has(#app.workspace) .form-panel .field :is(input,select,textarea):focus{
+ outline:2px solid #73aaa9;
+ outline-offset:1px;
+}
+body:has(#app.workspace) .basic-design-controls{
+ background:rgba(233,244,242,.7)!important;
+ border-color:#c7dcda!important;
+ color:#294748;
+}
+body:has(#app.workspace) .basic-design-controls input[type=range]{accent-color:#327e80}
+body:has(#app.workspace) .form-pagination{border-top-color:#cbdcd9}
+body:has(#app.workspace) .editor-actions .primary,
+body:has(#app.workspace) .form-pagination .primary{
+ background:#31736b!important;
+ border-color:#285e59!important;
+ color:#fff!important;
+}
+body:has(#app.workspace) .editor-actions .primary:hover,
+body:has(#app.workspace) .form-pagination .primary:hover{background:#245e59!important}
+body:has(#app.workspace) .editor-actions .secondary{
+ background:rgba(255,255,255,.62)!important;
+ border-color:#b9cfcb!important;
+ color:#285c59!important;
+}
+body:has(#app.workspace) .preview-panel{
+ background:rgba(212,229,233,.66)!important;
+ border:1px solid rgba(92,135,142,.25);
+ border-radius:16px;
+ box-shadow:0 12px 35px rgba(32,74,81,.09);
+ backdrop-filter:blur(14px);
+}
+body:has(#app.workspace) .preview-toolbar,
+body:has(#app.workspace) .preview-note{color:#375f64!important}
+body:has(#app.workspace) .preview-toolbar select{color:#21494d!important}
+body:has(#app.workspace) #footer{background:#1d4241!important;color:#e9f3f0!important}
+body:has(#app.workspace) #footer .footer-shell{
+ background:rgba(31,77,73,.84)!important;
+ border:1px solid rgba(196,228,218,.18);
+ border-radius:16px;
+}
+body:has(#app.workspace) #footer .impact-strip{background:#173a3a!important;color:#f0f8f5!important}
+body:has(#app.workspace) #footer .wordmark,
+body:has(#app.workspace) #footer .footer-col strong{color:#f3faf7!important}
+body:has(#app.workspace) #footer .footer-brand p,
+body:has(#app.workspace) #footer .footer-col button,
+body:has(#app.workspace) #footer .footer-bottom{color:#d3e4df!important}
+@media(max-width:1150px){
+ body:has(#app.workspace) .section-nav{position:static}
+}
+@media(max-width:650px){
+ body:has(#app.workspace) .section-nav{padding:10px}
+ body:has(#app.workspace) .form-panel{border-radius:13px}
+}
