@@ -310,7 +310,17 @@ body:has(.hero-reference) main,
 body:has(.hero-reference) .page{background:transparent!important}
 body:has(.hero-reference) #header{background:rgba(18,41,32,.83)!important;backdrop-filter:blur(14px)}
 .page .hero-reference{
- background:linear-gradient(90deg,rgba(12,32,24,.78),rgba(12,32,24,.42) 52%,rgba(12,32,24,.12))!important;
+ background:transparent!important;
+ animation:none;
+}
+.page .hero-reference::before{
+ inset:-30px -clamp(80px,12vw,180px);
+ opacity:1;
+ background-image:
+  linear-gradient(90deg,transparent,rgba(12,32,24,.78) 15%,rgba(12,32,24,.68) 36%,rgba(12,32,24,.38) 64%,rgba(12,32,24,.1) 84%,transparent),
+  radial-gradient(rgba(228,242,218,.1) 1px,transparent 1px);
+ background-size:100% 100%,30px 30px;
+ mask-image:linear-gradient(90deg,transparent,#000 13%,#000 87%,transparent);
  animation:none;
 }
 .page .example-collection{background:rgba(21,48,36,.76)!important;backdrop-filter:blur(12px)}
@@ -382,7 +392,12 @@ body:has(.hero-reference) #footer .footer-language option{color:#203b2c}
 body:has(.hero-reference) #footer .footer-socials span{background:#d4f09b;color:#203b2c}
 @media(max-width:700px){
  .page .hero-reference{
-  background:linear-gradient(180deg,rgba(12,32,24,.72),rgba(12,32,24,.48) 52%,rgba(12,32,24,.28))!important;
+  background:transparent!important;
+ }
+ .page .hero-reference::before{
+  inset:0 -21px;
+  background-image:linear-gradient(180deg,rgba(12,32,24,.72),rgba(12,32,24,.48) 52%,rgba(12,32,24,.28));
+  mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
  }
  .page .how,.page .pricing{background:rgba(20,45,34,.76)!important}
  body:has(.hero-reference) #footer .footer-shell{padding:24px 20px}
