@@ -1,0 +1,298 @@
+/* Landing-page refresh. Kept separate from legacy CV/export styling. */
+html{scroll-behavior:smooth}
+.page .hero-reference{position:relative}
+.page .hero-reference .hero-copy{position:relative;z-index:2}
+.page .hero-reference .hero-copy .eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:11px!important;letter-spacing:.16em!important;margin-bottom:25px!important}
+.page .hero-reference .hero-copy .eyebrow::before{content:"";display:block;width:25px;height:1px;background:#7a343d}
+.page .hero-reference h1{letter-spacing:-.045em!important}
+.page .hero-reference h1 em{color:#6d8f59!important}
+.page .hero-reference .primary{box-shadow:0 12px 28px rgba(77,108,58,.14);transition:transform .28s ease,box-shadow .28s ease,background .28s ease!important}
+.page .hero-reference .primary{background:#c9efa9!important;color:#1c2b1e!important}
+.page .hero-reference .primary:hover{transform:translateY(-4px)!important;box-shadow:0 20px 36px rgba(77,108,58,.20)}
+.page .hero-reference .hero-price{color:#61695a}
+.page .hero-reference .hero-price strong{color:#293d26}
+.page .hero-reference .hero-more-wrap{transform:none!important;margin-top:23px}
+.page .hero-reference-visual{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important}
+.page .hero-reference .hero-more-wrap{width:100%;flex:0 0 auto;position:relative;z-index:2}
+.page .hero-reference .hero-template-carousel{flex:0 0 auto}
+.page .hero-reference .hero-more-templates{display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;text-decoration:none;transition:transform .2s ease,background .2s ease}
+.page .hero-reference .hero-more-templates:hover{transform:translateY(-3px);background:#b8df9c}
+.page .hero-reference .hero-template-card{font-family:Arial,sans-serif;text-align:left;padding:0!important}
+.page .hero-reference .hero-template-card .sample-type{font-family:'DM Sans',sans-serif;font-size:10px!important;letter-spacing:.06em}
+.page .hero-reference .hero-template-card .cv-head{display:block!important;position:static!important;min-height:0!important;max-height:none!important;padding:30px 30px 14px!important;background:#fffefa!important;text-align:left!important}
+.page .hero-reference .hero-template-card .cv-head h2{position:static!important;display:block!important;transform:none!important;max-width:none!important;width:auto!important;margin:0 0 8px!important;padding:0!important;text-align:left!important;color:#233328!important;font-size:27px!important;letter-spacing:-.04em!important}
+.page .hero-reference .hero-template-card .cv-head .cv-title,.page .hero-reference .hero-template-card .cv-head .cv-contact{color:#3a4539!important;text-align:left!important;margin:5px 0!important}
+.page .hero-reference .hero-template-card .cv-paper{height:100%!important;min-height:0!important;background:#fffefa!important;padding:0!important;border-top:7px solid #9bb886}
+.page .hero-reference .hero-template-card.hero-style-tech .cv-paper{border-top-color:#41685e}
+.page .hero-reference .hero-template-card .cv-paper>section{padding:10px 30px!important}
+.page .hero-reference .hero-template-card .cv-paper>section h3{color:#415e43!important;border-color:#bbccaf!important}
+.page .hero-reference .hero-template-card:focus-visible,.example-card button:focus-visible,.hero-more-templates:focus-visible{outline:3px solid #62824b!important;outline-offset:5px}
+.page .hero-reference .template-arrow{transition:transform .22s ease,background .22s ease!important}
+.page .hero-reference .template-arrow:hover{transform:translateY(-50%) scale(1.08)!important;background:#d9efc9!important}
+.page .hero-reference .template-dots button.active{background:#406c4c!important}
+
+/* The previews are marketing illustrations; editable/exported CV markup is untouched. */
+.example-collection{position:relative;isolation:isolate;margin:96px 0 22px;padding:64px clamp(24px,5vw,72px) 30px;border-radius:28px;background:#23382f;color:#f7f2e8;overflow:hidden}
+.example-collection::before{content:"";position:absolute;right:-180px;top:-220px;width:560px;height:560px;border-radius:50%;background:radial-gradient(circle,rgba(193,230,165,.12),transparent 70%);pointer-events:none}
+.examples-heading{position:relative;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(240px,.7fr);gap:40px;align-items:end;margin-bottom:40px}
+.examples-heading .eyebrow{color:#bcd7a7!important;margin-bottom:15px}
+.examples-heading h2{font-family:'Libre Caslon Display',Georgia,serif;font-weight:400;font-size:clamp(38px,4vw,59px);line-height:1.08;max-width:760px;letter-spacing:-.025em}
+.examples-heading>p{font-size:14px;line-height:1.65;color:#d0ddce;max-width:310px;padding-bottom:4px}
+.examples-grid{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.example-card{min-width:0;display:flex;flex-direction:column;background:#f6f2e9;color:#232c25;border-radius:14px;overflow:hidden;box-shadow:0 12px 36px rgba(2,18,12,.16);transition:transform .36s cubic-bezier(.2,.8,.2,1),box-shadow .36s ease}
+.example-card:hover,.example-card:focus-within{transform:translateY(-8px);box-shadow:0 24px 46px rgba(2,18,12,.28)}
+.example-card-top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:17px 20px;color:#556255;font-size:10px;font-weight:650;letter-spacing:.12em;text-transform:uppercase}
+.example-category{border:1px solid #b8c8ae;border-radius:999px;padding:5px 9px;letter-spacing:.07em;white-space:nowrap}
+.example-sheet{width:calc(100% - 40px);height:235px;overflow:hidden;margin:0 auto;background:#fffefa;box-shadow:0 5px 22px rgba(25,38,25,.13);border-top:5px solid var(--example-accent);color:#263025;font-family:Arial,sans-serif;transform-origin:bottom center;transition:transform .4s cubic-bezier(.2,.8,.2,1)}
+.example-card:hover .example-sheet,.example-card:focus-within .example-sheet{transform:translateY(-4px) scale(1.025)}
+.example-sheet-head{display:flex;flex-direction:column;gap:3px;padding:14px 19px 9px;border-bottom:1px solid #dfe4d8}
+.example-sheet-head strong{font-family:Georgia,serif;font-weight:400;font-size:17px;letter-spacing:-.02em}
+.example-sheet-head span{font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.example-sheet-head small{font-size:6px;color:#657062}
+.example-sheet-body{padding:7px 19px 16px}
+.example-sheet-body b{display:block;color:#536b50;font-size:7px;letter-spacing:.14em;margin:7px 0 4px;padding-bottom:3px;border-bottom:1px solid #dce4d5}
+.example-sheet-body p{font-size:6.8px;line-height:1.45;color:#3b473b;max-height:29px;overflow:hidden}
+.example-job{display:flex;justify-content:space-between;gap:6px;font-size:7px}
+.example-job span,.example-sheet-body small{font-size:6px;color:#67736a}
+.example-sheet-body>small{display:block;margin:3px 0}
+.example-sheet .cv-paper{
+  width:222.22%;
+  min-height:540px;
+  margin:0;
+  transform:scale(.45);
+  transform-origin:top left;
+  box-shadow:none;
+}
+.example-sheet .cv-paper.basic-cv{padding:0!important}
+.example-sheet .basic-cv .basic-body{min-height:450px}
+.example-sheet .cv-style-tech .cv-head{background:#17232d!important}
+.example-sheet .cv-style-executive .cv-head{background:#26322f!important}
+.example-sheet .cv-style-executive .cv-head h2,
+.example-sheet .cv-style-executive .cv-head p{color:#fff!important}
+.example-sheet .cv-style-ats .cv-head{text-align:center}
+.example-sheet .cv-style-ats section h3{color:#252921}
+.example-sheet .cv-paper.cv-style-ats .cv-head{background:#fffefa!important}
+.example-sheet .cv-paper.cv-style-ats .cv-head h2,
+.example-sheet .cv-paper.cv-style-ats .cv-head p{color:#252921!important;text-align:center!important}
+.example-sheet .cv-paper.cv-style-modern .cv-head{background:#dcebf1!important}
+.example-sheet .cv-paper.cv-style-modern .cv-head h2{color:#284f63!important}
+.example-sheet .cv-paper.cv-style-professional .cv-head{background:#e9f2e9!important}
+.example-sheet .cv-paper.cv-style-minimal .cv-head{background:#fffefa!important;border-bottom:1px solid #d3c7b1!important}
+.example-sheet .cv-paper.cv-style-executive .cv-head::after,
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head::after{content:"✦   ✦   ✦";display:block;margin:8px auto 0;color:#c6ae80;text-align:center;letter-spacing:.2em;font-size:12px}
+.example-card-info{position:relative;background:#f6f2e9;padding:21px 20px 20px;flex:1;display:flex;flex-direction:column}
+.example-card-info>span{font-size:11px;color:#667769;font-weight:600}
+.example-card-info h3{font-family:'Libre Caslon Display',Georgia,serif;font-size:27px;line-height:1.12;font-weight:400;margin:9px 0 10px;min-height:58px}
+.example-card-info p{font-size:12px;color:#53624f;margin-bottom:18px;line-height:1.5}
+.example-card-info button{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;margin-top:auto;border-top:1px solid #d9dfd2;padding:15px 0 0;text-align:left;color:#315737;font-size:12px;font-weight:700}
+.example-card-info button span{font-size:20px;font-weight:400;line-height:1;transition:transform .25s ease}
+.example-card-info button:hover span{transform:translate(3px,-3px)}
+.examples-disclaimer{margin-top:22px;color:#b9cdb9;font-size:11px;line-height:1.55}
+.how .steps>div{border-top:1px solid #c9d5c2;padding-top:19px}
+.pricing .price-card{box-shadow:0 10px 35px rgba(30,51,26,.04);transition:transform .25s ease,box-shadow .25s ease}
+.pricing .price-card:hover{transform:translateY(-5px);box-shadow:0 18px 38px rgba(30,51,26,.10)}
+
+@media(min-width:1051px){
+ .page .hero-reference{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;column-gap:clamp(25px,4vw,70px)!important;min-height:700px!important;height:auto!important;max-height:none!important;padding:85px 0 78px!important}
+ .page .hero-reference .hero-copy{max-width:580px!important;transform:none!important}
+ .page .hero-reference h1{font-size:clamp(60px,5.2vw,78px)!important}
+ .page .hero-reference-visual{height:555px!important;transform:none!important}
+ .page .hero-reference .hero-template-carousel{width:100%!important;max-width:600px!important;height:515px!important;margin:0 auto}
+ .page .hero-reference .hero-cv-examples{min-width:0!important;height:480px!important}
+ .page .hero-reference .hero-template-card{width:320px!important;max-width:320px!important;height:450px!important;max-height:450px!important;top:49%!important}
+ .page .hero-reference .hero-template-card.is-front{left:46%!important;transform:translate(-50%,-49%) rotate(-2deg) scale(1)!important}
+ .page .hero-reference .hero-template-card.is-next,.page .hero-reference .hero-template-card.is-prev{left:74%!important;transform:translate(-50%,-49%) rotate(5deg) scale(.88)!important;opacity:.69!important}
+ .page .hero-reference .template-prev{left:0!important}
+ .page .hero-reference .template-next{right:0!important}
+ .page .hero-reference .template-dots{bottom:0!important}
+ .page .hero-reference .sample-caption{bottom:-27px!important}
+}
+@media(max-width:1050px){
+ .example-collection{margin-top:68px}
+ .examples-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .page .hero-reference-visual{height:auto!important;min-height:0!important;padding-bottom:22px}
+ .page .hero-reference .hero-template-carousel{width:100%!important}
+ .page .hero-reference .hero-template-card .cv-head{padding:23px 22px 12px!important}
+ .page .hero-reference .hero-template-card .cv-head h2{font-size:21px!important}
+}
+@media(max-width:700px){
+ html{scroll-behavior:auto}
+ .nav{max-width:100%;min-width:0;padding-left:16px;padding-right:16px}
+ .nav .wordmark{font-size:clamp(21px,6vw,26px);letter-spacing:-1.4px}
+ .nav .brand-dot{font-size:20px}
+ .nav-right{gap:8px;min-width:0}
+ .nav .language select{width:65px;font-size:11px}
+ .nav .language svg{width:14px}
+ .nav .login{padding:6px}
+ .nav .login span{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+ .nav .login svg{width:19px;height:19px}
+ .example-collection{margin:45px -21px 0;padding:48px 21px 28px;border-radius:18px}
+ .examples-heading{grid-template-columns:1fr;gap:14px;margin-bottom:28px}
+ .examples-heading h2{font-size:43px}
+ .examples-heading>p{max-width:460px}
+ .examples-grid{grid-template-columns:1fr;gap:16px}
+ .example-card{max-width:490px;width:100%;margin:0 auto}
+ .example-sheet{height:252px}
+ .example-card-info h3{min-height:0}
+ .page .hero-reference .hero-more-wrap{margin-top:20px}
+ .page .hero-reference .hero-template-carousel{height:450px!important;padding-top:0!important}
+ .page .hero-reference .hero-cv-examples{height:415px!important;min-width:0!important}
+ .page .hero-reference .template-dots{bottom:0!important}
+ .page .hero-reference .sample-caption{bottom:-22px!important}
+ .page .hero-reference .hero-template-card .cv-head h2{font-size:18px!important}
+ .how .steps>div{padding-top:0}
+}
+@media(prefers-reduced-motion:reduce){
+ html{scroll-behavior:auto}
+ .example-card,.example-sheet,.example-card-info button span,.page .hero-reference .primary,.page .hero-reference .template-arrow{transition:none!important;animation:none!important}
+}
+
+/* Living editorial stage: motion is decorative, never required for navigation. */
+body:has(.hero-reference),body:has(.hero-reference) #header,body:has(.hero-reference) .page{background:#152820!important}
+body:has(.hero-reference){overflow-x:clip;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
+body:has(.hero-reference) #header{border-bottom:1px solid rgba(238,246,224,.16)}
+body:has(.hero-reference) .nav .wordmark,body:has(.hero-reference) .nav .login{color:#f8f5ec!important}
+body:has(.hero-reference) .nav .brand-dot{color:#d4f09b!important}
+body:has(.hero-reference) .nav .language,body:has(.hero-reference) .nav .language select{color:#e3eadd!important}
+body:has(.hero-reference) .nav .language select{background:#152820!important}
+body:has(.hero-reference) .nav .wordmark{transition:transform .25s ease}
+body:has(.hero-reference) .nav .wordmark:hover{transform:translateY(-3px)}
+body:has(.hero-reference) .nav .login{transition:transform .25s ease,color .25s ease}
+body:has(.hero-reference) .nav .login:hover{transform:translateY(-3px);color:#d4f09b!important}
+/* Real alpine-valley photograph: https://www.pexels.com/photo/33855024/ ; 1920px and 3840px variants. */
+.page .hero-reference{isolation:isolate;color:#f7f3e8;background:linear-gradient(90deg,rgba(14,34,27,.91) 0%,rgba(14,34,27,.68) 41%,rgba(13,34,27,.34) 100%),url('./nature-landscape.jpg') center 52% / cover no-repeat!important;animation:homeLandscapeDrift 26s ease-in-out infinite alternate}
+.page .hero-reference{background-image:linear-gradient(90deg,rgba(14,34,27,.91) 0%,rgba(14,34,27,.68) 41%,rgba(13,34,27,.34) 100%),image-set(url('./nature-landscape.jpg') 1x,url('./nature-landscape-4k.jpg') 2x)!important}
+.page .hero-reference::before{content:"";position:absolute;z-index:-1;inset:-35px -6%;opacity:.14;pointer-events:none;background-image:radial-gradient(#e4f2da 1px,transparent 1px);background-size:30px 30px;mask-image:linear-gradient(90deg,transparent,#000 30%,#000 85%,transparent);animation:homeGridDrift 48s linear infinite}
+.page .hero-reference::after{content:"";position:absolute;z-index:-1;top:10%;right:1%;width:clamp(360px,47vw,720px);aspect-ratio:1;border:1px solid rgba(212,240,155,.13);border-radius:50%;pointer-events:none;box-shadow:0 0 0 70px rgba(212,240,155,.025),0 0 0 150px rgba(212,240,155,.018);animation:homeOrbit 18s ease-in-out infinite alternate}
+.page .hero-reference .hero-copy .eyebrow{color:#d4f09b!important}
+.page .hero-reference .hero-copy .eyebrow::before{background:#d4f09b}
+.page .hero-reference h1{color:#faf7ee!important;text-wrap:balance}
+.page .hero-reference h1 em{color:#d4f09b!important}
+.page .hero-reference .intro{color:#d0d9ce!important}
+.page .hero-reference .hero-price,.page .hero-reference .hero-price strong{color:#f3f4e7!important}
+.page .hero-reference .hero-proof,.page .hero-reference .sample-caption{color:#c7d4c3!important}
+.page .hero-reference .hero-proof svg{color:#d4f09b!important}
+.page .hero-reference .primary{background:#d4f09b!important;border-color:#d4f09b!important;color:#14251f!important}
+.page .hero-reference .primary:hover{background:#e0fab0!important;filter:brightness(1.03)}
+.page .hero-reference .hero-more-label{color:#d7e4d2}
+.page .hero-reference .hero-more-templates{background:transparent!important;border:1px solid #a8c793!important;color:#d4f09b!important}
+.page .hero-reference .hero-more-templates:hover{background:rgba(212,240,155,.13)!important}
+.page .hero-reference .hero-template-carousel{position:relative}
+.page .hero-reference .hero-template-carousel::before{content:"";position:absolute;inset:14% 9%;border:1px solid rgba(210,238,185,.13);border-radius:50%;pointer-events:none;transform:rotate(-17deg);animation:homeOrbit 14s ease-in-out infinite alternate-reverse}
+.page .hero-reference .hero-template-carousel::after{content:"";position:absolute;z-index:-1;top:15%;left:12%;width:76%;height:65%;border-radius:50%;pointer-events:none;background:radial-gradient(ellipse,rgba(174,223,139,.28),transparent 69%);animation:homeGlow 7s ease-in-out infinite alternate}
+.page .hero-reference .hero-template-card{box-shadow:0 35px 72px rgba(0,0,0,.35)!important;transition:transform .64s cubic-bezier(.19,.9,.22,1),opacity .48s ease,filter .48s ease!important}
+.page .hero-reference .hero-template-card{overflow:visible!important}
+.page .hero-reference .hero-template-card .cv-paper{overflow:hidden!important}
+.page .hero-reference .hero-template-card:not(.is-front):not(.is-prev):not(.is-next){display:none!important;visibility:hidden!important;pointer-events:none!important}
+.page .hero-reference .hero-template-card.is-front{animation:homeCardEnter .64s cubic-bezier(.2,.8,.2,1) both}
+.page .hero-reference .hero-template-card .sample-type{display:block!important;background:var(--sample-accent)!important;border-color:var(--sample-accent)!important;color:#213325!important;top:-25px!important}
+.page .hero-reference .hero-template-card .cv-paper{border-top-color:var(--sample-accent)!important}
+.page .hero-reference .hero-template-card.hero-style-tech .cv-head h2,.page .hero-reference .hero-template-card.hero-style-modern .cv-head h2{font-family:'DM Sans',Arial,sans-serif!important;font-weight:700!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head h2{font-family:Georgia,serif!important;text-transform:uppercase!important;letter-spacing:.07em!important;font-size:22px!important}
+.page .hero-reference .hero-template-card.hero-style-minimal .cv-head h2{font-family:Arial,sans-serif!important;font-weight:400!important}
+/* The paper, name treatment and section structure distinguish all six sample styles. */
+.page .hero-reference .hero-template-carousel::before,.page .hero-reference .hero-template-carousel::after{content:none!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-paper{background:#fffdf6!important;border-top-width:8px!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-head{background:#fffdf6!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-head h2{font-family:Georgia,serif!important;font-style:italic!important}
+.page .hero-reference .hero-template-card.hero-style-tech .cv-paper{border-top:0!important;background:#f8fcfa!important}
+.page .hero-reference .hero-template-card.hero-style-tech .cv-head{background:#204640!important;border-bottom:5px solid #85b9ad!important}
+.page .hero-reference .hero-template-card.hero-style-tech .cv-head h2{font-family:ui-monospace,Consolas,monospace!important;color:#fffdf6!important;letter-spacing:-.065em!important}
+.page .hero-reference .hero-template-card.hero-style-tech .cv-head .cv-title,.page .hero-reference .hero-template-card.hero-style-tech .cv-head .cv-contact{color:#d2e6df!important}
+.page .hero-reference .hero-template-card.hero-style-tech .cv-paper>section h3{color:#266b64!important;border-color:#aad3ca!important}
+.page .hero-reference .hero-template-card.hero-style-professional .cv-paper{border-top:0!important;border-left:9px solid #779878!important;background:#f7faf5!important}
+.page .hero-reference .hero-template-card.hero-style-professional .cv-head{background:#e9f2e9!important}
+.page .hero-reference .hero-template-card.hero-style-professional .cv-head h2{font-family:'DM Sans',Arial,sans-serif!important;font-weight:700!important;color:#31513c!important}
+.page .hero-reference .hero-template-card.hero-style-professional .cv-paper>section h3{border-left:3px solid #779878!important;padding-left:7px!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-paper{border-top:9px double #716b54!important;background:#fbf8f0!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head{background:#efe9da!important;border-bottom:2px solid #b8ab8a!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head h2{color:#48402f!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-paper>section h3{color:#62563e!important;border-color:#baa98b!important}
+.page .hero-reference .hero-template-card.hero-style-modern .cv-paper{border-top:0!important;border-left:8px solid #7196a5!important;background:#f6fafc!important}
+.page .hero-reference .hero-template-card.hero-style-modern .cv-head{background:#dfedf2!important}
+.page .hero-reference .hero-template-card.hero-style-modern .cv-head h2{color:#284f63!important}
+.page .hero-reference .hero-template-card.hero-style-modern .cv-paper>section h3{color:#416f82!important;border-color:#a7c8d7!important}
+.page .hero-reference .hero-template-card.hero-style-minimal .cv-paper{border-top:0!important;border-bottom:9px solid #d4bd91!important;background:#fffefa!important}
+.page .hero-reference .hero-template-card.hero-style-minimal .cv-head{background:#f7f1e6!important;border-bottom:1px solid #d3c7b1!important}
+.page .hero-reference .hero-template-card.hero-style-minimal .cv-head h2{font-size:29px!important;color:#3d3b34!important;letter-spacing:-.065em!important}
+.page .hero-reference .hero-template-card.hero-style-minimal .cv-paper>section h3{color:#8a7558!important;border-color:#d3c7b1!important}
+/* Chyper1 and Chyper2 retain their original layouts, not recolored generic sheets. */
+.page .hero-reference .hero-template-card.hero-style-basic .cv-paper{border-top:0!important;background:#fffefa!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-head{display:flex!important;grid-template-columns:none!important;height:auto!important;min-height:0!important;padding:25px 23px 20px!important;background:#e8f0df!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-head>div{width:100%!important;min-width:0!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-head h2{font:400 27px Georgia,serif!important;letter-spacing:-.04em!important;color:#26392b!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-head .basic-title,
+.page .hero-reference .hero-template-card.hero-style-basic .basic-head .basic-contact{color:#405746!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-body{min-height:500px;grid-template-columns:36% 64%}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-body>aside{padding:22px 14px!important;background:#f1f6ed!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-body>main{padding:22px 20px!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-body h3{font-size:9px!important;line-height:1.3!important;text-align:left!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-head{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;padding:30px 24px 18px!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-head h2{position:static!important;width:100%!important;max-width:none!important;margin:0 0 8px!important;text-align:center!important;transform:none!important;color:#20251f!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-head .cv-title,
+.page .hero-reference .hero-template-card.hero-style-ats .cv-head .cv-contact{text-align:center!important;color:#2d302c!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-paper>section h3{color:#252921!important;border-color:#91a77e!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head{background:#26322f!important;border-bottom:3px double #c6ae80!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head h2,
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head .cv-title,
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head .cv-contact{color:#fff!important;text-align:center!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head h2{font-size:22px!important}
+.page .hero-reference .template-arrow{background:#244235!important;border-color:#66846b!important;color:#f9f8ed!important}
+.page .hero-reference .template-arrow:hover{background:#d4f09b!important;color:#182d23!important}
+.page .hero-reference .template-dots{background:rgba(236,249,219,.12)!important}
+.page .hero-reference .template-dots button{background:#718c71!important}
+.page .hero-reference .template-dots button:hover{transform:scale(1.18)}
+.page .hero-reference .template-dots button.active{background:#d4f09b!important}
+.page .hero-reference .hero-live-label{width:min(100%,600px);display:flex;align-items:center;gap:9px;color:#d7e5d1;font-size:10px;font-weight:700;letter-spacing:.16em;margin:0 auto 5px}
+.page .hero-reference .hero-live-label #hero-example-count{margin-left:auto;color:#d4f09b;font-variant-numeric:tabular-nums}
+.live-pulse{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#d4f09b;box-shadow:0 0 0 5px rgba(212,240,155,.15);animation:homePulse 2.4s ease-in-out infinite}
+.page .hero-reference .hero-feature-result{position:relative;z-index:4;display:flex;gap:8px;align-items:center;justify-content:center;flex-wrap:wrap;margin:16px 0 0;padding:10px 20px;border:1px solid rgba(212,240,155,.25);border-radius:999px;background:rgba(29,52,41,.89);color:#f9f8ed;box-shadow:0 14px 32px rgba(0,0,0,.18);animation:homeFloat 5s ease-in-out infinite}
+.page .hero-reference .sample-caption{display:none!important}
+.hero-feature-result span{font-size:9px;letter-spacing:.13em;color:#d4f09b}
+.hero-feature-result strong{font-size:12px}
+.hero-feature-result small{font-size:10px;color:#c8d7c3}
+.page .hero-reference .hero-more-wrap{margin-top:12px}
+.energy-marquee{overflow:hidden;margin:0;border-top:1px solid rgba(212,240,155,.22);border-bottom:1px solid rgba(212,240,155,.22);color:#e1ecdc}
+.energy-track{display:flex;width:max-content;animation:homeMarquee 28s linear infinite}
+.energy-marquee:hover .energy-track{animation-play-state:paused}
+.energy-group{display:flex;align-items:center;gap:45px;min-height:51px;padding-right:45px;white-space:nowrap;font-size:10px;font-weight:600;letter-spacing:.15em}
+.energy-group b{color:#d4f09b;margin-left:40px;font-size:15px;font-weight:400}
+.page .promise-strip{background:#152820!important;color:#d2dfcc;border-color:rgba(212,240,155,.22)}
+.page .promise-strip i{background:#d4f09b!important}
+.page .example-collection{background:#1c372c;border:1px solid rgba(212,240,155,.16);box-shadow:0 22px 70px rgba(0,0,0,.13)}
+.page .how,.page .pricing{background:#f7f2e8!important;color:#203024}
+.page .how{padding:80px clamp(24px,5vw,72px);margin-top:70px;border-radius:26px 26px 0 0}
+.page .pricing{padding:60px clamp(24px,5vw,72px) 80px;margin-bottom:70px;border-radius:0 0 26px 26px}
+.page .pricing .primary,.page .pricing .secondary{transition:transform .25s ease,box-shadow .25s ease!important}
+.page .pricing .primary:hover,.page .pricing .secondary:hover{transform:translateY(-4px)!important;box-shadow:0 12px 26px rgba(39,66,38,.16)}
+@keyframes homeGridDrift{to{background-position:90px -60px}}
+@keyframes homeOrbit{to{transform:translate(18px,-18px) rotate(14deg)}}
+@keyframes homeGlow{to{opacity:.45;transform:scale(1.12)}}
+@keyframes homePulse{50%{box-shadow:0 0 0 10px rgba(212,240,155,.02);opacity:.7}}
+@keyframes homeFloat{50%{transform:translateY(-6px)}}
+@keyframes homeMarquee{to{transform:translateX(-50%)}}
+@keyframes homeCardEnter{from{opacity:.45;filter:blur(4px)}to{opacity:1;filter:none}}
+@keyframes homeLandscapeDrift{to{background-position:center,54% 46%}}
+@media(max-width:1050px){
+ .page .hero-reference{padding-bottom:55px!important}
+ .page .hero-reference .hero-live-label{max-width:700px}
+ .page .hero-reference .hero-feature-result{margin-top:18px}
+ .page .hero-reference .hero-more-wrap{margin-top:12px}
+}
+@media(max-width:700px){
+ .page .hero-reference{background:linear-gradient(180deg,rgba(14,34,27,.87),rgba(14,34,27,.73) 50%,rgba(14,34,27,.57)),url('./nature-landscape.jpg') 67% center / cover no-repeat!important}
+ .page .hero-reference{background-image:linear-gradient(180deg,rgba(14,34,27,.87),rgba(14,34,27,.73) 50%,rgba(14,34,27,.57)),image-set(url('./nature-landscape.jpg') 1x,url('./nature-landscape-4k.jpg') 2x)!important}
+ .page .hero-reference::before{inset:0 -21px}
+ .page .hero-reference::after{top:25%;right:-50%;width:440px}
+ .page .hero-reference .hero-live-label{padding:0 14px}
+ .page .hero-reference .hero-feature-result{border-radius:12px;margin-top:15px;text-align:center}
+ .hero-feature-result span{width:100%}
+ .energy-marquee{margin:0 -21px}
+ .energy-group{min-height:45px;gap:25px;padding-right:25px;font-size:9px}
+ .energy-group b{margin-left:20px}
+ .page .how{padding:54px 22px;margin:45px -21px 0;border-radius:18px 18px 0 0}
+ .page .pricing{padding:45px 22px 60px;margin:0 -21px 35px;border-radius:0 0 18px 18px}
+}
+@media(prefers-reduced-motion:reduce){
+ .page .hero-reference,.page .hero-reference::before,.page .hero-reference::after,.page .hero-reference .hero-template-carousel::before,.page .hero-reference .hero-template-carousel::after,.page .hero-reference .hero-template-card.is-front,.page .hero-reference .hero-feature-result,.live-pulse,.energy-track{animation:none!important}
+}
