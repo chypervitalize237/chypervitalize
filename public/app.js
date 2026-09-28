@@ -7,6 +7,7 @@ const blank={name:'',title:'',email:'',phone:'',city:'',link:'',summary:'',skill
 let stored;try{stored=JSON.parse(localStorage.getItem('chypervitalize-draft'));}catch{}
 let state={lang:stored?.lang||'hu',cvLang:stored?.cvLang||'hu',cv:{...blank,...stored?.cv},resumeType:stored?.resumeType||'ats',basicAccent:stored?.basicAccent||'#e8f0df',basicAccent2:stored?.basicAccent2||stored?.basicAccent||'#a9a7a7',basicShade:stored?.basicShade||0,basicSide:stored?.basicSide||'left',cvStyle:stored?.cvStyle||stored?.resumeType||'ats',projectKey:stored?.projectKey||crypto.randomUUID(),section:0,route:'home',user:null,ai:false,demo:true,plan:'month',authMode:'register',pendingDownload:false,reviews:[],reviewRating:5};
 if(!locales[state.lang])state.lang='hu';if(!locales[state.cvLang])state.cvLang='hu';
+state.visitCount=0;
 const params=new URLSearchParams(location.search),ref=params.get('ref');if(ref)localStorage.setItem('chypervitalize-ref',ref);const checkoutResult=params.get('checkout');let checkoutSession=params.get('session_id')||localStorage.getItem('chypervitalize-checkout-session');
 const t=k=>strings[state.lang][k],ct=k=>strings[state.cvLang][k];
 const icons={arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',check:'<path d="m5 12 4 4L19 6"/>',file:'<path d="M14 2H6a2 2 0 0 0-2 2v16h16V8zM14 2v6h6M8 12h8M8 16h6"/>',spark:'<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/>',download:'<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/>',globe:'<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>'};
@@ -42,6 +43,10 @@ const saleLabels={hu:'AKCIÓ · CSAK MOST',en:'SALE · LIMITED TIME',de:'ANGEBOT
 const oldMonthlyPrice=()=>money(20);
 const langOptions=selected=>Object.entries(locales).map(([code,l])=>`<option value="${code}" ${code===selected?'selected':''}>${l.name}</option>`).join('');
 const languageSelect=(id,value)=>`<select id="${id}" aria-label="${t(id==='cv-language'?'cvLang':'appLang')}">${langOptions(value)}</select>`;
+function languageMenu(id,value){
+ const label=t('appLang');
+ return `<div class="language-picker" data-language-picker><button type="button" class="language-trigger" id="${id}-trigger" data-language-trigger aria-label="${esc(label)}: ${esc(locales[value].name)}" aria-haspopup="menu" aria-expanded="false" aria-controls="${id}-menu">${icon('globe')}<span class="language-current">${esc(locales[value].name)}</span><span class="language-chevron" aria-hidden="true"></span></button><div class="language-popover" id="${id}-menu" role="menu" aria-label="${esc(label)}"><div class="language-popover-title"><span>${esc(label)}</span><span>${Object.keys(locales).length} LANGUAGES</span></div><div class="language-options">${Object.entries(locales).map(([code,l])=>`<button type="button" role="menuitemradio" aria-checked="${code===value}" class="language-option ${code===value?'is-selected':''}" data-language-option="${code}"><span>${esc(l.name)}</span><span class="language-option-check" aria-hidden="true">${code===value?'✓':''}</span></button>`).join('')}</div></div></div>`;
+}
 let saveTimer,toastTimer;
 function toast(text){$('#toast').textContent=text;$('#toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),4000);}
 async function api(path,data){const res=await fetch('/api/'+path,{method:data?'POST':'GET',headers:data?{'Content-Type':'application/json'}:{},body:data?JSON.stringify(data):undefined});const b=await res.json();if(!res.ok)throw Error(b.error);return b;}
@@ -49,16 +54,36 @@ function snapshot(){return {lang:state.lang,cvLang:state.cvLang,resumeType:state
 function save(){try{localStorage.setItem('chypervitalize-draft',JSON.stringify(snapshot()));if($('#save-status'))$('#save-status').textContent=t('saved');}catch{toast(t('error'));}clearTimeout(saveTimer);if(state.user)saveTimer=setTimeout(async()=>{try{await api('draft',snapshot());if($('#save-status'))$('#save-status').textContent=t('cloudSave');}catch{toast(t('localSave'));}},600);}
 function go(route){save();state.route=route;render();scrollTo({top:0,behavior:'smooth'});}
 const impactStripText=()=>state.lang==='hu'?'Egy jó önéletrajz dönthet a felvételről. Ne bízd a véletlenre.':'A great CV can make the difference in getting hired. Don’t leave it to chance.';
-function render(){document.documentElement.lang=state.lang;document.title='chypervitalize';$('#header').innerHTML=`<div class="nav"><button class="wordmark" data-action="home" aria-label="chypervitalize">chypervitalize<img class="brand-star" src="/favicon.svg?v=20260928-green-star" alt=""></button><div class="nav-right"><div class="language">${icon('globe')}${languageSelect('header-language',state.lang)}</div><button class="login" data-action="account">${icon('user')}<span>${t(state.user?'account':'login')}</span></button></div></div>`;$('#footer').innerHTML=`
+function visitLabel(){
+ if(state.visitCount<1000)return '';
+ const count=new Intl.NumberFormat(state.lang).format(state.visitCount);
+ return state.lang==='hu'?`Már ${count} látogatás az oldalon`:state.lang==='de'?`Bereits ${count} Besuche auf dieser Website`:`Already ${count} visits to this site`;
+}
+async function recordVisit(){
+ let counted=false;
+ try{counted=sessionStorage.getItem('chypervitalize-visit-counted')==='1';}catch{}
+ try{
+  const response=await fetch('/api/visits',{method:counted?'GET':'POST',headers:{Accept:'application/json'}});
+  if(!response.ok)return;
+  const data=await response.json();
+  if(!counted)try{sessionStorage.setItem('chypervitalize-visit-counted','1');}catch{}
+  if(Number.isSafeInteger(data.count)&&data.count>=1000){
+   state.visitCount=data.count;
+   const badge=$('#visit-proof');
+   if(badge)badge.textContent=visitLabel();
+  }
+ }catch{}
+}
+function render(){document.documentElement.lang=state.lang;document.title='chypervitalize';$('#header').innerHTML=`<div class="nav"><button class="wordmark" data-action="home" aria-label="chypervitalize">chypervitalize<img class="brand-star" src="/favicon.svg?v=20260928-green-star" alt=""></button><div class="nav-right"><div class="language">${languageMenu('header-language',state.lang)}</div><button class="login" data-action="account">${icon('user')}<span>${t(state.user?'account':'login')}</span></button></div></div>`;$('#footer').innerHTML=`
 <div class="footer-shell">
  <div class="footer-brand"><span class="wordmark small">chypervitalize<img class="brand-star" src="/favicon.svg?v=20260928-green-star" alt=""></span><p>${t('footer')}</p></div>
  <div class="footer-col"><strong>Chypervitalize</strong><button data-action="home">CV készítő</button><button data-action="setup">CV sablonok</button><button data-action="account">Fiókom</button></div>
  <div class="footer-col"><strong>Hasznos</strong><button data-action="home">ATS-barát CV</button><button data-action="home">Hogyan működik?</button><button data-action="home">Árak</button></div>
  <div class="footer-col"><strong>Jogi</strong><button data-action="legal-terms">Felhasználási feltételek</button><button data-action="legal-privacy">Adatvédelmi nyilatkozat</button><button data-action="legal-contact">Kapcsolat</button></div>
- <div class="footer-col"><strong>Nyelv</strong><div class="footer-language">${icon('globe')}${languageSelect('footer-language',state.lang)}</div></div>
+ <div class="footer-col"><strong>Nyelv</strong><div class="footer-language">${languageMenu('footer-language',state.lang)}</div></div>
 </div>
 <div class="impact-strip">${esc(impactStripText())}</div>
-<div class="footer-bottom"><span>© ${new Date().getFullYear()} Chypervitalize</span><div class="footer-socials" aria-label="Közösségi média"><span aria-label="LinkedIn">in</span><span aria-label="Facebook">f</span><span aria-label="Instagram">◎</span><span aria-label="YouTube">▶</span><span aria-label="TikTok">♪</span></div><span>CV by Chypervitalize</span></div>`;$('#app').className=state.route==='editor'?'workspace':'page';$('#app').innerHTML=state.route==='home'?home():state.route==='setup'?setup():state.route==='payment'?paymentPage():editor();}
+<div class="footer-bottom"><span>© ${new Date().getFullYear()} Chypervitalize</span><div class="footer-socials" aria-label="Közösségi média"><span aria-label="LinkedIn">in</span><span aria-label="Facebook">f</span><span aria-label="Instagram">◎</span><span aria-label="YouTube">▶</span><span aria-label="TikTok">♪</span></div><span>CV by Chypervitalize</span></div>`;$('#app').className=state.route==='editor'?'workspace':'page';$('#app').innerHTML=state.route==='home'?home()+`<p id="visit-proof" class="visitor-proof" role="status">${visitLabel()}</p>`:state.route==='setup'?setup():state.route==='payment'?paymentPage():editor();}
 function sample(){const l=strings[state.lang];const org=l.exampleOrganization||'Northline Studio';const city=l.exampleCity||'Budapest';return {...blank,name:l.exampleName,title:l.exampleTitle,email:'hello@example.com',phone:'+44 7700 900123',city,link:'linkedin.com/in/example',summary:l.exampleSummary,skills:l.exampleSkills,languages:l.exampleLanguages,languageLevels:[5,4,3],experience:[{heading:l.exampleHeading,organization:org,location:city,dates:l.exampleDates,details:l.exampleDetails},{heading:l.exampleHeading,organization:org,location:city,dates:'2021 — 2023',details:l.exampleDetails}],education:[{heading:'Business & Communication',organization:'Metropolitan University',location:city,dates:'2018 — 2021',details:'Strategy · communication · digital projects'}],projects:[{heading:'Portfolio project',organization:'Independent',location:'',dates:'2024',details:'Research, planning and measurable delivery.'}],certifications:[{heading:'Professional Certificate',organization:'Online Academy',location:'',dates:'2024',details:'Completed practical professional training.'}]};}
 function languageMarkup(d,l){const lines=String(d.languages||'').split(/\n|,/).map(x=>x.trim()).filter(Boolean);if(!lines.length)return '';return `<section class="cv-languages"><h3>${esc(l.languages)}</h3>${lines.map((name,i)=>{const level=Math.max(1,Math.min(5,Number(d.languageLevels?.[i]||5)));return `<div class="cv-language"><span>${esc(name)}</span><span class="language-dots" aria-label="${level} / 5">${[1,2,3,4,5].map(n=>`<i class="${n<=level?'filled':''}"></i>`).join('')}</span></div>`}).join('')}</section>`;}
 function cvMarkup(d,lang,example=false){const l=strings[lang];const has=Object.values(d).some(v=>typeof v==='string'?!!v.trim():Array.isArray(v)&&v.some(r=>Object.values(r).some(value=>typeof value==='string'&&value.trim())));if(!has&&!example)return `<article class="cv-paper empty-paper"><div class="empty-icon">${icon('file')}</div><h3>${t('empty')}</h3><div class="skeleton-lines"><i></i><i></i><i></i></div></article>`;const part=(k,txt)=>txt?`<section><h3>${esc(l[k])}</h3><p>${esc(txt).replace(/\n/g,'<br>')}</p></section>`:'';return `<article class="cv-paper"><div class="cv-head">${d.photo?`<img class="cv-photo" src="${esc(d.photo)}" alt="">`:''}<h2>${esc(d.name)}</h2><p class="cv-title">${esc(d.title)}</p><p class="cv-contact">${[d.email,d.phone,d.city,d.link].filter(Boolean).map(esc).join(' <span>·</span> ')}</p></div>${part('summary',d.summary)}${['experience','education','projects','awards','volunteer','certifications'].map(k=>(d[k]||[]).some(r=>r.heading||r.details)?`<section><h3>${esc(l[k])}</h3>${d[k].map(r=>`<div class="cv-entry"><div><strong>${esc(r.heading)}</strong><small>${esc(r.dates)}</small></div><p class="cv-org">${[r.organization,r.location].filter(Boolean).map(esc).join(' · ')}</p><p>${esc(r.details).replace(/\n/g,'<br>')}</p></div>`).join('')}</section>`:'').join('')}${part('skills',d.skills)}${languageMarkup(d,l)}</article>`;}
@@ -217,6 +242,52 @@ async function download(){if(!state.cv.name.trim()){toast(t('missingName'));stat
 async function pdf(showThanks=true){toast(t('exporting'));try{const res=await fetch('/api/pdf',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cv:state.cv,labels:strings[state.cvLang],projectKey:state.projectKey,resumeType:state.resumeType,cvStyle:state.cvStyle||state.resumeType})});if(!res.ok)throw Error();const blob=await res.blob(),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Chypervitalize-CV.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),20000);if(showThanks)openModal(`<div class="success-mark">${icon('check')}</div><h2>${t('thanks')}</h2><p>${t('thanksDesc')}</p>${button(t('downloadAgain'),'download','primary','download')}<button class="text-button" data-action="close">${t('close')}</button>`);else $('#modal').close();}catch{toast(t('error'));}}
 function account(){if(!state.user){state.pendingDownload=false;auth();return;}openModal(`<p class="eyebrow">CHYPERVITALIZE</p><h2>${t('account')}</h2><p>${esc(state.user.email)}</p><div class="account-plan"><span>${t('subscription')}</span><strong>${Number(state.user.credits||0)>0?t(state.user.plan):t('noSub')}</strong>${Number(state.user.credits||0)>0?`<p>${t('validUntil')}: ${new Date(state.user.expires).toLocaleDateString(state.lang)}</p><small>${t('demoAccount')}</small>`:''}</div><h3>${t('refTitle')}</h3><p>${t('refDesc')}</p><p class="hint">${t('refPending')}</p>${state.user.plan==='month'?button(t('refCopy'),'copy-ref','secondary',''):''}<hr>${button(t('logout'),'logout','secondary','')}`);}
 function review(){const messages=[];if(!state.cv.name.trim())messages.push(t('missingName'));if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.cv.email))messages.push(t('missingContact'));if(!state.cv.summary.trim())messages.push(t('missingSummary'));if(!['experience','projects','volunteer'].some(k=>complete(k)))messages.push(t('missingExperience'));if(!state.cv.skills.trim())messages.push(t('missingSkills'));openModal(`<p class="eyebrow">${t('checklist')}</p><h2>${t('review')}</h2><p>${t('reviewHint')}</p><ul class="review-list">${(messages.length?messages:[t('reviewGood')]).map(v=>`<li>${esc(v)}</li>`).join('')}</ul><div id="ai-result"></div>${state.ai?button(t('review'),'run-ai','primary','spark'):`<p class="hint">${t('aiUnavailable')}</p>`}`);}
+function closeLanguageMenu(picker,restoreFocus=false){
+ if(!picker?.classList.contains('is-open'))return;
+ picker.classList.remove('is-open');
+ picker.querySelector('[data-language-trigger]').setAttribute('aria-expanded','false');
+ if(restoreFocus)picker.querySelector('[data-language-trigger]').focus();
+}
+document.addEventListener('click',e=>{
+ const trigger=e.target.closest('[data-language-trigger]');
+ if(trigger){
+  const picker=trigger.closest('[data-language-picker]'),opening=!picker.classList.contains('is-open');
+  document.querySelectorAll('.language-picker.is-open').forEach(other=>closeLanguageMenu(other));
+  if(opening){picker.classList.add('is-open');trigger.setAttribute('aria-expanded','true');picker.querySelector('.is-selected')?.scrollIntoView({block:'nearest'});}
+  return;
+ }
+ const option=e.target.closest('[data-language-option]');
+ if(option){
+  const picker=option.closest('[data-language-picker]'),id=picker.querySelector('[data-language-trigger]').id;
+  if(locales[option.dataset.languageOption]){
+   state.lang=option.dataset.languageOption;
+   save();render();
+   document.getElementById(id)?.focus();
+  }
+  return;
+ }
+ if(!e.target.closest('[data-language-picker]'))document.querySelectorAll('.language-picker.is-open').forEach(picker=>closeLanguageMenu(picker));
+});
+document.addEventListener('keydown',e=>{
+ const picker=e.target.closest('[data-language-picker]');
+ if(e.key==='Escape'){
+  const opened=document.querySelector('.language-picker.is-open');
+  if(opened){e.preventDefault();closeLanguageMenu(opened,true);}
+  return;
+ }
+ if(!picker)return;
+ const options=[...picker.querySelectorAll('[data-language-option]')];
+ if(!['ArrowDown','ArrowUp','Home','End'].includes(e.key))return;
+ e.preventDefault();
+ if(!picker.classList.contains('is-open')){
+  picker.classList.add('is-open');
+  picker.querySelector('[data-language-trigger]').setAttribute('aria-expanded','true');
+ }
+ const index=options.indexOf(document.activeElement),selected=options.findIndex(option=>option.classList.contains('is-selected'));
+ const next=e.key==='Home'?0:e.key==='End'?options.length-1:index<0?selected<0?0:selected:e.key==='ArrowDown'?(index+1)%options.length:(index-1+options.length)%options.length;
+ options[next].focus();
+});
+document.addEventListener('focusin',e=>document.querySelectorAll('.language-picker.is-open').forEach(picker=>{if(!picker.contains(e.target))closeLanguageMenu(picker);}));
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-action]');if(!b)return;const a=b.dataset.action;
  if(a.startsWith('lang-level-')){const m=a.match(/^lang-level-(\d+)-([1-5])$/);if(m){state.cv.languageLevels=Array.isArray(state.cv.languageLevels)?state.cv.languageLevels:[];state.cv.languageLevels[Number(m[1])]=Number(m[2]);save();render();}return;}
  if(a.startsWith('rate-')){state.reviewRating=Number(a.slice(5));render();return;}
@@ -245,7 +316,7 @@ function queueLandscapePosition(){if(!landscapeFrame)landscapeFrame=requestAnima
 window.addEventListener('scroll',queueLandscapePosition,{passive:true});
 window.addEventListener('resize',queueLandscapePosition,{passive:true});
 reducedLandscapeMotion.addEventListener('change',queueLandscapePosition);
-render();refreshFx();
+render();refreshFx();recordVisit();
 document.addEventListener('visibilitychange',()=>{if(!document.hidden&&Date.now()-fxCheckedAt>4*60*60*1000)refreshFx();});
 api('me').then(async r=>{
  queueLandscapePosition();

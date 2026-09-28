@@ -7,6 +7,7 @@ import {DatabaseSync} from 'node:sqlite';
 import PDFDocument from 'pdfkit';
 const root=import.meta.dirname, dir=process.env.DATA_DIR||join(root,'data');mkdirSync(dir,{recursive:true});
 const db=new DatabaseSync(join(dir,'chypermax.sqlite'));db.exec(`PRAGMA journal_mode=WAL; CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email TEXT UNIQUE,hash TEXT,salt TEXT,draft TEXT,expires INTEGER DEFAULT 0,plan TEXT,ref TEXT UNIQUE,referred TEXT); CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,uid TEXT,expires INTEGER); CREATE TABLE IF NOT EXISTS reviews(id INTEGER PRIMARY KEY AUTOINCREMENT,uid TEXT UNIQUE,rating INTEGER,text TEXT,created INTEGER);`);try{db.exec('ALTER TABLE users ADD COLUMN day_download_used INTEGER DEFAULT 0')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN credits INTEGER DEFAULT 0')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN credited_sessions TEXT DEFAULT "[]"')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN paid_projects TEXT DEFAULT "[]"')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN stripe_customer_id TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN stripe_subscription_id TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN subscription_status TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN access_until INTEGER DEFAULT 0')}catch{}
+db.exec('CREATE TABLE IF NOT EXISTS site_metrics(name TEXT PRIMARY KEY, count INTEGER NOT NULL DEFAULT 0)');
 const limits=new Map();
 function json(res,data,status=200){res.writeHead(status,{'Content-Type':'application/json'});res.end(JSON.stringify(data));}
 function user(req){let token=(req.headers.cookie||'').match(/(?:^|; )session=([a-f0-9]+)/)?.[1];return token?db.prepare('SELECT u.* FROM users u JOIN sessions s ON u.id=s.uid WHERE s.token=? AND s.expires>?').get(token,Date.now()):null;}
@@ -20,6 +21,12 @@ function validStripeSignature(raw,header,secret){if(!header||!secret)return fals
 http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','same-origin');res.setHeader('X-Frame-Options','DENY');const url=new URL(req.url,'http://localhost');try{
  if(req.method==='POST'&&req.headers.origin&&new URL(req.headers.origin).host!==req.headers.host)return json(res,{error:'Origin rejected'},403);
  const u=user(req);
+      if(url.pathname==='/api/visits'&&(req.method==='GET'||req.method==='POST')){
+       res.setHeader('Cache-Control','no-store');
+       if(req.method==='POST')db.prepare("INSERT INTO site_metrics(name,count) VALUES('visits',1) ON CONFLICT(name) DO UPDATE SET count=count+1").run();
+       const count=Number(db.prepare("SELECT count FROM site_metrics WHERE name='visits'").get()?.count||0);
+       return json(res,{count:count>=1000?count:null});
+      }
  if(url.pathname==='/api/stripe-webhook'&&req.method==='POST'){
   if(!process.env.STRIPE_WEBHOOK_SECRET)return json(res,{error:'Webhook not configured'},503);
   const raw=await rawBody(req);
