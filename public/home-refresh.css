@@ -77,6 +77,24 @@ html{scroll-behavior:smooth}
 .workspace .cv-paper.cv-style-tech .cv-head p,
 .workspace .cv-paper.cv-style-executive .cv-head h2,
 .workspace .cv-paper.cv-style-executive .cv-head p{color:#fff!important}
+/* Style-specific colors preserve the actual editor layout in the gallery and keep Chyper2 white. */
+.workspace .cv-paper.cv-style-ats .cv-head,
+.example-sheet .cv-paper.cv-style-ats .cv-head{background:#fffefa!important}
+.workspace .cv-paper.cv-style-ats .cv-head h2,
+.workspace .cv-paper.cv-style-ats .cv-head p,
+.example-sheet .cv-paper.cv-style-ats .cv-head h2,
+.example-sheet .cv-paper.cv-style-ats .cv-head p{color:#252921!important;text-align:center!important}
+.workspace .cv-paper.cv-style-modern .cv-head,
+.example-sheet .cv-paper.cv-style-modern .cv-head{background:#dcebf1!important}
+.workspace .cv-paper.cv-style-modern .cv-head h2,
+.example-sheet .cv-paper.cv-style-modern .cv-head h2{color:#284f63!important}
+.workspace .cv-paper.cv-style-professional .cv-head,
+.example-sheet .cv-paper.cv-style-professional .cv-head{background:#e9f2e9!important}
+.workspace .cv-paper.cv-style-minimal .cv-head,
+.example-sheet .cv-paper.cv-style-minimal .cv-head{background:#fffefa!important;border-bottom:1px solid #d3c7b1!important}
+.workspace .cv-paper.cv-style-executive .cv-head::after,
+.example-sheet .cv-paper.cv-style-executive .cv-head::after,
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head::after{content:"✦   ✦   ✦";display:block;margin:8px auto 0;color:#c6ae80;text-align:center;letter-spacing:.2em;font-size:12px}
 .example-card-info{position:relative;background:#f6f2e9;padding:21px 20px 20px;flex:1;display:flex;flex-direction:column}
 .example-card-info>span{font-size:11px;color:#667769;font-weight:600}
 .example-card-info h3{font-family:'Libre Caslon Display',Georgia,serif;font-size:27px;line-height:1.12;font-weight:400;margin:9px 0 10px;min-height:58px}

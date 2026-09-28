@@ -74,7 +74,7 @@ const examples = [
   {
     id:'developer',style:'tech',accent:'#a8cfc5',
     hu:{
-      category:'Technológia',label:'Szoftverfejlesztő',note:'Terméképítés és teljesítmény',
+      category:'Futurisztikus · Tech',label:'Szoftverfejlesztő',note:'Terméképítés és teljesítmény',
       result:'Példa eredmény: 40%-kal gyorsabb betöltés',
       cv:{
         name:'Nagy Bence',title:'Full-stack fejlesztő',email:'bence@example.com',phone:'+36 30 000 0000',city:'Szeged',link:'github.com/pelda-bence',
@@ -88,7 +88,7 @@ const examples = [
       }
     },
     en:{
-      category:'Technology',label:'Software engineer',note:'Products and performance',
+      category:'Futuristic · Tech',label:'Software engineer',note:'Products and performance',
       result:'Example outcome: 40% faster load time',
       cv:{
         name:'Ben Nagy',title:'Full-stack Software Engineer',email:'ben@example.com',phone:'+44 7700 900000',city:'Manchester',link:'github.com/example-ben',
@@ -105,7 +105,7 @@ const examples = [
   {
     id:'project',style:'professional',accent:'#c9d5b9',
     hu:{
-      category:'Menedzsment',label:'Projektmenedzser',note:'Csapatok és határidők',
+      category:'Szakmai',label:'Projektmenedzser',note:'Csapatok és határidők',
       result:'Példa eredmény: 6 projekt határidőre',
       cv:{
         name:'Szabó Dóra',title:'Projektmenedzser',email:'dora@example.com',phone:'+36 30 000 0000',city:'Budapest',link:'linkedin.com/in/pelda-dora',
@@ -119,7 +119,7 @@ const examples = [
       }
     },
     en:{
-      category:'Management',label:'Project manager',note:'Teams and delivery',
+      category:'Professional',label:'Project manager',note:'Teams and delivery',
       result:'Example outcome: 6 projects on time',
       cv:{
         name:'Dora Szabo',title:'Project Manager',email:'dora@example.com',phone:'+44 7700 900000',city:'London',link:'linkedin.com/in/example-dora',
@@ -136,7 +136,7 @@ const examples = [
   {
     id:'finance',style:'executive',accent:'#d8cbb5',
     hu:{
-      category:'Pénzügy',label:'Pénzügyi elemző',note:'Pontosság és üzleti döntések',
+      category:'Díszes · Executive',label:'Pénzügyi elemző',note:'Pontosság és üzleti döntések',
       result:'Példa eredmény: 25%-kal rövidebb riportidő',
       cv:{
         name:'Tóth Márton',title:'Pénzügyi elemző',email:'marton@example.com',phone:'+36 30 000 0000',city:'Budapest',link:'linkedin.com/in/pelda-marton',
@@ -150,7 +150,7 @@ const examples = [
       }
     },
     en:{
-      category:'Finance',label:'Financial analyst',note:'Clarity for better decisions',
+      category:'Ornate · Executive',label:'Financial analyst',note:'Clarity for better decisions',
       result:'Example outcome: 25% less reporting time',
       cv:{
         name:'Martin Toth',title:'Financial Analyst',email:'martin@example.com',phone:'+44 7700 900000',city:'London',link:'linkedin.com/in/example-martin',
@@ -167,7 +167,7 @@ const examples = [
   {
     id:'support',style:'modern',accent:'#c6d6d0',
     hu:{
-      category:'Ügyfélkapcsolat',label:'Ügyfélszolgálati munkatárs',note:'Emberek és megoldások',
+      category:'Modern',label:'Ügyfélszolgálati munkatárs',note:'Emberek és megoldások',
       result:'Példa eredmény: 95% elégedettség',
       cv:{
         name:'Farkas Réka',title:'Ügyfélszolgálati munkatárs',email:'reka@example.com',phone:'+36 30 000 0000',city:'Debrecen',link:'linkedin.com/in/pelda-reka',
@@ -181,7 +181,7 @@ const examples = [
       }
     },
     en:{
-      category:'Customer care',label:'Customer support specialist',note:'People and solutions',
+      category:'Modern',label:'Customer support specialist',note:'People and solutions',
       result:'Example outcome: 95% satisfaction',
       cv:{
         name:'Reka Farkas',title:'Customer Support Specialist',email:'reka@example.com',phone:'+44 7700 900000',city:'Bristol',link:'linkedin.com/in/example-reka',
@@ -198,7 +198,7 @@ const examples = [
   {
     id:'graduate',style:'minimal',accent:'#d8d9c6',
     hu:{
-      category:'Pályakezdő',label:'Junior adatelemző',note:'Projektekből első karrier',
+      category:'Egyszerű · Minimal',label:'Junior adatelemző',note:'Projektekből első karrier',
       result:'Példa eredmény: 3 önálló elemzési projekt',
       cv:{
         name:'Varga Levente',title:'Junior adatelemző',email:'levente@example.com',phone:'+36 30 000 0000',city:'Pécs',link:'github.com/pelda-levente',
@@ -210,7 +210,7 @@ const examples = [
       }
     },
     en:{
-      category:'Early career',label:'Junior data analyst',note:'Projects into a first career',
+      category:'Simple · Minimal',label:'Junior data analyst',note:'Projects into a first career',
       result:'Example outcome: 3 portfolio projects',
       cv:{
         name:'Leo Varga',title:'Junior Data Analyst',email:'leo@example.com',phone:'+44 7700 900000',city:'Birmingham',link:'github.com/example-leo',
