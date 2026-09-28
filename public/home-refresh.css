@@ -440,6 +440,7 @@ body:has(.hero-reference) #footer .footer-socials span{background:#d4f09b;color:
  text-decoration-thickness:2px;
 }
 .page .pricing .price-card .current-price{margin:5px 0 14px}
+.page .pricing .price-card.recommended .current-price{color:#137a3f!important}
 .page .pricing .price-card:not(.recommended) .current-price{margin-top:23px}
 .page .pricing .fx-note{
  max-width:660px;
