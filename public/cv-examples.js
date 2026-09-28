@@ -72,9 +72,9 @@ const examples = [
     }
   },
   {
-    id:'developer',style:'tech',accent:'#a8cfc5',
+    id:'developer',style:'modern',accent:'#a8cfc5',
     hu:{
-      category:'Futurisztikus · Tech',label:'Szoftverfejlesztő',note:'Terméképítés és teljesítmény',
+      category:'Prémium · Midnight Modern',label:'Szoftverfejlesztő',note:'Terméképítés és teljesítmény',
       result:'Példa eredmény: 40%-kal gyorsabb betöltés',
       cv:{
         name:'Nagy Bence',title:'Full-stack fejlesztő',email:'bence@example.com',phone:'+36 30 000 0000',city:'Szeged',link:'github.com/pelda-bence',
@@ -88,7 +88,7 @@ const examples = [
       }
     },
     en:{
-      category:'Futuristic · Tech',label:'Software engineer',note:'Products and performance',
+      category:'Premium · Midnight Modern',label:'Software engineer',note:'Products and performance',
       result:'Example outcome: 40% faster load time',
       cv:{
         name:'Ben Nagy',title:'Full-stack Software Engineer',email:'ben@example.com',phone:'+44 7700 900000',city:'Manchester',link:'github.com/example-ben',
@@ -105,7 +105,7 @@ const examples = [
   {
     id:'project',style:'professional',accent:'#c9d5b9',
     hu:{
-      category:'Szakmai',label:'Projektmenedzser',note:'Csapatok és határidők',
+      category:'Prémium · Architectural',label:'Projektmenedzser',note:'Csapatok és határidők',
       result:'Példa eredmény: 6 projekt határidőre',
       cv:{
         name:'Szabó Dóra',title:'Projektmenedzser',email:'dora@example.com',phone:'+36 30 000 0000',city:'Budapest',link:'linkedin.com/in/pelda-dora',
@@ -119,7 +119,7 @@ const examples = [
       }
     },
     en:{
-      category:'Professional',label:'Project manager',note:'Teams and delivery',
+      category:'Premium · Architectural',label:'Project manager',note:'Teams and delivery',
       result:'Example outcome: 6 projects on time',
       cv:{
         name:'Dora Szabo',title:'Project Manager',email:'dora@example.com',phone:'+44 7700 900000',city:'London',link:'linkedin.com/in/example-dora',
@@ -136,7 +136,7 @@ const examples = [
   {
     id:'finance',style:'executive',accent:'#d8cbb5',
     hu:{
-      category:'Díszes · Executive',label:'Pénzügyi elemző',note:'Pontosság és üzleti döntések',
+      category:'Prémium · Executive Gold',label:'Pénzügyi elemző',note:'Pontosság és üzleti döntések',
       result:'Példa eredmény: 25%-kal rövidebb riportidő',
       cv:{
         name:'Tóth Márton',title:'Pénzügyi elemző',email:'marton@example.com',phone:'+36 30 000 0000',city:'Budapest',link:'linkedin.com/in/pelda-marton',
@@ -150,7 +150,7 @@ const examples = [
       }
     },
     en:{
-      category:'Ornate · Executive',label:'Financial analyst',note:'Clarity for better decisions',
+      category:'Premium · Executive Gold',label:'Financial analyst',note:'Clarity for better decisions',
       result:'Example outcome: 25% less reporting time',
       cv:{
         name:'Martin Toth',title:'Financial Analyst',email:'martin@example.com',phone:'+44 7700 900000',city:'London',link:'linkedin.com/in/example-martin',
@@ -165,9 +165,9 @@ const examples = [
     }
   },
   {
-    id:'support',style:'modern',accent:'#c6d6d0',
+    id:'support',style:'creative',accent:'#c6d6d0',
     hu:{
-      category:'Modern',label:'Ügyfélszolgálati munkatárs',note:'Emberek és megoldások',
+      category:'Prémium · Atelier',label:'Ügyfélszolgálati munkatárs',note:'Emberek és megoldások',
       result:'Példa eredmény: 95% elégedettség',
       cv:{
         name:'Farkas Réka',title:'Ügyfélszolgálati munkatárs',email:'reka@example.com',phone:'+36 30 000 0000',city:'Debrecen',link:'linkedin.com/in/pelda-reka',
@@ -181,7 +181,7 @@ const examples = [
       }
     },
     en:{
-      category:'Modern',label:'Customer support specialist',note:'People and solutions',
+      category:'Premium · Atelier',label:'Customer support specialist',note:'People and solutions',
       result:'Example outcome: 95% satisfaction',
       cv:{
         name:'Reka Farkas',title:'Customer Support Specialist',email:'reka@example.com',phone:'+44 7700 900000',city:'Bristol',link:'linkedin.com/in/example-reka',
@@ -198,7 +198,7 @@ const examples = [
   {
     id:'graduate',style:'minimal',accent:'#d8d9c6',
     hu:{
-      category:'Egyszerű · Minimal',label:'Junior adatelemző',note:'Projektekből első karrier',
+      category:'Prémium · Pure Signature',label:'Junior adatelemző',note:'Projektekből első karrier',
       result:'Példa eredmény: 3 önálló elemzési projekt',
       cv:{
         name:'Varga Levente',title:'Junior adatelemző',email:'levente@example.com',phone:'+36 30 000 0000',city:'Pécs',link:'github.com/pelda-levente',
@@ -210,7 +210,7 @@ const examples = [
       }
     },
     en:{
-      category:'Simple · Minimal',label:'Junior data analyst',note:'Projects into a first career',
+      category:'Premium · Pure Signature',label:'Junior data analyst',note:'Projects into a first career',
       result:'Example outcome: 3 portfolio projects',
       cv:{
         name:'Leo Varga',title:'Junior Data Analyst',email:'leo@example.com',phone:'+44 7700 900000',city:'Birmingham',link:'github.com/example-leo',
@@ -225,7 +225,7 @@ const examples = [
   {
     id:'nurse',style:'compact',accent:'#9cbdb5',
     hu:{
-      category:'Egészségügy · Tömör',label:'Ápoló',note:'Betegellátás és szakmai felelősség',
+      category:'Prémium · Monaco',label:'Ápoló',note:'Betegellátás és szakmai felelősség',
       result:'Példa fókusz: betegút és csapatmunka',
       cv:{
         name:'Molnár Zsófia',title:'Ápoló',email:'zsofia@example.com',phone:'+36 30 000 0000',city:'Pécs',link:'',
@@ -237,7 +237,7 @@ const examples = [
       }
     },
     en:{
-      category:'Healthcare · Compact',label:'Registered nurse',note:'Patient care and clinical responsibility',
+      category:'Premium · Monaco',label:'Registered nurse',note:'Patient care and clinical responsibility',
       result:'Example focus: patient journey and teamwork',
       cv:{
         name:'Sophie Molnar',title:'Registered Nurse',email:'sophie@example.com',phone:'+44 7700 900000',city:'Leeds',link:'',
@@ -252,7 +252,7 @@ const examples = [
   {
     id:'electrician',style:'elegant',accent:'#d6bd8b',
     hu:{
-      category:'Szakmunka · Elegáns',label:'Villanyszerelő',note:'Műszaki gyakorlat és helyszíni munkák',
+      category:'Prémium · Swiss Grid',label:'Villanyszerelő',note:'Műszaki gyakorlat és helyszíni munkák',
       result:'Példa fókusz: felújítások és hibakeresés',
       cv:{
         name:'Vörös Ádám',title:'Villanyszerelő',email:'adam@example.com',phone:'+36 30 000 0000',city:'Miskolc',link:'',
@@ -264,7 +264,7 @@ const examples = [
       }
     },
     en:{
-      category:'Skilled trades · Elegant',label:'Electrician',note:'Technical experience and work on site',
+      category:'Premium · Swiss Grid',label:'Electrician',note:'Technical experience and work on site',
       result:'Example focus: renovations and fault finding',
       cv:{
         name:'Adam Voros',title:'Electrician',email:'adam@example.com',phone:'+44 7700 900000',city:'Sheffield',link:'',
@@ -273,6 +273,33 @@ const examples = [
         education:[{heading:'Electrical Installation Diploma',organization:'Example Technical College',location:'Sheffield',dates:'2014 – 2017',details:''}],
         certifications:[{heading:'Electrical safety training',organization:'Sample Training Centre',location:'',dates:'2023',details:''}],
         skills:'Fault finding · electrical installation · reading plans · client communication',languages:'English\nGerman',languageLevels:[5,3]
+      }
+    }
+  },
+  {
+    id:'emerald-director',style:'tech',accent:'#b99b59',
+    hu:{
+      category:'Körhinta-exkluzív · Emerald Prestige',label:'Digitális termékvezető',note:'Stratégia, növekedés és modern vezetői jelenlét',
+      result:'Példa fókusz: prémium vezetői pozicionálás',
+      cv:{
+        name:'Németh Dániel',title:'Digitális termékvezető',email:'daniel@example.com',phone:'+36 30 000 0000',city:'Budapest',link:'linkedin.com/in/nemeth-daniel',
+        summary:'Digitális termékvezető vagyok, aki üzleti stratégiát, ügyféligényeket és technológiai megvalósítást kapcsol össze. Nemzetközi csapatokkal skálázható termékeket és mérhető növekedést építek.',
+        experience:[{heading:'Head of Product',organization:'Fiktív Digital Labs',location:'Budapest',dates:'2022 – jelenleg',details:'Három termékcsapat stratégiáját vezettem; az aktiváció 24%-kal, az éves visszatérő bevétel 31%-kal nőtt.'},{heading:'Senior Product Manager',organization:'Minta Technologies',location:'Bécs',dates:'2018 – 2022',details:'Új B2B platform piacra vitelét és a kutatási, tervezési, fejlesztési folyamat összehangolását irányítottam.'}],
+        education:[{heading:'MSc, Vezetés és szervezés',organization:'Példa Egyetem',location:'Budapest',dates:'2016 – 2018',details:''}],
+        projects:[{heading:'Nemzetközi termékportfólió',organization:'Fiktív Digital Labs',location:'',dates:'2024',details:'Egységes portfólióstratégiát és mérési rendszert vezettem be hat piacon.'}],
+        skills:'Termékstratégia · csapatvezetés · üzleti modellezés · discovery · stakeholder management',languages:'Magyar\nAngol\nNémet',languageLevels:[5,5,3]
+      }
+    },
+    en:{
+      category:'Carousel exclusive · Emerald Prestige',label:'Digital product director',note:'Strategy, growth and modern executive presence',
+      result:'Example focus: premium leadership positioning',
+      cv:{
+        name:'Daniel Nemeth',title:'Digital Product Director',email:'daniel@example.com',phone:'+44 7700 900000',city:'London',link:'linkedin.com/in/daniel-nemeth',
+        summary:'Digital product leader connecting business strategy, customer needs and technology delivery. I build scalable products and measurable growth with international teams.',
+        experience:[{heading:'Head of Product',organization:'Fictional Digital Labs',location:'London',dates:'2022 – Present',details:'Led strategy across three product squads, increasing activation by 24% and annual recurring revenue by 31%.'},{heading:'Senior Product Manager',organization:'Sample Technologies',location:'Vienna',dates:'2018 – 2022',details:'Directed the launch of a new B2B platform and aligned research, design and engineering delivery.'}],
+        education:[{heading:'MSc, Management',organization:'Example University',location:'London',dates:'2016 – 2018',details:''}],
+        projects:[{heading:'International product portfolio',organization:'Fictional Digital Labs',location:'',dates:'2024',details:'Introduced a unified portfolio strategy and measurement system across six markets.'}],
+        skills:'Product strategy · team leadership · business modelling · discovery · stakeholder management',languages:'English\nHungarian\nGerman',languageLevels:[5,5,3]
       }
     }
   }
