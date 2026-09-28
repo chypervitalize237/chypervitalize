@@ -296,3 +296,75 @@ body:has(.hero-reference) .nav .login:hover{transform:translateY(-3px);color:#d4
 @media(prefers-reduced-motion:reduce){
  .page .hero-reference,.page .hero-reference::before,.page .hero-reference::after,.page .hero-reference .hero-template-carousel::before,.page .hero-reference .hero-template-carousel::after,.page .hero-reference .hero-template-card.is-front,.page .hero-reference .hero-feature-result,.live-pulse,.energy-track{animation:none!important}
 }
+/* One continuous landscape behind the entire home page, including the footer.
+   The image is fixed to the viewport so it never repeats between sections. */
+body:has(.hero-reference){
+ background-color:#152820!important;
+ background-image:linear-gradient(180deg,rgba(12,32,24,.34),rgba(12,32,24,.46)),image-set(url('./nature-landscape.jpg') 1x,url('./nature-landscape-4k.jpg') 2x)!important;
+ background-position:center 46%!important;
+ background-size:cover!important;
+ background-repeat:no-repeat!important;
+ background-attachment:fixed!important;
+}
+body:has(.hero-reference) main,
+body:has(.hero-reference) .page{background:transparent!important}
+body:has(.hero-reference) #header{background:rgba(18,41,32,.83)!important;backdrop-filter:blur(14px)}
+.page .hero-reference{
+ background:linear-gradient(90deg,rgba(12,32,24,.78),rgba(12,32,24,.42) 52%,rgba(12,32,24,.12))!important;
+ animation:none;
+}
+.page .example-collection{background:rgba(21,48,36,.76)!important;backdrop-filter:blur(12px)}
+.page .promise-strip{background:rgba(18,41,31,.72)!important;backdrop-filter:blur(9px)}
+.page .how,.page .pricing{
+ background:rgba(20,45,34,.72)!important;
+ color:#f5f8ee!important;
+ backdrop-filter:blur(14px);
+}
+.page .how{border:1px solid rgba(201,232,169,.23);border-bottom:0}
+.page .pricing{border:1px solid rgba(201,232,169,.23);border-top:1px solid rgba(201,232,169,.18)}
+.page .how .eyebrow,.page .pricing>.eyebrow{color:#d4f09b!important}
+.page .how .section-heading h2,.page .pricing h2,
+.page .how .steps h3{color:#f7f8ee!important}
+.page .how .steps p,.page .pricing>p{color:#d0dfcf!important}
+.page .how .steps>div{border-top-color:rgba(212,240,155,.4)}
+.page .how .step-number{color:#d4f09b!important}
+.page .pricing .price-card{
+ background:rgba(232,241,221,.95)!important;
+ border-color:#abc69e!important;
+ color:#203b2c!important;
+ box-shadow:0 14px 38px rgba(3,24,13,.22);
+}
+.page .pricing .price-card.recommended{
+ background:rgba(213,234,198,.96)!important;
+ border-color:#aad08e!important;
+}
+.page .pricing .price-card h3,.page .pricing .price-card strong{color:#1d3a2b!important}
+.page .pricing .price-card p{color:#425e4a!important}
+.page .pricing .ribbon{background:#31583f!important;color:#f0f8df!important}
+.page .pricing .price-card .primary{background:#31583f!important;border-color:#31583f!important;color:#f7faee!important}
+.page .pricing .price-card .primary:hover{background:#244a33!important}
+.page .pricing .price-card .secondary{background:transparent!important;border-color:#739275!important;color:#284633!important}
+.page .pricing .price-card .secondary:hover{background:rgba(89,143,81,.12)!important}
+body:has(.hero-reference) #footer{
+ background:rgba(16,38,29,.74)!important;
+ border-top-color:rgba(212,240,155,.23);
+ color:#eff5e9;
+ backdrop-filter:blur(12px);
+}
+body:has(.hero-reference) #footer .wordmark,
+body:has(.hero-reference) #footer .footer-col strong{color:#f5f8ee!important}
+body:has(.hero-reference) #footer .footer-brand p,
+body:has(.hero-reference) #footer .footer-col button,
+body:has(.hero-reference) #footer .footer-bottom{color:#d2dfd0!important}
+body:has(.hero-reference) #footer .footer-col button:hover{color:#d4f09b!important}
+body:has(.hero-reference) #footer .footer-bottom{border-top-color:rgba(212,240,155,.22)}
+body:has(.hero-reference) #footer .footer-language{background:rgba(212,240,155,.14)}
+body:has(.hero-reference) #footer .footer-language select{color:#f5f8ee}
+body:has(.hero-reference) #footer .footer-language option{color:#203b2c}
+body:has(.hero-reference) #footer .footer-socials span{background:#d4f09b;color:#203b2c}
+@media(max-width:700px){
+ .page .hero-reference{
+  background:linear-gradient(180deg,rgba(12,32,24,.72),rgba(12,32,24,.48) 52%,rgba(12,32,24,.28))!important;
+ }
+ .page .how,.page .pricing{background:rgba(20,45,34,.76)!important}
+}
