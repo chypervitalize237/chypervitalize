@@ -100,36 +100,39 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   const pdf=new PDFDocument({size:'A4',margin:48,info:{Title:(d.name||'CV')+' — Chypervitalize',Author:d.name||''}});
   res.writeHead(200,{'Content-Type':'application/pdf','Content-Disposition':'attachment; filename=Chypervitalize-CV.pdf'});pdf.pipe(res);
   pdf.registerFont('regular',join(root,'fonts/DejaVuSans.ttf'));pdf.registerFont('bold',join(root,'fonts/DejaVuSans-Bold.ttf'));pdf.registerFont('serif',join(root,'fonts/DejaVuSerif.ttf'));
-  const left=style==='minimal'?62:48,right=pdf.page.width-48,width=right-left,contact=[d.email,d.phone,d.city,d.link].filter(Boolean).join('  •  ');
-  const paintPage=()=>{const x=pdf.x,y=pdf.y;pdf.rect(0,0,pdf.page.width,pdf.page.height).fill(bg);if(style==='minimal')pdf.rect(0,0,10,pdf.page.height).fill(accent2);if(style==='elegant'){pdf.rect(18,18,pdf.page.width-36,pdf.page.height-36).lineWidth(.8).strokeColor(accent2).stroke();pdf.rect(25,25,pdf.page.width-50,pdf.page.height-50).lineWidth(.35).strokeColor(accent2).stroke();}pdf.x=x;pdf.y=y;pdf.fillColor(ink);};pdf.on('pageAdded',paintPage);paintPage();
+  const left=style==='minimal'?62:(style==='professional'||style==='tech'?66:48),right=pdf.page.width-48,width=right-left,contact=[d.email,d.phone,d.city,d.link].filter(Boolean).join('  •  ');
+  const paintPage=()=>{const x=pdf.x,y=pdf.y;pdf.rect(0,0,pdf.page.width,pdf.page.height).fill(bg);if(style==='minimal')pdf.rect(0,0,10,pdf.page.height).fill(accent2);if(style==='professional')pdf.rect(0,0,18,pdf.page.height).fill('#1d2722');if(style==='elegant')pdf.rect(0,0,pdf.page.width,14).fill('#b6252c');if(style==='tech')pdf.rect(0,0,16,pdf.page.height).fill('#123a31');pdf.x=x;pdf.y=y;pdf.fillColor(ink);};pdf.on('pageAdded',paintPage);paintPage();
   const photo=(x,y,w=50,h=60)=>{if(!d.photo)return false;try{pdf.image(Buffer.from(String(d.photo).split(',')[1],'base64'),x,y,{fit:[w,h],align:'center',valign:'center'});return true;}catch{return false;}};
   const name=d.name||'',title=d.title||'';
   if(style==='basic'){
    pdf.rect(0,0,pdf.page.width,118).fill(accent);pdf.fillColor('#1f2923').font('serif').fontSize(27).text(name,48,38,{width:440});pdf.font('regular').fontSize(10.5).text(title,48,74,{width:440});pdf.fontSize(8).fillColor('#435046').text(contact,48,94,{width:440});if(d.photo)photo(pdf.page.width-104,28,52,66);pdf.y=132;
-  }else if(style==='modern'||style==='professional'||style==='tech'){
-   const header=style==='tech'?'#101c25':style==='professional'?'#26342f':'#142c26',edge=style==='tech'?'#59c8b4':style==='modern'?accent2:accent;
-   pdf.rect(0,0,pdf.page.width,148).fill(header);pdf.rect(0,142,pdf.page.width,6).fill(edge);pdf.fillColor('#ffffff').font('bold').fontSize(style==='modern'?31:28).text(name,48,38,{width:d.photo?430:pdf.page.width-96});pdf.font('regular').fontSize(10.5).fillColor('#dce6e1').text(title,48,82,{width:430});pdf.fontSize(8).fillColor('#bfcec7').text(contact,48,108,{width:430});if(d.photo)photo(pdf.page.width-105,36,54,67);pdf.y=164;
+  }else if(style==='modern'){
+   pdf.rect(0,0,pdf.page.width,148).fill('#142c26');pdf.rect(0,142,pdf.page.width,6).fill(accent2);pdf.fillColor('#ffffff').font('bold').fontSize(31).text(name,48,38,{width:d.photo?430:pdf.page.width-96});pdf.font('regular').fontSize(10.5).fillColor('#dce6e1').text(title,48,82,{width:430});pdf.fontSize(8).fillColor('#bfcec7').text(contact,48,108,{width:430});if(d.photo)photo(pdf.page.width-105,36,54,67);pdf.y=164;
+  }else if(style==='professional'){
+   pdf.fillColor('#171a18').font('bold').fontSize(34).text(name,left,44,{width});pdf.font('regular').fontSize(10).fillColor('#a55f3a').text(title.toUpperCase(),left,88,{width,characterSpacing:1.3});pdf.fontSize(8).fillColor(muted).text(contact,left,111,{width});pdf.moveTo(left,137).lineTo(right,137).strokeColor('#171a18').lineWidth(2.2).stroke();pdf.y=151;
+  }else if(style==='tech'){
+   pdf.rect(0,0,pdf.page.width,148).fill('#123a31');pdf.rect(0,142,pdf.page.width,6).fill('#bd9a55');pdf.fillColor('#ffffff').font('serif').fontSize(30).text(name,left,38,{width:d.photo?410:width});pdf.font('regular').fontSize(10).fillColor('#dbe8df').text(title,left,82,{width:410});pdf.fontSize(8).text(contact,left,108,{width:410});if(d.photo)photo(pdf.page.width-105,36,54,67);pdf.y=164;
   }else if(style==='executive'){
    pdf.rect(22,22,pdf.page.width-44,pdf.page.height-44).lineWidth(7).strokeColor('#211f1a').stroke();pdf.rect(33,33,pdf.page.width-66,pdf.page.height-66).lineWidth(.8).strokeColor(accent2).stroke();pdf.fillColor(accent2).font('serif').fontSize(10).text('◆',0,49,{width:pdf.page.width,align:'center'});pdf.fillColor(ink).font('serif').fontSize(29).text(name.toUpperCase(),58,73,{width:pdf.page.width-116,align:'center',characterSpacing:2});pdf.font('regular').fontSize(10).fillColor(accent2).text(title.toUpperCase(),58,112,{width:pdf.page.width-116,align:'center',characterSpacing:1});pdf.fontSize(8).fillColor(muted).text(contact,58,134,{width:pdf.page.width-116,align:'center'});pdf.moveTo(68,158).lineTo(pdf.page.width-68,158).strokeColor(accent2).lineWidth(.7).stroke();pdf.y=171;
   }else if(style==='creative'){
    pdf.rect(0,0,pdf.page.width,148).fill('#c7ddcd');pdf.rect(0,0,18,148).fill('#20362f');pdf.fillColor('#18342b').font('bold').fontSize(32).text(name,48,40,{width:d.photo?420:pdf.page.width-96});pdf.font('regular').fontSize(10).fillColor('#315347').text(title,48,84,{width:420});pdf.fontSize(8).text(contact,48,108,{width:420});if(d.photo)photo(pdf.page.width-105,36,54,67);pdf.y=164;
   }else if(style==='elegant'){
-   pdf.fillColor(accent2).font('serif').fontSize(10).text('✦',0,48,{width:pdf.page.width,align:'center'});pdf.fillColor(ink).font('serif').fontSize(32).text(name,58,70,{width:pdf.page.width-116,align:'center'});pdf.font('regular').fontSize(10).fillColor(accent2).text(title,58,111,{width:pdf.page.width-116,align:'center',characterSpacing:.8});pdf.fontSize(8).fillColor(muted).text(contact,58,133,{width:pdf.page.width-116,align:'center'});pdf.moveTo(92,155).lineTo(pdf.page.width-92,155).strokeColor(accent2).lineWidth(.5).stroke();pdf.y=170;
+   pdf.fillColor('#111111').font('bold').fontSize(35).text(name,left,48,{width,characterSpacing:-.4});pdf.font('regular').fontSize(9.5).fillColor('#b6252c').text(title.toUpperCase(),left,94,{width,characterSpacing:1.8});pdf.fontSize(8).fillColor(muted).text(contact,left,118,{width});pdf.moveTo(left,142).lineTo(right,142).strokeColor('#111111').lineWidth(2.2).stroke();pdf.fillColor('#b6252c').font('bold').fontSize(14).text('01',right-28,111,{width:28,align:'right'});pdf.y=157;
   }else if(style==='minimal'){
    pdf.fillColor(ink).font('regular').fontSize(31).text(name,left,54,{width});pdf.fontSize(9.5).fillColor(accent2).text(title.toUpperCase(),left,96,{width,characterSpacing:1.4});pdf.fontSize(8).fillColor(muted).text(contact,left,119,{width});pdf.y=150;
   }else if(style==='compact'){
-   pdf.rect(0,0,pdf.page.width,12).fill('#24352f');pdf.fillColor(ink).font('bold').fontSize(24).text(name,left,38,{width:width*.6});pdf.font('regular').fontSize(9).fillColor(muted).text(contact,left+width*.58,44,{width:width*.42,align:'right'});pdf.fontSize(9.5).fillColor(accent).text(title,left,74,{width});pdf.moveTo(left,98).lineTo(right,98).strokeColor('#24352f').lineWidth(1.4).stroke();pdf.y=108;
+   pdf.rect(0,0,pdf.page.width,148).fill('#13283a');pdf.rect(0,142,pdf.page.width,6).fill('#ad734b');pdf.fillColor('#ffffff').font('serif').fontSize(30).text(name,48,40,{width:pdf.page.width-96,align:'center'});pdf.font('regular').fontSize(10).fillColor('#e8d9c6').text(title,48,84,{width:pdf.page.width-96,align:'center'});pdf.fontSize(8).text(contact,48,109,{width:pdf.page.width-96,align:'center'});pdf.y=164;
   }else{
    pdf.fillColor(ink).font('serif').fontSize(27).text(name,{align:'center'});pdf.font('regular').fontSize(10.5).text(title,{align:'center'});pdf.moveDown(.4).fontSize(8).fillColor(muted).text(contact,{align:'center'});if(d.photo){pdf.moveDown();if(photo(pdf.page.width/2-25,pdf.y))pdf.y+=66;}
   }
   const pageCheck=()=>{if(pdf.y>700){pdf.addPage();pdf.y=48;}};
   const section=(heading,txt)=>{
    if(!String(txt||'').trim())return;pageCheck();pdf.moveDown(style==='compact'?.55:.9);
-   const centered=['ats','executive','elegant'].includes(style),headColor=['executive','elegant','minimal'].includes(style)?accent2:style==='tech'?'#3aa895':accent;
+   const centered=['ats','executive','compact'].includes(style),headColor=style==='elegant'?'#b6252c':style==='professional'?'#a55f3a':style==='tech'?'#9e7b3d':['executive','minimal','compact'].includes(style)?accent2:accent;
    pdf.font('bold').fillColor(headColor).fontSize(style==='compact'?8:9).text(String(heading||'').toUpperCase(),left,pdf.y,{width,align:centered?'center':'left',characterSpacing:style==='elegant'?1.7:.8});
    const lineY=pdf.y+4;
-   if(style==='ats'||style==='professional'||style==='compact')pdf.moveTo(left,lineY).lineTo(right,lineY).strokeColor(accent).lineWidth(.5).stroke();
-   else if(style==='executive'||style==='elegant')pdf.moveTo(left+45,lineY).lineTo(right-45,lineY).strokeColor(accent2).lineWidth(.45).stroke();
+   if(style==='ats'||style==='professional'||style==='elegant')pdf.moveTo(left,lineY).lineTo(right,lineY).strokeColor(headColor).lineWidth(.5).stroke();
+   else if(style==='executive'||style==='compact')pdf.moveTo(left+45,lineY).lineTo(right-45,lineY).strokeColor(headColor).lineWidth(.45).stroke();
    else if(style==='modern'||style==='creative'||style==='tech')pdf.rect(left,lineY-2,20,3).fill(headColor);
    pdf.moveDown(style==='compact'?.5:.72).font('regular').fillColor(ink).fontSize(style==='compact'?8.5:9.5).text(String(txt),left,pdf.y,{width,lineGap:style==='compact'?2:3});
   };
