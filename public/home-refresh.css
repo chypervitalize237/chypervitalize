@@ -718,3 +718,11 @@ body:has(#app.workspace) #footer .footer-bottom{color:#d3e4df!important}
 .workspace .cv-paper.paper-dark>section :is(h3,p,strong,small),
 .workspace .basic-cv.paper-dark .basic-body>main,
 .workspace .basic-cv.paper-dark .basic-body>main :is(h3,p,strong,small){color:#fff!important}
+
+/* Move repeatable CV entries without changing their contents. */
+.workspace .entry-top .entry-actions{display:flex;align-items:center;gap:7px}
+.workspace .entry-move{display:inline-grid;place-items:center;width:30px;height:30px;border:1px solid #b9d2ce;border-radius:7px;background:#f3f9f7;color:#255d55;font-size:17px;cursor:pointer}
+.workspace .entry-move:hover:not(:disabled){background:#dcece7}
+.workspace .entry-move:focus-visible{outline:2px solid #31736b;outline-offset:2px}
+.workspace .entry-move:disabled{opacity:.4;cursor:not-allowed}
+@media(max-width:650px){.workspace .entry-top .entry-actions{gap:4px}}
