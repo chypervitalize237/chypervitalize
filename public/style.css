@@ -2000,3 +2000,8 @@ body>*,header,nav,main,footer,.topbar,.navbar,.site-header,.site-shell,.page,.he
  .cv-paper.cv-style-elegant{padding:38px 30px 42px}
  .cv-paper.cv-style-tech{grid-template-columns:1fr}
 }
+
+
+/* Sky-blue replacement for dark-green UI backgrounds */
+:root{--darkgreen:#9fd3ee!important}
+.ribbon,#toast{background:#9fd3ee!important;color:#252921!important}
