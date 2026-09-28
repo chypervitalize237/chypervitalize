@@ -221,6 +221,87 @@ const examples = [
         skills:'Excel · SQL · Python · Power BI · data visualisation',languages:'English\nFrench',languageLevels:[5,3]
       }
     }
+  },
+  {
+    id:'designer',style:'creative',accent:'#e4b6a8',
+    hu:{
+      category:'Kreatív · Portfólió',label:'Arculattervező',note:'Vizuális gondolkodás és alkotói projektek',
+      result:'Példa eredmény: új arculat egy helyi márkának',
+      cv:{
+        name:'Bíró Lili',title:'Arculattervező',email:'lili@example.com',phone:'+36 30 000 0000',city:'Budapest',link:'behance.net/pelda-lili',
+        summary:'Arculattervező vagyok, aki kutatásból és történetekből épít felismerhető vizuális világokat. Márkáknak, kiadványoknak és digitális felületeknek tervezek.',
+        experience:[{heading:'Vizuális tervező',organization:'Fiktív Műhely',location:'Budapest',dates:'2022 – jelenleg',details:'Kisvállalkozások arculatát és kampányanyagait terveztem, a kezdeti vázlatoktól az átadható rendszerig.'}],
+        projects:[{heading:'Egy helyi kávézó új arculata',organization:'Önálló projekt',location:'Budapest',dates:'2025',details:'Logót, csomagolást és közösségimédia-sablonokat készítettem egységes képi nyelvvel.'}],
+        education:[{heading:'Tervezőgrafika BA',organization:'Példa Művészeti Egyetem',location:'Budapest',dates:'2019 – 2022',details:''}],
+        skills:'Arculattervezés · tipográfia · Figma · Adobe Illustrator · kiadványtervezés',languages:'Magyar\nAngol',languageLevels:[5,4]
+      }
+    },
+    en:{
+      category:'Creative · Portfolio',label:'Brand designer',note:'Visual thinking and independent projects',
+      result:'Example project: a new identity for a local brand',
+      cv:{
+        name:'Lily Biro',title:'Brand Designer',email:'lily@example.com',phone:'+44 7700 900000',city:'Brighton',link:'behance.net/example-lily',
+        summary:'Brand designer turning research and stories into memorable visual identities. I create systems for brands, publications and digital experiences.',
+        experience:[{heading:'Visual Designer',organization:'Fictional Studio',location:'Brighton',dates:'2022 – Present',details:'Designed identities and campaign materials for small businesses from first sketches to handover-ready systems.'}],
+        projects:[{heading:'A local café rebrand',organization:'Independent project',location:'Brighton',dates:'2025',details:'Created a logo, packaging and social templates with a consistent visual language.'}],
+        education:[{heading:'BA Graphic Design',organization:'Example Arts University',location:'Brighton',dates:'2019 – 2022',details:''}],
+        skills:'Brand identity · typography · Figma · Adobe Illustrator · editorial design',languages:'English\nFrench',languageLevels:[5,3]
+      }
+    }
+  },
+  {
+    id:'nurse',style:'compact',accent:'#9cbdb5',
+    hu:{
+      category:'Egészségügy · Tömör',label:'Ápoló',note:'Betegellátás és szakmai felelősség',
+      result:'Példa fókusz: betegút és csapatmunka',
+      cv:{
+        name:'Molnár Zsófia',title:'Ápoló',email:'zsofia@example.com',phone:'+36 30 000 0000',city:'Pécs',link:'',
+        summary:'Empatikus ápoló vagyok öt év osztályos tapasztalattal. Fontos számomra a pontos dokumentáció, a biztonságos ellátás és a betegek érthető tájékoztatása.',
+        experience:[{heading:'Ápoló',organization:'Fiktív Egészségközpont',location:'Pécs',dates:'2021 – jelenleg',details:'Betegfelvételt, állapotkövetést és ápolási dokumentációt végzek; szorosan együttműködöm az orvosi csapattal.'},{heading:'Ápolási asszisztens',organization:'Minta Klinika',location:'Pécs',dates:'2019 – 2021',details:'Segítettem a napi ellátás szervezését és az új betegek tájékoztatását.'}],
+        education:[{heading:'Ápoló BSc',organization:'Példa Tudományegyetem',location:'Pécs',dates:'2015 – 2019',details:''}],
+        certifications:[{heading:'Alapszintű újraélesztési képzés',organization:'Példa Oktatóközpont',location:'',dates:'2024',details:''}],
+        skills:'Betegellátás · dokumentáció · betegkommunikáció · csapatmunka',languages:'Magyar\nAngol',languageLevels:[5,3]
+      }
+    },
+    en:{
+      category:'Healthcare · Compact',label:'Registered nurse',note:'Patient care and clinical responsibility',
+      result:'Example focus: patient journey and teamwork',
+      cv:{
+        name:'Sophie Molnar',title:'Registered Nurse',email:'sophie@example.com',phone:'+44 7700 900000',city:'Leeds',link:'',
+        summary:'Compassionate nurse with five years of ward experience. I value accurate records, safe care and clear communication with patients and colleagues.',
+        experience:[{heading:'Registered Nurse',organization:'Fictional Health Centre',location:'Leeds',dates:'2021 – Present',details:'Coordinate admissions, monitor patient progress and maintain care notes in collaboration with the clinical team.'},{heading:'Nursing Assistant',organization:'Example Clinic',location:'Leeds',dates:'2019 – 2021',details:'Supported daily care and helped new patients understand their care journey.'}],
+        education:[{heading:'BSc Nursing',organization:'Example University',location:'Leeds',dates:'2015 – 2019',details:''}],
+        certifications:[{heading:'Basic life support',organization:'Example Training Centre',location:'',dates:'2024',details:''}],
+        skills:'Patient care · clinical documentation · communication · teamwork',languages:'English\nPolish',languageLevels:[5,3]
+      }
+    }
+  },
+  {
+    id:'electrician',style:'elegant',accent:'#d6bd8b',
+    hu:{
+      category:'Szakmunka · Elegáns',label:'Villanyszerelő',note:'Műszaki gyakorlat és helyszíni munkák',
+      result:'Példa fókusz: felújítások és hibakeresés',
+      cv:{
+        name:'Vörös Ádám',title:'Villanyszerelő',email:'adam@example.com',phone:'+36 30 000 0000',city:'Miskolc',link:'',
+        summary:'Villanyszerelő vagyok lakossági és kisebb ipari munkákban szerzett tapasztalattal. Precíz kivitelezéssel és érthető kommunikációval dolgozom.',
+        experience:[{heading:'Villanyszerelő',organization:'Fiktív Elektro',location:'Miskolc',dates:'2020 – jelenleg',details:'Felújítások villamos kivitelezését, hálózati hibakeresést és helyszíni egyeztetéseket végeztem.'},{heading:'Villanyszerelő segéd',organization:'Példa Műszaki Kft.',location:'Miskolc',dates:'2017 – 2020',details:'Csapatban végeztem szerelési és karbantartási feladatokat, munkalapokat vezettem.'}],
+        education:[{heading:'Villanyszerelő szakképesítés',organization:'Példa Technikum',location:'Miskolc',dates:'2014 – 2017',details:''}],
+        certifications:[{heading:'Érintésvédelmi felülvizsgálói képzés',organization:'Minta Képzőhely',location:'',dates:'2023',details:''}],
+        skills:'Hibakeresés · villamos hálózatok · műszaki rajz olvasása · ügyfélkommunikáció',languages:'Magyar\nNémet',languageLevels:[5,3]
+      }
+    },
+    en:{
+      category:'Skilled trades · Elegant',label:'Electrician',note:'Technical experience and work on site',
+      result:'Example focus: renovations and fault finding',
+      cv:{
+        name:'Adam Voros',title:'Electrician',email:'adam@example.com',phone:'+44 7700 900000',city:'Sheffield',link:'',
+        summary:'Electrician experienced in residential and light commercial projects. I combine careful installation and practical fault finding with clear client communication.',
+        experience:[{heading:'Electrician',organization:'Fictional Electrical',location:'Sheffield',dates:'2020 – Present',details:'Completed electrical work on renovations, diagnosed faults and coordinated requirements with clients on site.'},{heading:'Electrician’s Mate',organization:'Example Technical Ltd',location:'Sheffield',dates:'2017 – 2020',details:'Supported installation and maintenance work as part of a team and kept job records.'}],
+        education:[{heading:'Electrical Installation Diploma',organization:'Example Technical College',location:'Sheffield',dates:'2014 – 2017',details:''}],
+        certifications:[{heading:'Electrical safety training',organization:'Sample Training Centre',location:'',dates:'2023',details:''}],
+        skills:'Fault finding · electrical installation · reading plans · client communication',languages:'English\nGerman',languageLevels:[5,3]
+      }
+    }
   }
 ];
 
