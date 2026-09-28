@@ -124,6 +124,7 @@ html{scroll-behavior:smooth}
 
 /* Living editorial stage: motion is decorative, never required for navigation. */
 body:has(.hero-reference),body:has(.hero-reference) #header,body:has(.hero-reference) .page{background:#152820!important}
+body:has(.hero-reference){overflow-x:clip}
 body:has(.hero-reference) #header{border-bottom:1px solid rgba(238,246,224,.16)}
 body:has(.hero-reference) .nav .wordmark,body:has(.hero-reference) .nav .login{color:#f8f5ec!important}
 body:has(.hero-reference) .nav .brand-dot{color:#d4f09b!important}
@@ -158,11 +159,37 @@ body:has(.hero-reference) .nav .login:hover{transform:translateY(-3px);color:#d4
 .page .hero-reference .hero-template-card .cv-paper{overflow:hidden!important}
 .page .hero-reference .hero-template-card:not(.is-front):not(.is-prev):not(.is-next){display:none!important;visibility:hidden!important;pointer-events:none!important}
 .page .hero-reference .hero-template-card.is-front{animation:homeCardEnter .64s cubic-bezier(.2,.8,.2,1) both}
-.page .hero-reference .hero-template-card .sample-type{display:block!important;background:#d4f09b!important;border-color:#b8d889!important;color:#213325!important;top:-25px!important}
+.page .hero-reference .hero-template-card .sample-type{display:block!important;background:var(--sample-accent)!important;border-color:var(--sample-accent)!important;color:#213325!important;top:-25px!important}
 .page .hero-reference .hero-template-card .cv-paper{border-top-color:var(--sample-accent)!important}
 .page .hero-reference .hero-template-card.hero-style-tech .cv-head h2,.page .hero-reference .hero-template-card.hero-style-modern .cv-head h2{font-family:'DM Sans',Arial,sans-serif!important;font-weight:700!important}
 .page .hero-reference .hero-template-card.hero-style-executive .cv-head h2{font-family:Georgia,serif!important;text-transform:uppercase!important;letter-spacing:.07em!important;font-size:22px!important}
 .page .hero-reference .hero-template-card.hero-style-minimal .cv-head h2{font-family:Arial,sans-serif!important;font-weight:400!important}
+/* The paper, name treatment and section structure distinguish all six sample styles. */
+.page .hero-reference .hero-template-carousel::before,.page .hero-reference .hero-template-carousel::after{content:none!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-paper{background:#fffdf6!important;border-top-width:8px!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-head{background:#fffdf6!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-head h2{font-family:Georgia,serif!important;font-style:italic!important}
+.page .hero-reference .hero-template-card.hero-style-tech .cv-paper{border-top:0!important;background:#f8fcfa!important}
+.page .hero-reference .hero-template-card.hero-style-tech .cv-head{background:#204640!important;border-bottom:5px solid #85b9ad!important}
+.page .hero-reference .hero-template-card.hero-style-tech .cv-head h2{font-family:ui-monospace,Consolas,monospace!important;color:#fffdf6!important;letter-spacing:-.065em!important}
+.page .hero-reference .hero-template-card.hero-style-tech .cv-head .cv-title,.page .hero-reference .hero-template-card.hero-style-tech .cv-head .cv-contact{color:#d2e6df!important}
+.page .hero-reference .hero-template-card.hero-style-tech .cv-paper>section h3{color:#266b64!important;border-color:#aad3ca!important}
+.page .hero-reference .hero-template-card.hero-style-professional .cv-paper{border-top:0!important;border-left:9px solid #779878!important;background:#f7faf5!important}
+.page .hero-reference .hero-template-card.hero-style-professional .cv-head{background:#e9f2e9!important}
+.page .hero-reference .hero-template-card.hero-style-professional .cv-head h2{font-family:'DM Sans',Arial,sans-serif!important;font-weight:700!important;color:#31513c!important}
+.page .hero-reference .hero-template-card.hero-style-professional .cv-paper>section h3{border-left:3px solid #779878!important;padding-left:7px!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-paper{border-top:9px double #716b54!important;background:#fbf8f0!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head{background:#efe9da!important;border-bottom:2px solid #b8ab8a!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head h2{color:#48402f!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-paper>section h3{color:#62563e!important;border-color:#baa98b!important}
+.page .hero-reference .hero-template-card.hero-style-modern .cv-paper{border-top:0!important;border-left:8px solid #7196a5!important;background:#f6fafc!important}
+.page .hero-reference .hero-template-card.hero-style-modern .cv-head{background:#dfedf2!important}
+.page .hero-reference .hero-template-card.hero-style-modern .cv-head h2{color:#284f63!important}
+.page .hero-reference .hero-template-card.hero-style-modern .cv-paper>section h3{color:#416f82!important;border-color:#a7c8d7!important}
+.page .hero-reference .hero-template-card.hero-style-minimal .cv-paper{border-top:0!important;border-bottom:9px solid #d4bd91!important;background:#fffefa!important}
+.page .hero-reference .hero-template-card.hero-style-minimal .cv-head{background:#f7f1e6!important;border-bottom:1px solid #d3c7b1!important}
+.page .hero-reference .hero-template-card.hero-style-minimal .cv-head h2{font-size:29px!important;color:#3d3b34!important;letter-spacing:-.065em!important}
+.page .hero-reference .hero-template-card.hero-style-minimal .cv-paper>section h3{color:#8a7558!important;border-color:#d3c7b1!important}
 .page .hero-reference .template-arrow{background:#244235!important;border-color:#66846b!important;color:#f9f8ed!important}
 .page .hero-reference .template-arrow:hover{background:#d4f09b!important;color:#182d23!important}
 .page .hero-reference .template-dots{background:rgba(236,249,219,.12)!important}
@@ -178,7 +205,7 @@ body:has(.hero-reference) .nav .login:hover{transform:translateY(-3px);color:#d4
 .hero-feature-result strong{font-size:12px}
 .hero-feature-result small{font-size:10px;color:#c8d7c3}
 .page .hero-reference .hero-more-wrap{margin-top:12px}
-.energy-marquee{overflow:hidden;margin:0 -48px;border-top:1px solid rgba(212,240,155,.22);border-bottom:1px solid rgba(212,240,155,.22);color:#e1ecdc}
+.energy-marquee{overflow:hidden;margin:0;border-top:1px solid rgba(212,240,155,.22);border-bottom:1px solid rgba(212,240,155,.22);color:#e1ecdc}
 .energy-track{display:flex;width:max-content;animation:homeMarquee 28s linear infinite}
 .energy-marquee:hover .energy-track{animation-play-state:paused}
 .energy-group{display:flex;align-items:center;gap:45px;min-height:51px;padding-right:45px;white-space:nowrap;font-size:10px;font-weight:600;letter-spacing:.15em}
