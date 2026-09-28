@@ -560,3 +560,14 @@ body:has(#app.workspace) #footer .footer-bottom{color:#d3e4df!important}
  body:has(#app.workspace) .section-nav{padding:10px}
  body:has(#app.workspace) .form-panel{border-radius:13px}
 }
+
+/* One four-point brand mark on every screen, matching the browser favicon. */
+.wordmark .brand-star{
+ display:inline-block;
+ width:.76em;
+ height:.76em;
+ margin-left:.14em;
+ vertical-align:-.015em;
+ object-fit:contain;
+}
+.energy-marquee b{color:#9bd36b!important}
