@@ -300,9 +300,9 @@ body:has(.hero-reference) .nav .login:hover{transform:translateY(-3px);color:#d4
    The image is fixed to the viewport so it never repeats between sections. */
 body:has(.hero-reference){
  background-color:#152820!important;
- background-image:linear-gradient(180deg,rgba(12,32,24,.34),rgba(12,32,24,.46)),image-set(url('./nature-landscape.jpg') 1x,url('./nature-landscape-4k.jpg') 2x)!important;
+ background-image:linear-gradient(180deg,rgba(12,32,24,.24),rgba(12,32,24,.39)),url('./nature-landscape-4k.jpg')!important;
  background-position:center,center calc(50% + var(--landscape-shift,0px))!important;
- background-size:cover,max(110vw,172.5vh) auto!important;
+ background-size:cover,max(100vw,163.5vh) auto!important;
  background-repeat:no-repeat!important;
  background-attachment:fixed!important;
 }
@@ -351,6 +351,24 @@ body:has(.hero-reference) #footer{
  color:#eff5e9;
  backdrop-filter:blur(12px);
 }
+body:has(.hero-reference) #footer .footer-shell{
+ background:rgba(30,67,47,.62)!important;
+ border:1px solid rgba(212,240,155,.24);
+ border-radius:20px 20px 0 0;
+ padding:32px;
+}
+body:has(.hero-reference) #footer .impact-strip{
+ background:rgba(17,46,32,.9)!important;
+ color:#f5f8ee!important;
+ border:1px solid rgba(212,240,155,.24);
+ border-top:0;
+ border-radius:0 0 20px 20px!important;
+}
+body:has(.hero-reference) #footer .impact-strip:hover{
+ transform:none!important;
+ border-radius:0 0 20px 20px!important;
+ box-shadow:none!important;
+}
 body:has(.hero-reference) #footer .wordmark,
 body:has(.hero-reference) #footer .footer-col strong{color:#f5f8ee!important}
 body:has(.hero-reference) #footer .footer-brand p,
@@ -367,4 +385,5 @@ body:has(.hero-reference) #footer .footer-socials span{background:#d4f09b;color:
   background:linear-gradient(180deg,rgba(12,32,24,.72),rgba(12,32,24,.48) 52%,rgba(12,32,24,.28))!important;
  }
  .page .how,.page .pricing{background:rgba(20,45,34,.76)!important}
+ body:has(.hero-reference) #footer .footer-shell{padding:24px 20px}
 }
