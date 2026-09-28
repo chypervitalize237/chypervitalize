@@ -55,6 +55,28 @@ html{scroll-behavior:smooth}
 .example-job{display:flex;justify-content:space-between;gap:6px;font-size:7px}
 .example-job span,.example-sheet-body small{font-size:6px;color:#67736a}
 .example-sheet-body>small{display:block;margin:3px 0}
+.example-sheet .cv-paper{
+  width:222.22%;
+  min-height:540px;
+  margin:0;
+  transform:scale(.45);
+  transform-origin:top left;
+  box-shadow:none;
+}
+.example-sheet .cv-paper.basic-cv{padding:0!important}
+.example-sheet .basic-cv .basic-body{min-height:450px}
+.example-sheet .cv-style-tech .cv-head{background:#17232d!important}
+.example-sheet .cv-style-executive .cv-head{background:#26322f!important}
+.example-sheet .cv-style-executive .cv-head h2,
+.example-sheet .cv-style-executive .cv-head p{color:#fff!important}
+.example-sheet .cv-style-ats .cv-head{text-align:center}
+.example-sheet .cv-style-ats section h3{color:#252921}
+.workspace .cv-paper.cv-style-tech .cv-head{background:color-mix(in srgb,#17232d 84%,var(--template-accent))!important}
+.workspace .cv-paper.cv-style-executive .cv-head{background:color-mix(in srgb,#26322f 84%,var(--template-accent))!important}
+.workspace .cv-paper.cv-style-tech .cv-head h2,
+.workspace .cv-paper.cv-style-tech .cv-head p,
+.workspace .cv-paper.cv-style-executive .cv-head h2,
+.workspace .cv-paper.cv-style-executive .cv-head p{color:#fff!important}
 .example-card-info{position:relative;background:#f6f2e9;padding:21px 20px 20px;flex:1;display:flex;flex-direction:column}
 .example-card-info>span{font-size:11px;color:#667769;font-weight:600}
 .example-card-info h3{font-family:'Libre Caslon Display',Georgia,serif;font-size:27px;line-height:1.12;font-weight:400;margin:9px 0 10px;min-height:58px}
@@ -124,7 +146,7 @@ html{scroll-behavior:smooth}
 
 /* Living editorial stage: motion is decorative, never required for navigation. */
 body:has(.hero-reference),body:has(.hero-reference) #header,body:has(.hero-reference) .page{background:#152820!important}
-body:has(.hero-reference){overflow-x:clip}
+body:has(.hero-reference){overflow-x:clip;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}
 body:has(.hero-reference) #header{border-bottom:1px solid rgba(238,246,224,.16)}
 body:has(.hero-reference) .nav .wordmark,body:has(.hero-reference) .nav .login{color:#f8f5ec!important}
 body:has(.hero-reference) .nav .brand-dot{color:#d4f09b!important}
@@ -134,8 +156,9 @@ body:has(.hero-reference) .nav .wordmark{transition:transform .25s ease}
 body:has(.hero-reference) .nav .wordmark:hover{transform:translateY(-3px)}
 body:has(.hero-reference) .nav .login{transition:transform .25s ease,color .25s ease}
 body:has(.hero-reference) .nav .login:hover{transform:translateY(-3px);color:#d4f09b!important}
-/* Real landscape photograph from Unsplash, image ID photo-1759322647929-5a9df179e847. */
+/* Real alpine-valley photograph: https://www.pexels.com/photo/33855024/ ; 1920px and 3840px variants. */
 .page .hero-reference{isolation:isolate;color:#f7f3e8;background:linear-gradient(90deg,rgba(14,34,27,.91) 0%,rgba(14,34,27,.68) 41%,rgba(13,34,27,.34) 100%),url('./nature-landscape.jpg') center 52% / cover no-repeat!important;animation:homeLandscapeDrift 26s ease-in-out infinite alternate}
+.page .hero-reference{background-image:linear-gradient(90deg,rgba(14,34,27,.91) 0%,rgba(14,34,27,.68) 41%,rgba(13,34,27,.34) 100%),image-set(url('./nature-landscape.jpg') 1x,url('./nature-landscape-4k.jpg') 2x)!important}
 .page .hero-reference::before{content:"";position:absolute;z-index:-1;inset:-35px -6%;opacity:.14;pointer-events:none;background-image:radial-gradient(#e4f2da 1px,transparent 1px);background-size:30px 30px;mask-image:linear-gradient(90deg,transparent,#000 30%,#000 85%,transparent);animation:homeGridDrift 48s linear infinite}
 .page .hero-reference::after{content:"";position:absolute;z-index:-1;top:10%;right:1%;width:clamp(360px,47vw,720px);aspect-ratio:1;border:1px solid rgba(212,240,155,.13);border-radius:50%;pointer-events:none;box-shadow:0 0 0 70px rgba(212,240,155,.025),0 0 0 150px rgba(212,240,155,.018);animation:homeOrbit 18s ease-in-out infinite alternate}
 .page .hero-reference .hero-copy .eyebrow{color:#d4f09b!important}
@@ -190,6 +213,27 @@ body:has(.hero-reference) .nav .login:hover{transform:translateY(-3px);color:#d4
 .page .hero-reference .hero-template-card.hero-style-minimal .cv-head{background:#f7f1e6!important;border-bottom:1px solid #d3c7b1!important}
 .page .hero-reference .hero-template-card.hero-style-minimal .cv-head h2{font-size:29px!important;color:#3d3b34!important;letter-spacing:-.065em!important}
 .page .hero-reference .hero-template-card.hero-style-minimal .cv-paper>section h3{color:#8a7558!important;border-color:#d3c7b1!important}
+/* Chyper1 and Chyper2 retain their original layouts, not recolored generic sheets. */
+.page .hero-reference .hero-template-card.hero-style-basic .cv-paper{border-top:0!important;background:#fffefa!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-head{display:flex!important;grid-template-columns:none!important;height:auto!important;min-height:0!important;padding:25px 23px 20px!important;background:#e8f0df!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-head>div{width:100%!important;min-width:0!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-head h2{font:400 27px Georgia,serif!important;letter-spacing:-.04em!important;color:#26392b!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-head .basic-title,
+.page .hero-reference .hero-template-card.hero-style-basic .basic-head .basic-contact{color:#405746!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-body{min-height:500px;grid-template-columns:36% 64%}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-body>aside{padding:22px 14px!important;background:#f1f6ed!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-body>main{padding:22px 20px!important}
+.page .hero-reference .hero-template-card.hero-style-basic .basic-body h3{font-size:9px!important;line-height:1.3!important;text-align:left!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-head{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;padding:30px 24px 18px!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-head h2{position:static!important;width:100%!important;max-width:none!important;margin:0 0 8px!important;text-align:center!important;transform:none!important;color:#20251f!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-head .cv-title,
+.page .hero-reference .hero-template-card.hero-style-ats .cv-head .cv-contact{text-align:center!important;color:#2d302c!important}
+.page .hero-reference .hero-template-card.hero-style-ats .cv-paper>section h3{color:#252921!important;border-color:#91a77e!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head{background:#26322f!important;border-bottom:3px double #c6ae80!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head h2,
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head .cv-title,
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head .cv-contact{color:#fff!important;text-align:center!important}
+.page .hero-reference .hero-template-card.hero-style-executive .cv-head h2{font-size:22px!important}
 .page .hero-reference .template-arrow{background:#244235!important;border-color:#66846b!important;color:#f9f8ed!important}
 .page .hero-reference .template-arrow:hover{background:#d4f09b!important;color:#182d23!important}
 .page .hero-reference .template-dots{background:rgba(236,249,219,.12)!important}
@@ -234,6 +278,7 @@ body:has(.hero-reference) .nav .login:hover{transform:translateY(-3px);color:#d4
 }
 @media(max-width:700px){
  .page .hero-reference{background:linear-gradient(180deg,rgba(14,34,27,.87),rgba(14,34,27,.73) 50%,rgba(14,34,27,.57)),url('./nature-landscape.jpg') 67% center / cover no-repeat!important}
+ .page .hero-reference{background-image:linear-gradient(180deg,rgba(14,34,27,.87),rgba(14,34,27,.73) 50%,rgba(14,34,27,.57)),image-set(url('./nature-landscape.jpg') 1x,url('./nature-landscape-4k.jpg') 2x)!important}
  .page .hero-reference::before{inset:0 -21px}
  .page .hero-reference::after{top:25%;right:-50%;width:440px}
  .page .hero-reference .hero-live-label{padding:0 14px}

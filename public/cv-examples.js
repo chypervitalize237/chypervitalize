@@ -4,9 +4,42 @@
 // All employers, names and results below are illustrative, not real testimonials.
 const examples = [
   {
+    id:'chyper1',style:'basic',accent:'#b4d3ad',
+    hu:{
+      category:'Chyper1 · Klasszikus',label:'Irodai koordinátor',note:'Áttekinthető, kéthasábos önéletrajz',
+      result:'Példa eredmény: 15%-kal rövidebb ügyintézés',
+      cv:{
+        name:'Kiss Eszter',title:'Irodai koordinátor',email:'eszter@example.com',phone:'+36 30 000 0000',city:'Győr',link:'linkedin.com/in/pelda-eszter',
+        summary:'Szervezett irodai koordinátor 6 év tapasztalattal. Az emberek és folyamatok közötti gördülékeny együttműködésre törekszem.',
+        experience:[
+          {heading:'Irodai koordinátor',organization:'Fiktív Központ',location:'Győr',dates:'2021 – jelenleg',details:'Egyszerűsítettem a belső igénylések kezelését; a mintaprojektben az átlagos ügyintézési idő 15%-kal csökkent.'},
+          {heading:'Adminisztrációs munkatárs',organization:'Példa Szolgáltató',location:'Győr',dates:'2018 – 2021',details:'Ügyféldokumentumokat kezeltem és a csapat heti egyeztetéseit szerveztem.'}
+        ],
+        education:[{heading:'Gazdálkodási és menedzsment BA',organization:'Példa Egyetem',location:'Győr',dates:'2015 – 2018',details:''}],
+        skills:'Szervezés · ügyfélkommunikáció · Microsoft 365 · folyamatfejlesztés',
+        languages:'Magyar\nAngol',languageLevels:[5,3]
+      }
+    },
+    en:{
+      category:'Chyper1 · Classic',label:'Office coordinator',note:'Clear two-column resume',
+      result:'Example outcome: 15% faster administration',
+      cv:{
+        name:'Esther Kiss',title:'Office Coordinator',email:'esther@example.com',phone:'+44 7700 900000',city:'Bristol',link:'linkedin.com/in/example-esther',
+        summary:'Organised office coordinator with six years of experience helping people and processes work smoothly together.',
+        experience:[
+          {heading:'Office Coordinator',organization:'Fictional Centre',location:'Bristol',dates:'2021 – Present',details:'Simplified internal requests; in this illustrative project, average handling time fell by 15%.'},
+          {heading:'Administrative Assistant',organization:'Example Services',location:'Bristol',dates:'2018 – 2021',details:'Managed customer documents and coordinated the team’s weekly meetings.'}
+        ],
+        education:[{heading:'BA Business Management',organization:'Example University',location:'Bristol',dates:'2015 – 2018',details:''}],
+        skills:'Organisation · customer communication · Microsoft 365 · process improvement',
+        languages:'English\nGerman',languageLevels:[5,3]
+      }
+    }
+  },
+  {
     id: 'marketing', style: 'ats', accent: '#c1d5ac',
     hu: {
-      category: 'Marketing', label: 'Marketing specialist', note: 'Kampányok és mérhető növekedés',
+      category: 'Chyper2 · ATS', label: 'Marketing specialist', note: 'Klasszikus, középre zárt elrendezés',
       result: 'Példa eredmény: +32% minősített érdeklődő',
       cv: {
         name: 'Kovács Anna', title: 'Marketing specialist', email: 'anna@example.com',
@@ -22,7 +55,7 @@ const examples = [
       }
     },
     en: {
-      category: 'Marketing', label: 'Marketing specialist', note: 'Campaigns and measurable growth',
+      category: 'Chyper2 · ATS', label: 'Marketing specialist', note: 'Classic centered layout',
       result: 'Example outcome: +32% qualified leads',
       cv: {
         name:'Anna Kovacs',title:'Marketing Specialist',email:'anna@example.com',
