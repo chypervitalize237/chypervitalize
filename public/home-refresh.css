@@ -710,3 +710,11 @@ body:has(#app.workspace) #footer .footer-bottom{color:#d3e4df!important}
  .why-mark{top:19px;right:17px}
 }
 @media(prefers-reduced-motion:reduce){.why-card{transition:none!important;animation:none!important}}
+
+/* The editor's page color is independent from the top and side accents. */
+.workspace .cv-paper{background-color:var(--cv-paper-bg,#fff)!important}
+.workspace .basic-cv .basic-body>main{background:transparent!important}
+.workspace .cv-paper.paper-dark>section,
+.workspace .cv-paper.paper-dark>section :is(h3,p,strong,small),
+.workspace .basic-cv.paper-dark .basic-body>main,
+.workspace .basic-cv.paper-dark .basic-body>main :is(h3,p,strong,small){color:#fff!important}

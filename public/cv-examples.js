@@ -223,33 +223,6 @@ const examples = [
     }
   },
   {
-    id:'designer',style:'creative',accent:'#e4b6a8',
-    hu:{
-      category:'Kreatív · Portfólió',label:'Arculattervező',note:'Vizuális gondolkodás és alkotói projektek',
-      result:'Példa eredmény: új arculat egy helyi márkának',
-      cv:{
-        name:'Bíró Lili',title:'Arculattervező',email:'lili@example.com',phone:'+36 30 000 0000',city:'Budapest',link:'behance.net/pelda-lili',
-        summary:'Arculattervező vagyok, aki kutatásból és történetekből épít felismerhető vizuális világokat. Márkáknak, kiadványoknak és digitális felületeknek tervezek.',
-        experience:[{heading:'Vizuális tervező',organization:'Fiktív Műhely',location:'Budapest',dates:'2022 – jelenleg',details:'Kisvállalkozások arculatát és kampányanyagait terveztem, a kezdeti vázlatoktól az átadható rendszerig.'}],
-        projects:[{heading:'Egy helyi kávézó új arculata',organization:'Önálló projekt',location:'Budapest',dates:'2025',details:'Logót, csomagolást és közösségimédia-sablonokat készítettem egységes képi nyelvvel.'}],
-        education:[{heading:'Tervezőgrafika BA',organization:'Példa Művészeti Egyetem',location:'Budapest',dates:'2019 – 2022',details:''}],
-        skills:'Arculattervezés · tipográfia · Figma · Adobe Illustrator · kiadványtervezés',languages:'Magyar\nAngol',languageLevels:[5,4]
-      }
-    },
-    en:{
-      category:'Creative · Portfolio',label:'Brand designer',note:'Visual thinking and independent projects',
-      result:'Example project: a new identity for a local brand',
-      cv:{
-        name:'Lily Biro',title:'Brand Designer',email:'lily@example.com',phone:'+44 7700 900000',city:'Brighton',link:'behance.net/example-lily',
-        summary:'Brand designer turning research and stories into memorable visual identities. I create systems for brands, publications and digital experiences.',
-        experience:[{heading:'Visual Designer',organization:'Fictional Studio',location:'Brighton',dates:'2022 – Present',details:'Designed identities and campaign materials for small businesses from first sketches to handover-ready systems.'}],
-        projects:[{heading:'A local café rebrand',organization:'Independent project',location:'Brighton',dates:'2025',details:'Created a logo, packaging and social templates with a consistent visual language.'}],
-        education:[{heading:'BA Graphic Design',organization:'Example Arts University',location:'Brighton',dates:'2019 – 2022',details:''}],
-        skills:'Brand identity · typography · Figma · Adobe Illustrator · editorial design',languages:'English\nFrench',languageLevels:[5,3]
-      }
-    }
-  },
-  {
     id:'nurse',style:'compact',accent:'#9cbdb5',
     hu:{
       category:'Egészségügy · Tömör',label:'Ápoló',note:'Betegellátás és szakmai felelősség',
