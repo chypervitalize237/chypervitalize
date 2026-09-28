@@ -301,8 +301,8 @@ body:has(.hero-reference) .nav .login:hover{transform:translateY(-3px);color:#d4
 body:has(.hero-reference){
  background-color:#152820!important;
  background-image:linear-gradient(180deg,rgba(12,32,24,.34),rgba(12,32,24,.46)),image-set(url('./nature-landscape.jpg') 1x,url('./nature-landscape-4k.jpg') 2x)!important;
- background-position:center 46%!important;
- background-size:cover!important;
+ background-position:center,center calc(50% + var(--landscape-shift,0px))!important;
+ background-size:cover,max(110vw,172.5vh) auto!important;
  background-repeat:no-repeat!important;
  background-attachment:fixed!important;
 }

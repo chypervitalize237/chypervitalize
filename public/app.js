@@ -211,7 +211,19 @@ document.addEventListener('change',async e=>{if(['header-language','setup-langua
 document.addEventListener('submit',async e=>{if(e.target.id!=='auth-form')return;e.preventDefault();const f=e.target,button=f.querySelector('button');button.disabled=true;try{const r=await api('auth',{email:f.email.value,password:f.password.value,mode:state.authMode,ref:localStorage.getItem('chypervitalize-ref')});state.user=r.user;if(state.paymentResume){state.paymentResume=false;const {draft}=await api('draft');if(draft&&!stored){state.cv={...structuredClone(blank),...draft.cv};state.cvLang=draft.cvLang||state.cvLang;}$('#modal').close();await verifyPayment();return;}const {draft}=await api('draft');if(draft){state.restore=draft;openModal(`<h2>${t('confirmRestore')}</h2>${buttonHTML(t('restore'),'restore-account')}${buttonHTML(t('keep'),'keep-current')}`);render();return;}save();$('#modal').close();render();if(state.pendingDownload){state.pendingDownload=false;download();}}catch{$('#auth-error').textContent=t('authError');button.disabled=false;}});
 function buttonHTML(label,action){return `<button class="secondary" data-action="${action}">${label}</button>`;}
 $('#modal').addEventListener('click',e=>{if(e.target===$('#modal')){const r=$('#modal').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('#modal').close();}});
+const reducedLandscapeMotion=matchMedia('(prefers-reduced-motion: reduce)');
+let landscapeFrame=0;
+function updateLandscapePosition(){
+ landscapeFrame=0;
+ const shift=!reducedLandscapeMotion.matches&&document.querySelector('.hero-reference')?Math.min(60,Math.max(0,window.scrollY*.035)):0;
+ document.body.style.setProperty('--landscape-shift',`${shift.toFixed(1)}px`);
+}
+function queueLandscapePosition(){if(!landscapeFrame)landscapeFrame=requestAnimationFrame(updateLandscapePosition);}
+window.addEventListener('scroll',queueLandscapePosition,{passive:true});
+window.addEventListener('resize',queueLandscapePosition,{passive:true});
+reducedLandscapeMotion.addEventListener('change',queueLandscapePosition);
 render();api('me').then(async r=>{
+ queueLandscapePosition();
  state.user=r.user;state.ai=r.ai;state.demo=r.demo;
  if(state.user){try{const {draft}=await api('draft');if(draft&&!stored){state.cv={...structuredClone(blank),...draft.cv};state.cvLang=draft.cvLang||state.cvLang;state.lang=draft.lang||state.lang;}}catch{}}
  if(checkoutResult==='success'){await verifyPayment();return;}else if(checkoutSession){localStorage.removeItem('chypervitalize-checkout-session');checkoutSession=null;}
