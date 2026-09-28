@@ -465,6 +465,9 @@ body:has(#app.workspace) #header{
 body:has(#app.workspace) #header .wordmark,
 body:has(#app.workspace) #header .nav-right{color:#f4f9f7!important}
 body:has(#app.workspace) #header .brand-dot{color:#bde4b2!important}
+body:has(#app.workspace) #header .language select,
+body:has(#app.workspace) #header .login{color:#f4f9f7!important}
+body:has(#app.workspace) #header .language select option{color:#214541!important}
 body:has(#app.workspace) #app.workspace{background:transparent!important}
 body:has(#app.workspace) .editor-top h1{color:#193c3c!important}
 body:has(#app.workspace) .editor-top .eyebrow,
