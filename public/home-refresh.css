@@ -986,3 +986,80 @@ body:has(.hero-reference) #footer{
  .page .pricing .plan-features{margin-top:18px}
  .page .pricing .plan-features li{font-size:12px;min-height:37px}
 }
+
+
+/* Premium concept fidelity in the homepage carousel and popular-template gallery. */
+.hero-template-card .cv-paper.cv-style-executive,
+.example-sheet .cv-paper.cv-style-executive{
+ display:block!important;padding:66px 64px!important;background:#fbf8ef!important;
+ border:10px solid #201f1b!important;outline:1px solid #b59a61!important;outline-offset:-19px!important;
+}
+.hero-template-card .cv-style-executive::before,.example-sheet .cv-style-executive::before{content:"◆"!important;display:block!important;text-align:center!important;color:#b59a61!important;font-size:10px!important;margin-bottom:14px!important}
+.hero-template-card .cv-style-executive .cv-head,.example-sheet .cv-style-executive .cv-head{padding:0 0 28px!important;margin:0 0 30px!important;background:transparent!important;border-bottom:1px solid #b59a61!important;text-align:center!important}
+.hero-template-card .cv-style-executive .cv-head h2,.example-sheet .cv-style-executive .cv-head h2{font-family:Georgia,serif!important;font-size:38px!important;letter-spacing:5.5px!important;text-transform:uppercase!important;color:#201f1b!important}
+.hero-template-card .cv-style-executive .cv-head :is(p,.cv-title,.cv-contact),.example-sheet .cv-style-executive .cv-head :is(p,.cv-title,.cv-contact){color:#4f4738!important;text-align:center!important}
+.hero-template-card .cv-style-executive>section,.example-sheet .cv-style-executive>section{display:block!important;padding:0!important;border:0!important}
+.hero-template-card .cv-style-executive>section h3,.example-sheet .cv-style-executive>section h3{text-align:center!important;color:#7d6332!important;border:0!important;letter-spacing:2px!important}
+
+.hero-template-card .cv-paper.cv-style-modern,
+.example-sheet .cv-paper.cv-style-modern{
+ display:grid!important;grid-template-columns:.86fr 2.14fr!important;column-gap:34px!important;align-content:start!important;
+ padding:0 46px 48px!important;background:#fff!important;border:0!important;
+}
+.hero-template-card .cv-style-modern .cv-head,.example-sheet .cv-style-modern .cv-head{grid-column:1/-1!important;margin:0 -46px 30px!important;padding:42px 46px 36px!important;background:linear-gradient(125deg,#142c26,#263f37)!important;border:0!important;text-align:left!important}
+.hero-template-card .cv-style-modern .cv-head h2,.example-sheet .cv-style-modern .cv-head h2{font:800 39px Arial,sans-serif!important;letter-spacing:-1.6px!important;color:#fff!important}
+.hero-template-card .cv-style-modern .cv-head :is(p,.cv-title,.cv-contact),.example-sheet .cv-style-modern .cv-head :is(p,.cv-title,.cv-contact){color:#dce8df!important;text-align:left!important}
+.hero-template-card .cv-style-modern>section,.example-sheet .cv-style-modern>section{grid-column:2!important;padding:0!important}
+.hero-template-card .cv-style-modern>section:nth-of-type(1),.hero-template-card .cv-style-modern>section:last-child,.example-sheet .cv-style-modern>section:nth-of-type(1),.example-sheet .cv-style-modern>section:last-child{grid-column:1!important;padding-right:6px!important}
+.hero-template-card .cv-style-modern>section h3,.example-sheet .cv-style-modern>section h3{color:#26483e!important;border-bottom:1px solid #91b6a5!important;background:transparent!important}
+
+.hero-template-card .cv-paper.cv-style-creative,
+.example-sheet .cv-paper.cv-style-creative{display:grid!important;grid-template-columns:36% 64%!important;align-content:start!important;padding:0!important;background:#fff!important;border:0!important}
+.hero-template-card .cv-style-creative .cv-head,.example-sheet .cv-style-creative .cv-head{grid-column:1/-1!important;padding:42px!important;margin:0!important;background:linear-gradient(120deg,#b9d5c3,#dbe8dc)!important;border:0!important;text-align:left!important}
+.hero-template-card .cv-style-creative .cv-head h2,.example-sheet .cv-style-creative .cv-head h2{font:800 40px Arial,sans-serif!important;letter-spacing:-1.7px!important;color:#18342b!important}
+.hero-template-card .cv-style-creative .cv-head :is(p,.cv-title,.cv-contact),.example-sheet .cv-style-creative .cv-head :is(p,.cv-title,.cv-contact){color:#304f45!important;text-align:left!important}
+.hero-template-card .cv-style-creative>section,.example-sheet .cv-style-creative>section{grid-column:2!important;padding:0 38px!important}
+.hero-template-card .cv-style-creative>section:nth-of-type(1),.hero-template-card .cv-style-creative>section:last-child,.example-sheet .cv-style-creative>section:nth-of-type(1),.example-sheet .cv-style-creative>section:last-child{grid-column:1!important;margin:0!important;padding:27px!important;background:#20362f!important;color:#f7f4e9!important}
+.hero-template-card .cv-style-creative>section:nth-of-type(1) h3,.hero-template-card .cv-style-creative>section:last-child h3,.example-sheet .cv-style-creative>section:nth-of-type(1) h3,.example-sheet .cv-style-creative>section:last-child h3{color:#cab27e!important;background:transparent!important;border-color:#cab27e!important}
+
+.hero-template-card .cv-paper.cv-style-minimal,
+.example-sheet .cv-paper.cv-style-minimal{display:block!important;padding:72px 62px 60px!important;border:0!important;border-left:5px solid #b29a68!important;background:#fff!important}
+.hero-template-card .cv-style-minimal .cv-head,.example-sheet .cv-style-minimal .cv-head{margin:0 0 50px!important;padding:0!important;background:transparent!important;border:0!important;text-align:left!important}
+.hero-template-card .cv-style-minimal .cv-head h2,.example-sheet .cv-style-minimal .cv-head h2{font:300 37px Arial,sans-serif!important;letter-spacing:-1.4px!important;color:#242621!important}
+.hero-template-card .cv-style-minimal .cv-title,.example-sheet .cv-style-minimal .cv-title{letter-spacing:2.5px!important;color:#a1844e!important}
+.hero-template-card .cv-style-minimal>section,.example-sheet .cv-style-minimal>section{display:block!important;padding:0!important}
+.hero-template-card .cv-style-minimal>section h3,.example-sheet .cv-style-minimal>section h3{font:600 8.5px Arial,sans-serif!important;letter-spacing:2.8px!important;color:#8d7449!important;border:0!important;background:transparent!important}
+
+.hero-template-card .cv-paper.cv-style-professional,
+.example-sheet .cv-paper.cv-style-professional{display:block!important;padding:48px 52px 52px 70px!important;background:#f5f2e9!important;border:0!important;border-left:18px solid #1d2722!important}
+.hero-template-card .cv-style-professional .cv-head,.example-sheet .cv-style-professional .cv-head{margin:0 0 34px!important;padding:0 0 26px!important;background:transparent!important;border:0!important;border-bottom:4px solid #171a18!important;text-align:left!important;color:#171a18!important}
+.hero-template-card .cv-style-professional .cv-head h2,.example-sheet .cv-style-professional .cv-head h2{font:900 42px Arial,sans-serif!important;letter-spacing:-2px!important;color:#171a18!important}
+.hero-template-card .cv-style-professional .cv-head :is(p,.cv-title,.cv-contact),.example-sheet .cv-style-professional .cv-head :is(p,.cv-title,.cv-contact){color:#4b504c!important;text-align:left!important}
+.hero-template-card .cv-style-professional>section,.example-sheet .cv-style-professional>section{display:block!important;padding:0!important}
+.hero-template-card .cv-style-professional>section h3,.example-sheet .cv-style-professional>section h3{font:700 9px Arial,sans-serif!important;letter-spacing:2.6px!important;color:#a55f3a!important;border:0!important;border-bottom:1px solid #bfc2bb!important;background:transparent!important}
+
+.hero-template-card .cv-paper.cv-style-compact,
+.example-sheet .cv-paper.cv-style-compact{display:block!important;padding:0 48px 48px!important;background:#fbf6ea!important;border:0!important;box-shadow:inset 0 0 0 6px #ad734b!important}
+.hero-template-card .cv-style-compact .cv-head,.example-sheet .cv-style-compact .cv-head{display:block!important;margin:0 -48px 30px!important;padding:44px 48px 34px!important;background:#13283a!important;color:#f8f2e7!important;border:0!important;border-bottom:7px solid #ad734b!important;text-align:center!important}
+.hero-template-card .cv-style-compact .cv-head h2,.example-sheet .cv-style-compact .cv-head h2{font:400 38px Georgia,serif!important;letter-spacing:1.5px!important;color:#fff!important}
+.hero-template-card .cv-style-compact .cv-head :is(p,.cv-title,.cv-contact),.example-sheet .cv-style-compact .cv-head :is(p,.cv-title,.cv-contact){color:#e8d9c6!important;text-align:center!important}
+.hero-template-card .cv-style-compact>section,.example-sheet .cv-style-compact>section{display:block!important;margin:18px 0!important;padding:0!important}
+.hero-template-card .cv-style-compact>section h3,.example-sheet .cv-style-compact>section h3{text-align:center!important;font:700 8px Arial,sans-serif!important;letter-spacing:2.4px!important;color:#8c542f!important;border:0!important;border-bottom:1px solid #ccb89f!important;background:transparent!important}
+
+.hero-template-card .cv-paper.cv-style-elegant,
+.example-sheet .cv-paper.cv-style-elegant{display:block!important;padding:50px 52px 52px!important;background:#faf9f4!important;border:0!important;border-top:14px solid #b6252c!important;outline:none!important}
+.hero-template-card .cv-style-elegant .cv-head,.example-sheet .cv-style-elegant .cv-head{position:relative!important;margin:0!important;padding:0 0 27px!important;background:transparent!important;border:0!important;border-bottom:4px solid #111!important;text-align:left!important}
+.hero-template-card .cv-style-elegant .cv-head::after,.example-sheet .cv-style-elegant .cv-head::after{content:"01"!important;position:absolute!important;right:0!important;bottom:10px!important;left:auto!important;transform:none!important;background:transparent!important;color:#b6252c!important;font:900 20px Arial,sans-serif!important}
+.hero-template-card .cv-style-elegant .cv-head h2,.example-sheet .cv-style-elegant .cv-head h2{font:900 46px Arial,sans-serif!important;font-style:normal!important;letter-spacing:-2.5px!important;color:#111!important}
+.hero-template-card .cv-style-elegant .cv-title,.example-sheet .cv-style-elegant .cv-title{font-family:Arial,sans-serif!important;text-transform:uppercase!important;letter-spacing:2px!important;color:#b6252c!important}
+.hero-template-card .cv-style-elegant>section,.example-sheet .cv-style-elegant>section{display:block!important;padding-left:20px!important;border-left:1px solid #c9c8c2!important}
+.hero-template-card .cv-style-elegant>section h3,.example-sheet .cv-style-elegant>section h3{text-align:left!important;font:900 9px Arial,sans-serif!important;letter-spacing:2.8px!important;color:#b6252c!important;border:0!important;background:transparent!important}
+
+.hero-template-card .cv-paper.cv-style-tech,
+.example-sheet .cv-paper.cv-style-tech{display:grid!important;grid-template-columns:35% 65%!important;align-content:start!important;padding:0!important;background:#f4efe3!important;color:#17221e!important;border:0!important}
+.hero-template-card .cv-style-tech .cv-head,.example-sheet .cv-style-tech .cv-head{grid-column:1/-1!important;margin:0!important;padding:44px 46px!important;background:linear-gradient(120deg,#123a31,#1e5245)!important;border:0!important;border-bottom:6px solid #bd9a55!important;text-align:left!important;color:#f8f3e7!important}
+.hero-template-card .cv-style-tech .cv-head h2,.example-sheet .cv-style-tech .cv-head h2{font:400 38px Georgia,serif!important;letter-spacing:.2px!important;color:#fff!important}
+.hero-template-card .cv-style-tech .cv-head :is(p,.cv-title,.cv-contact),.example-sheet .cv-style-tech .cv-head :is(p,.cv-title,.cv-contact){color:#dbe8df!important;text-align:left!important}
+.hero-template-card .cv-style-tech>section,.example-sheet .cv-style-tech>section{grid-column:2!important;padding:0 40px!important}
+.hero-template-card .cv-style-tech>section:nth-of-type(1),.hero-template-card .cv-style-tech>section:last-child,.example-sheet .cv-style-tech>section:nth-of-type(1),.example-sheet .cv-style-tech>section:last-child{grid-column:1!important;margin:0!important;padding:28px!important;background:#123a31!important;color:#f4efe3!important}
+.hero-template-card .cv-style-tech>section h3,.example-sheet .cv-style-tech>section h3{font-family:Arial,sans-serif!important;color:#9e7b3d!important;border:0!important;border-left:4px solid #bd9a55!important;padding-left:10px!important;letter-spacing:2px!important;background:transparent!important}
