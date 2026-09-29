@@ -279,7 +279,7 @@ const examples = [
   {
     id:'emerald-director',style:'tech',accent:'#b99b59',
     hu:{
-      category:'Körhinta-exkluzív · Emerald Prestige',label:'Digitális termékvezető',note:'Stratégia, növekedés és modern vezetői jelenlét',
+      category:'Prémium · Emerald Prestige',label:'Digitális termékvezető',note:'Stratégia, növekedés és modern vezetői jelenlét',
       result:'Példa fókusz: prémium vezetői pozicionálás',
       cv:{
         name:'Németh Dániel',title:'Digitális termékvezető',email:'daniel@example.com',phone:'+36 30 000 0000',city:'Budapest',link:'linkedin.com/in/nemeth-daniel',
@@ -291,7 +291,7 @@ const examples = [
       }
     },
     en:{
-      category:'Carousel exclusive · Emerald Prestige',label:'Digital product director',note:'Strategy, growth and modern executive presence',
+      category:'Premium · Emerald Prestige',label:'Digital product director',note:'Strategy, growth and modern executive presence',
       result:'Example focus: premium leadership positioning',
       cv:{
         name:'Daniel Nemeth',title:'Digital Product Director',email:'daniel@example.com',phone:'+44 7700 900000',city:'London',link:'linkedin.com/in/daniel-nemeth',
