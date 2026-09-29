@@ -96,12 +96,15 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   if(!paidProjects.includes(projectKey)){paidProjects.push(projectKey);db.prepare('UPDATE users SET paid_projects=? WHERE id=?').run(JSON.stringify(paidProjects.slice(-100)),u.id);}
   const allowed=['basic','ats','modern','executive','minimal','creative','professional','compact','elegant','tech'],style=allowed.includes(b.cvStyle)?b.cvStyle:(b.resumeType==='basic'?'basic':'ats');
   const validColor=v=>/^#[0-9a-f]{6}$/i.test(String(v||'')),bg=validColor(b.cvBackground)?String(b.cvBackground).toLowerCase():'#ffffff',accent=validColor(b.basicAccent)?String(b.basicAccent):'#74866b',accent2=validColor(b.basicAccent2)?String(b.basicAccent2):'#b49a68';
-  const rgb=[1,3,5].map(i=>parseInt(bg.slice(i,i+2),16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4),darkPaper=rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722<.179,ink=darkPaper?'#ffffff':'#252921',muted=darkPaper?'#d5dbd5':'#626960';
-  const pdf=new PDFDocument({size:'A4',margin:48,info:{Title:(d.name||'CV')+' — Chypervitalize',Author:d.name||''}});
-  res.writeHead(200,{'Content-Type':'application/pdf','Content-Disposition':'attachment; filename=Chypervitalize-CV.pdf'});pdf.pipe(res);
-  pdf.registerFont('regular',join(root,'fonts/DejaVuSans.ttf'));pdf.registerFont('bold',join(root,'fonts/DejaVuSans-Bold.ttf'));pdf.registerFont('serif',join(root,'fonts/DejaVuSerif.ttf'));
+   const rgb=[1,3,5].map(i=>parseInt(bg.slice(i,i+2),16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4),darkPaper=rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722<.179,ink=darkPaper?'#ffffff':'#252921',muted=darkPaper?'#d5dbd5':'#626960';
+   const layout=b.layout&&typeof b.layout==='object'?b.layout:{},customInk=validColor(layout.textColor)?layout.textColor:ink,customHeading=validColor(layout.headingColor)?layout.headingColor:null;
+   const fontFiles=['DejaVuSans.ttf','DejaVuSans-Bold.ttf','DejaVuSerif.ttf'].map(name=>join(root,'fonts',name));
+   if(fontFiles.some(file=>!existsSync(file)))return json(res,{error:'pdf_fonts_missing'},500);
+   const pdf=new PDFDocument({size:'A4',margin:48,info:{Title:(d.name||'CV')+' — Chypervitalize',Author:d.name||''}});
+   pdf.registerFont('regular',fontFiles[0]);pdf.registerFont('bold',fontFiles[1]);pdf.registerFont('serif',fontFiles[2]);
+   res.writeHead(200,{'Content-Type':'application/pdf','Content-Disposition':'attachment; filename=Chypervitalize-CV.pdf'});pdf.pipe(res);
   const left=style==='minimal'?62:(style==='professional'||style==='tech'?66:48),right=pdf.page.width-48,width=right-left,contact=[d.email,d.phone,d.city,d.link].filter(Boolean).join('  •  ');
-  const paintPage=()=>{const x=pdf.x,y=pdf.y;pdf.rect(0,0,pdf.page.width,pdf.page.height).fill(bg);if(style==='minimal')pdf.rect(0,0,10,pdf.page.height).fill(accent2);if(style==='professional')pdf.rect(0,0,18,pdf.page.height).fill('#1d2722');if(style==='elegant')pdf.rect(0,0,pdf.page.width,14).fill('#b6252c');if(style==='tech')pdf.rect(0,0,16,pdf.page.height).fill('#123a31');pdf.x=x;pdf.y=y;pdf.fillColor(ink);};pdf.on('pageAdded',paintPage);paintPage();
+   const paintPage=()=>{const x=pdf.x,y=pdf.y;pdf.rect(0,0,pdf.page.width,pdf.page.height).fill(bg);if(style==='minimal')pdf.rect(0,0,10,pdf.page.height).fill(accent2);if(style==='professional')pdf.rect(0,0,18,pdf.page.height).fill('#1d2722');if(style==='elegant')pdf.rect(0,0,pdf.page.width,14).fill('#b6252c');if(style==='tech')pdf.rect(0,0,16,pdf.page.height).fill('#123a31');pdf.x=x;pdf.y=y;pdf.fillColor(customInk);};pdf.on('pageAdded',paintPage);paintPage();
   const photo=(x,y,w=50,h=60)=>{if(!d.photo)return false;try{pdf.image(Buffer.from(String(d.photo).split(',')[1],'base64'),x,y,{fit:[w,h],align:'center',valign:'center'});return true;}catch{return false;}};
   const name=d.name||'',title=d.title||'';
   if(style==='basic'){
@@ -128,17 +131,85 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   const pageCheck=()=>{if(pdf.y>700){pdf.addPage();pdf.y=48;}};
   const section=(heading,txt)=>{
    if(!String(txt||'').trim())return;pageCheck();pdf.moveDown(style==='compact'?.55:.9);
-   const centered=['ats','executive','compact'].includes(style),headColor=style==='elegant'?'#b6252c':style==='professional'?'#a55f3a':style==='tech'?'#9e7b3d':['executive','minimal','compact'].includes(style)?accent2:accent;
+    const centered=['ats','executive','compact'].includes(style),headColor=customHeading||(style==='elegant'?'#b6252c':style==='professional'?'#a55f3a':style==='tech'?'#9e7b3d':['executive','minimal','compact'].includes(style)?accent2:accent);
    pdf.font('bold').fillColor(headColor).fontSize(style==='compact'?8:9).text(String(heading||'').toUpperCase(),left,pdf.y,{width,align:centered?'center':'left',characterSpacing:style==='elegant'?1.7:.8});
    const lineY=pdf.y+4;
    if(style==='ats'||style==='professional'||style==='elegant')pdf.moveTo(left,lineY).lineTo(right,lineY).strokeColor(headColor).lineWidth(.5).stroke();
    else if(style==='executive'||style==='compact')pdf.moveTo(left+45,lineY).lineTo(right-45,lineY).strokeColor(headColor).lineWidth(.45).stroke();
    else if(style==='modern'||style==='creative'||style==='tech')pdf.rect(left,lineY-2,20,3).fill(headColor);
-   pdf.moveDown(style==='compact'?.5:.72).font('regular').fillColor(ink).fontSize(style==='compact'?8.5:9.5).text(String(txt),left,pdf.y,{width,lineGap:style==='compact'?2:3});
+    pdf.moveDown(style==='compact'?.5:.72).font(layout.font==='serif'?'serif':'regular').fillColor(customInk).fontSize(style==='compact'?8.5:9.5).text(String(txt),left,pdf.y,{width,lineGap:style==='compact'?2:3});
   };
-  section(l.summary,d.summary);
-  for(const key of ['experience','education','projects','awards','volunteer','certifications']){const rows=d[key]||[];if(rows.some(x=>x.heading||x.details))section(l[key],rows.filter(x=>x.heading||x.details).map(x=>[x.heading,[x.organization,x.location,x.dates].filter(Boolean).join('  |  '),x.details].filter(Boolean).join('\n')).join('\n\n'));}
-  section(l.skills,d.skills);section(l.languages,d.languages);pdf.end();return;
+   const defaultOrder=['summary','experience','education','projects','awards','volunteer','certifications','skills','languages'];
+   const ordered=Array.isArray(layout.order)?[...new Set(layout.order.filter(key=>defaultOrder.includes(key))),...defaultOrder.filter(key=>!layout.order.includes(key))]:defaultOrder;
+   const blocks=ordered.map(key=>{
+    if(['summary','skills','languages'].includes(key))return {key,heading:l[key],text:String(d[key]||'')};
+    const rows=Array.isArray(d[key])?d[key]:[];
+    return {key,heading:l[key],text:rows.filter(x=>x&&(x.heading||x.details)).map(x=>[x.heading,[x.organization,x.location,x.dates].filter(Boolean).join('  |  '),x.details].filter(Boolean).join('\n')).join('\n\n')};
+   }).filter(item=>item.text.trim());
+   const hasRail=['basic','modern','creative','tech'].includes(style),placements=layout.placements&&typeof layout.placements==='object'?layout.placements:{};
+   const defaultSide=style==='creative'?['summary','skills','languages']:['skills','languages'];
+   const isSide=key=>hasRail&&(placements[key]==='side'||placements[key]!=='main'&&defaultSide.includes(key));
+   const railActive=blocks.some(item=>isSide(item.key)),twoColumns=layout.columns==='two';
+   const gap=18,railWidth=railActive?Math.round(width*.29):0,mainWidth=width-railWidth-(railActive?gap:0);
+   const sideRight=b.basicSide==='right',mainLeft=left+(railActive&&!sideRight?railWidth+gap:0),railLeft=sideRight?right-railWidth:left;
+   const bodyFont=layout.font==='serif'?'serif':'regular',bodySize=style==='compact'?8.5:9.5,lineGap=style==='compact'?2:3;
+   const headColor=customHeading||(style==='elegant'?'#b6252c':style==='professional'?'#a55f3a':style==='tech'?'#9e7b3d':['executive','minimal','compact'].includes(style)?accent2:accent);
+   const pageTop=48,pageBottom=pdf.page.height-49,firstY=Math.max(pdf.y+16,pageTop);
+   const measure=(item,w)=>{
+    pdf.font('bold').fontSize(style==='compact'?8:9);
+    const headingHeight=pdf.heightOfString(String(item.heading||'').toUpperCase(),{width:w});
+    pdf.font(bodyFont).fontSize(bodySize);
+    return headingHeight+pdf.heightOfString(item.text,{width:w,lineGap})+23;
+   };
+   const canGrid=railActive||twoColumns;
+   if(canGrid){
+    // Split oversized sections into page-sized pieces without dropping the chosen layout.
+    const maxHeight=pageBottom-pageTop-30,gridBlocks=[];
+    for(const item of blocks){
+     const w=isSide(item.key)?railWidth:twoColumns&&layout.widths?.[item.key]==='half'?(mainWidth-gap)/2:mainWidth;
+     let remaining=item.text;
+     while(measure({...item,text:remaining},w)>maxHeight){
+      let low=1,high=remaining.length-1;
+      while(low<high){const middle=Math.ceil((low+high)/2);if(measure({...item,text:remaining.slice(0,middle)},w)<=maxHeight)low=middle;else high=middle-1;}
+      const breakAt=remaining.lastIndexOf(' ',low),cut=breakAt>low*.7?breakAt:low;
+      gridBlocks.push({...item,text:remaining.slice(0,cut).trim()});
+      remaining=remaining.slice(cut).trim();
+     }
+     if(remaining)gridBlocks.push({...item,text:remaining});
+    }
+    const positions=[],main={page:0,y:firstY},rail={page:0,y:firstY};let pending=null;
+    const advance=(cursor,h)=>{if(cursor.y+h>pageBottom){cursor.page++;cursor.y=pageTop;}};
+    for(const item of gridBlocks){
+     if(isSide(item.key)){
+      const h=measure(item,railWidth);advance(rail,h);positions.push({item,x:railLeft,w:railWidth,y:rail.y,page:rail.page});
+      rail.y+=h+9;continue;
+     }
+     const half=twoColumns&&layout.widths?.[item.key]==='half';
+     if(!half&&pending){main.y=pending.y+pending.h+9;pending=null;}
+     if(half&&pending){
+      const w=(mainWidth-gap)/2,h=measure(item,w);
+      if(pending.y+h<=pageBottom){
+       positions.push({item,x:mainLeft+w+gap,w,y:pending.y,page:pending.page});
+       main.y=pending.y+Math.max(pending.h,h)+9;pending=null;continue;
+      }
+      main.y=pending.y+pending.h+9;pending=null;
+     }
+     const w=half?(mainWidth-gap)/2:mainWidth,h=measure(item,w);advance(main,h);
+     positions.push({item,x:mainLeft,w,y:main.y,page:main.page});
+     if(half)pending={page:main.page,y:main.y,h};else main.y+=h+9;
+    }
+    const draw=({item,x,w,y})=>{
+     const centered=['ats','executive','compact'].includes(style);
+     pdf.font('bold').fillColor(headColor).fontSize(style==='compact'?8:9).text(String(item.heading||'').toUpperCase(),x,y,{width:w,align:centered?'center':'left'});
+     const ruleY=pdf.y+4;
+     if(['ats','professional','elegant'].includes(style))pdf.moveTo(x,ruleY).lineTo(x+w,ruleY).strokeColor(headColor).lineWidth(.5).stroke();
+     else if(['modern','creative','tech'].includes(style))pdf.rect(x,ruleY-2,20,3).fill(headColor);
+     pdf.font(bodyFont).fillColor(customInk).fontSize(bodySize).text(item.text,x,ruleY+11,{width:w,lineGap});
+    };
+    positions.sort((a,b)=>a.page-b.page||a.y-b.y||a.x-b.x);
+    let currentPage=0;for(const position of positions){while(currentPage<position.page){pdf.addPage();currentPage++;}draw(position);}
+   }else for(const item of blocks)section(item.heading,item.text);
+   pdf.end();return;
  }
  if(url.pathname.startsWith('/api/'))return json(res,{error:'Not found'},404);
  const path=url.pathname==='/'?'/index.html':url.pathname;const portraitMatch=path.match(/^\/chypermax_portraits_9\/person-([1-9])\.png$/);const portrait=!!portraitMatch;if(!portrait&&!['/index.html','/app.js','/examples.js','/style.css','/i18n.js','/favicon.svg','/cv-examples.js','/home-refresh.css','/premium-templates.js','/premium-templates.css','/nature-landscape.jpg','/nature-landscape-4k.jpg'].includes(path)){res.writeHead(404);res.end('Not found');return;}if(portrait){const file=join(root,'public','chypermax_portraits_9',`person-${portraitMatch[1]}.png`);if(!existsSync(file)){res.writeHead(404,{'Content-Type':'text/plain'});res.end('Portrait missing');return;}const img=readFileSync(file);res.writeHead(200,{'Content-Type':'image/png','Content-Length':img.length,'Cache-Control':'no-store'});res.end(img);return;}res.setHeader('Cache-Control','no-cache');res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg'})[extname(path)]);res.end(readFileSync(join(root,'public',path)));

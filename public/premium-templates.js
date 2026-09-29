@@ -19,7 +19,7 @@
     "certifications"
   ];
 
-  function renderPremiumCv(id, d, l, esc) {
+  function renderPremiumCv(id, d, l, esc, options = {}) {
     if (!PREMIUM_STYLE_IDS.includes(id)) return "";
     d = d || {};
     l = l || {};
@@ -54,9 +54,14 @@
       ? `<ul class="premium-contact" aria-label="${safe(l.contact || l.contacts)}">${contacts.map(([, value]) => `<li>${safe(value)}</li>`).join("")}</ul>`
       : "";
 
+    const orderedKeys = Array.isArray(options.order)
+      ? [...options.order.filter(key => ["summary", ...sectionKeys, "skills", "languages"].includes(key)), ...["summary", ...sectionKeys, "skills", "languages"].filter(key => !options.order.includes(key))]
+      : ["summary", ...sectionKeys, "skills", "languages"];
+    const columnsClass = options.columns === "two" ? " premium-two-columns" : "";
     function section(key, contents, className) {
       if (!contents) return "";
-      return `<section class="premium-section ${className || ""}"><h3>${label(key)}</h3>${contents}</section>`;
+      const widthClass = options.columns === "two" && options.widths?.[key] === "half" ? " premium-half" : "";
+      return `<section class="premium-section ${className || ""}${widthClass}" data-cv-section="${key}"><h3>${label(key)}</h3>${contents}</section>`;
     }
 
     function paragraph(key, value, className) {
@@ -100,40 +105,40 @@
       return section("languages", content, "premium-languages");
     }
 
-    const summary = paragraph("summary", d.summary, "premium-summary");
-    const allRows = sectionKeys.map(entries).join("");
-    const skills = skillsMarkup();
-    const languages = languagesMarkup();
+    const blocks = {summary:paragraph("summary", d.summary, "premium-summary"),skills:skillsMarkup(),languages:languagesMarkup()};
+    sectionKeys.forEach(key => { blocks[key] = entries(key); });
     const identity = `${photo}${name}${title}${contactMarkup}`;
-
-    const sideContent = `${skills}${languages}`;
-    const mainContent = `${summary}${allRows}${sideContent}`;
+    const hasRail = ["midnight-modern", "atelier", "emerald-prestige"].includes(id);
+    const defaultSide = id === "atelier" ? ["summary", "skills", "languages"] : ["skills", "languages"];
+    const isSide = key => hasRail && (options.placements?.[key] === "side" || (options.placements?.[key] !== "main" && defaultSide.includes(key)));
+    const sideContent = orderedKeys.filter(isSide).map(key => blocks[key]).join("");
+    const mainContent = orderedKeys.filter(key => !isSide(key)).map(key => blocks[key]).join("");
     let layout;
 
     switch (id) {
       case "executive-gold":
-        layout = `<div class="premium-gold-frame"><header class="premium-head premium-head-centered">${identity}</header><main class="premium-main">${summary}${allRows}${skills}${languages}</main></div>`;
+        layout = `<div class="premium-gold-frame"><header class="premium-head premium-head-centered">${identity}</header><main class="premium-main${columnsClass}">${mainContent}</main></div>`;
         break;
       case "midnight-modern":
-        layout = `<header class="premium-head premium-head-midnight">${photo}<div class="premium-identity">${name}${title}${contactMarkup}</div></header><div class="premium-columns"><aside class="premium-rail">${skills}${languages}</aside><main class="premium-main">${summary}${allRows}</main></div>`;
+        layout = `<header class="premium-head premium-head-midnight">${photo}<div class="premium-identity">${name}${title}${contactMarkup}</div></header><div class="premium-columns"><aside class="premium-rail">${sideContent}</aside><main class="premium-main${columnsClass}">${mainContent}</main></div>`;
         break;
       case "atelier":
-        layout = `<div class="premium-columns premium-columns-atelier"><aside class="premium-rail">${photo}${summary}${skills}${languages}</aside><main class="premium-main"><header class="premium-head premium-head-atelier"><div class="premium-portrait-mark">${photo ? "" : `<span aria-hidden="true"></span>`}</div><div class="premium-identity">${name}${title}${contactMarkup}</div></header>${allRows}</main></div>`;
+        layout = `<div class="premium-columns premium-columns-atelier"><aside class="premium-rail">${photo}${sideContent}</aside><main class="premium-main${columnsClass}"><header class="premium-head premium-head-atelier"><div class="premium-portrait-mark">${photo ? "" : `<span aria-hidden="true"></span>`}</div><div class="premium-identity">${name}${title}${contactMarkup}</div></header>${mainContent}</main></div>`;
         break;
       case "pure-signature":
-        layout = `<header class="premium-head premium-head-pure">${photo}<div class="premium-identity">${name}${title}${contactMarkup}</div></header><main class="premium-main">${summary}${allRows}${skills}${languages}</main>`;
+        layout = `<header class="premium-head premium-head-pure">${photo}<div class="premium-identity">${name}${title}${contactMarkup}</div></header><main class="premium-main${columnsClass}">${mainContent}</main>`;
         break;
       case "architectural":
-        layout = `<div class="premium-architectural-wrap"><header class="premium-head premium-head-architectural">${photo}<div class="premium-identity">${name}${title}${contactMarkup}</div></header><main class="premium-main">${summary}${allRows}${skills}${languages}</main></div>`;
+        layout = `<div class="premium-architectural-wrap"><header class="premium-head premium-head-architectural">${photo}<div class="premium-identity">${name}${title}${contactMarkup}</div></header><main class="premium-main${columnsClass}">${mainContent}</main></div>`;
         break;
       case "monaco":
-        layout = `<header class="premium-head premium-head-monaco">${photo}<div class="premium-monaco-plaque">${name}${title}${contactMarkup}</div></header><main class="premium-main">${summary}${allRows}${skills}${languages}</main>`;
+        layout = `<header class="premium-head premium-head-monaco">${photo}<div class="premium-monaco-plaque">${name}${title}${contactMarkup}</div></header><main class="premium-main${columnsClass}">${mainContent}</main>`;
         break;
       case "swiss-grid":
-        layout = `<header class="premium-head premium-head-swiss"><div class="premium-swiss-id">${name}${title}</div>${photo}<div class="premium-swiss-contact">${contactMarkup}</div></header><main class="premium-main">${summary}${allRows}${skills}${languages}</main>`;
+        layout = `<header class="premium-head premium-head-swiss"><div class="premium-swiss-id">${name}${title}</div>${photo}<div class="premium-swiss-contact">${contactMarkup}</div></header><main class="premium-main${columnsClass}">${mainContent}</main>`;
         break;
       case "emerald-prestige":
-        layout = `<div class="premium-columns premium-columns-emerald"><aside class="premium-rail">${photo}${contactMarkup}${skills}${languages}</aside><main class="premium-main"><header class="premium-head premium-head-emerald">${name}${title}</header>${summary}${allRows}</main></div>`;
+        layout = `<div class="premium-columns premium-columns-emerald"><aside class="premium-rail">${photo}${contactMarkup}${sideContent}</aside><main class="premium-main${columnsClass}"><header class="premium-head premium-head-emerald">${name}${title}</header>${mainContent}</main></div>`;
         break;
       default:
         layout = `<header class="premium-head">${identity}</header><main class="premium-main">${mainContent}</main>`;
