@@ -221,6 +221,11 @@
 .premium-monaco{--p-paper:#faf8f2}
 .premium-swiss-grid{--p-paper:#faf9f4}
 .premium-emerald-prestige{--p-paper:#f9fbf8}
+.premium-cv .premium-head,
+.premium-cv .premium-main{background-color:transparent!important}
+.premium-midnight-modern .premium-head-midnight{background-color:#152b27!important}
+.premium-atelier .premium-head-atelier{background-color:#d4e7dc!important}
+.premium-monaco .premium-head-monaco{background-color:#1d3040!important}
 .workspace .cv-paper.premium-cv{background-color:var(--cv-paper-bg,var(--p-paper))!important}
 .workspace .premium-executive-gold .premium-gold-frame{background-color:var(--cv-paper-bg,#fffdf6)}
 .workspace .premium-cv.paper-dark .premium-main,
@@ -242,6 +247,8 @@
   overflow:hidden!important;
 }
 .example-sheet .cv-paper.premium-cv{min-height:760px}
+.page .hero-reference .hero-template-card .cv-paper.premium-executive-gold,
+.example-sheet .cv-paper.premium-executive-gold{padding:12px!important}
 .resume-choice .premium-choice-preview{
   height:165px;
   position:relative;
