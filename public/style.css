@@ -2011,9 +2011,16 @@ body>*,header,nav,main,footer,.topbar,.navbar,.site-header,.site-shell,.page,.he
 @media (min-width:1101px){
  .workspace{max-width:1780px}
  .editor-layout{
-  grid-template-columns:210px minmax(400px,.9fr) minmax(540px,1.35fr);
-  gap:24px;
+  grid-template-columns:210px minmax(520px,1.1fr) minmax(560px,1.25fr);
+  gap:20px;
  }
+ .form-panel{padding:36px}
+ .form-head h2{font-size:36px}
+ .field-grid{gap:24px 18px}
+ .field{font-size:15px;gap:11px}
+ .field input,.field textarea,.field select{font-size:17px;padding:15px 16px;min-height:52px}
+ .field textarea{min-height:150px}
+ .form-pagination button{font-size:15px}
  .preview-panel{padding:18px}
  #cv-preview .cv-paper{
   min-height:760px;
