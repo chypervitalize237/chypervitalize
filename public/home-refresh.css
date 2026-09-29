@@ -913,3 +913,37 @@ body:has(.hero-reference) #footer{
 /* Avoid separate blur layers creating a visible line between adjacent sky panels. */
 .page .how,.page .why,.page .pricing{backdrop-filter:none!important;box-shadow:none!important}
 .page .why::before{opacity:0!important}
+
+
+/* Registration and sign-in inherit the soft blue sky instead of the old cream/olive palette. */
+#modal:has(.auth-tabs){
+ background:linear-gradient(160deg,rgba(237,249,255,.97) 0%,rgba(213,239,252,.97) 58%,rgba(190,223,242,.97) 100%)!important;
+ border:1px solid rgba(239,250,255,.75)!important;
+ color:#163b53!important;
+ box-shadow:0 28px 85px rgba(9,45,69,.25),inset 0 1px rgba(255,255,255,.65)!important;
+}
+#modal:has(.auth-tabs) .eyebrow{color:#2b7098!important}
+#modal:has(.auth-tabs) h2{color:#17384a!important}
+#modal:has(.auth-tabs)>p:not(.eyebrow){color:#49687a!important}
+#modal:has(.auth-tabs) .modal-close{color:#40667a!important}
+#modal:has(.auth-tabs) .auth-tabs{border-bottom-color:rgba(48,112,146,.25)!important}
+#modal:has(.auth-tabs) .auth-tabs button{color:#456477!important}
+#modal:has(.auth-tabs) .auth-tabs button.active{color:#163b53!important;border-bottom-color:#4c9ac2!important}
+#modal:has(.auth-tabs) .field{color:#254b62!important}
+#modal:has(.auth-tabs) .field input{
+ background:rgba(255,255,255,.8)!important;
+ border:1px solid rgba(81,139,171,.32)!important;
+ color:#17384a!important;
+}
+#modal:has(.auth-tabs) .field input:focus{outline-color:#4c9ac2!important}
+#modal:has(.auth-tabs) .field input::placeholder{color:#748d9d!important}
+#modal:has(.auth-tabs) .primary{
+ background:#317da7!important;
+ border-color:#317da7!important;
+ color:#fff!important;
+ box-shadow:0 10px 25px rgba(34,105,143,.18)!important;
+}
+#modal:has(.auth-tabs) .primary:hover{background:#256b93!important;border-color:#256b93!important}
+#modal:has(.auth-tabs) .primary:focus-visible,
+#modal:has(.auth-tabs) .auth-tabs button:focus-visible{outline:3px solid #256b93!important;outline-offset:3px}
+#modal:has(.auth-tabs)::backdrop{background:rgba(14,54,78,.36);backdrop-filter:blur(4px)}
