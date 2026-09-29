@@ -808,3 +808,51 @@ body:has(#app.workspace) #footer :is(.wordmark,.footer-col strong,.footer-brand 
 .page .why-card h3,
 .page .why-card p,
 .page .why-footnote{color:var(--chyper-sky-ink)!important}
+
+
+/* Blend the site chrome into the photograph's blue sky. */
+:root{--chyper-sky:#78adca;--chyper-sky-border:#6599b6}
+body:has(.hero-reference) #header{
+ background:linear-gradient(180deg,rgba(20,71,105,.24) 0%,rgba(20,71,105,.08) 58%,transparent 100%)!important;
+ border-bottom:0!important;
+ backdrop-filter:none!important;
+}
+body:has(.hero-reference) #header .nav .wordmark,
+body:has(.hero-reference) #header .nav .login,
+body:has(.hero-reference) #header .nav .language{color:#fff!important;text-shadow:0 1px 8px rgba(10,39,60,.4)}
+body:has(.hero-reference) #header .language-trigger{
+ background:rgba(18,67,100,.3)!important;
+ border-color:rgba(228,245,255,.36)!important;
+ color:#fff!important;
+}
+body:has(.hero-reference) #header .language-trigger svg{color:#fff!important}
+body:has(.hero-reference) #header .language-picker.is-open .language-trigger,
+body:has(.hero-reference) #header .language-trigger:hover{background:rgba(18,67,100,.55)!important}
+.page .promise-strip{
+ background:linear-gradient(180deg,rgba(107,162,194,.55),rgba(107,162,194,.83) 44%,rgba(107,162,194,.69))!important;
+ border-color:transparent!important;
+}
+.page .example-collection{
+ background:linear-gradient(180deg,rgba(107,162,194,.26) 0%,rgba(107,162,194,.88) 9%,rgba(107,162,194,.88) 90%,rgba(107,162,194,.18) 100%)!important;
+ border:0!important;
+}
+.page .how{
+ background:linear-gradient(180deg,rgba(107,162,194,.3),rgba(107,162,194,.89) 13%,rgba(107,162,194,.89))!important;
+ border:0!important;
+}
+.page .why{background:rgba(107,162,194,.89)!important;border:0!important}
+.page .pricing{
+ background:linear-gradient(180deg,rgba(107,162,194,.89) 0%,rgba(107,162,194,.89) 86%,rgba(107,162,194,.25) 100%)!important;
+ border:0!important;
+}
+body:has(.hero-reference) #footer{
+ background:linear-gradient(180deg,rgba(107,162,194,0) 0%,rgba(107,162,194,.88) 18%,#78adca 58%)!important;
+ border-top:0!important;
+}
+body:has(.hero-reference) #footer .footer-shell,
+body:has(.hero-reference) #footer .impact-strip{background:transparent!important}
+@media(max-width:700px){
+ body:has(.hero-reference) #header{background:linear-gradient(180deg,rgba(20,71,105,.45),rgba(20,71,105,.18) 65%,transparent)!important}
+ .page .how{background:linear-gradient(180deg,rgba(107,162,194,.36),rgba(107,162,194,.9) 13%,rgba(107,162,194,.9))!important}
+ .page .pricing{background:linear-gradient(180deg,rgba(107,162,194,.9),rgba(107,162,194,.9) 85%,rgba(107,162,194,.28))!important}
+}
