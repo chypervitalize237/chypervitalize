@@ -726,3 +726,68 @@ body:has(#app.workspace) #footer .footer-bottom{color:#d3e4df!important}
 .workspace .entry-move:focus-visible{outline:2px solid #31736b;outline-offset:2px}
 .workspace .entry-move:disabled{opacity:.4;cursor:not-allowed}
 @media(max-width:650px){.workspace .entry-top .entry-actions{gap:4px}}
+
+/* Sky blue site surfaces, matched to the blue already used in Chyper. */
+:root{--chyper-sky:#9fd3ee;--chyper-sky-ink:#17384a;--chyper-sky-border:#70a9c7}
+body:has(.hero-reference){
+ background-color:var(--chyper-sky)!important;
+ background-image:linear-gradient(90deg,rgba(16,56,81,.69),rgba(16,56,81,.46) 42%,rgba(16,56,81,.28)),url('./nature-landscape-4k.jpg')!important;
+}
+body:has(.hero-reference) #header,
+body:has(#app.workspace) #header{background:rgba(159,211,238,.95)!important;border-bottom-color:rgba(23,56,74,.25)!important;color:var(--chyper-sky-ink)!important}
+body:has(.hero-reference) .nav .wordmark,
+body:has(.hero-reference) .nav .login,
+body:has(.hero-reference) .nav .language,
+body:has(#app.workspace) #header .wordmark,
+body:has(#app.workspace) #header .nav-right,
+body:has(#app.workspace) #header .login{color:var(--chyper-sky-ink)!important}
+body:has(.hero-reference) .nav .language select{background:var(--chyper-sky)!important;color:var(--chyper-sky-ink)!important}
+.page .hero-reference::before{background-image:radial-gradient(rgba(220,242,253,.22) 1px,transparent 1px)!important}
+.page .hero-reference .template-arrow,
+.page .hero-reference .hero-feature-result,
+.page .visitor-proof{background:var(--chyper-sky)!important;border-color:var(--chyper-sky-border)!important;color:var(--chyper-sky-ink)!important}
+.page .hero-reference .template-arrow:hover{background:#c2e7f8!important;color:var(--chyper-sky-ink)!important}
+.page .hero-reference .hero-feature-result :is(span,small),
+.page .visitor-proof{color:var(--chyper-sky-ink)!important}
+.page .promise-strip,
+.page .example-collection,
+.page .how,
+.page .why,
+.page .pricing{background:rgba(159,211,238,.92)!important;border-color:rgba(23,56,74,.22)!important;color:var(--chyper-sky-ink)!important}
+.page .examples-heading :is(h2,p,.eyebrow),
+.page .how :is(h2,h3,p,.eyebrow,.step-number),
+.page .why :is(h2,h3,p,.eyebrow,.why-mark),
+.page .pricing> :is(h2,p,.eyebrow),
+.page .pricing .fx-note{color:var(--chyper-sky-ink)!important}
+.page .how .steps>div{border-top-color:rgba(23,56,74,.25)!important}
+.page .why-card{background:rgba(231,247,255,.75)!important;border-color:rgba(23,56,74,.2)!important;color:var(--chyper-sky-ink)!important}
+.page .why-card:hover{background:#e7f7ff!important}
+.page .why-icon{background:var(--chyper-sky)!important;border-color:var(--chyper-sky-border)!important;color:var(--chyper-sky-ink)!important}
+.page .why::before{background:radial-gradient(ellipse at 94% 2%,rgba(255,255,255,.44),transparent 38%)!important}
+.page .pricing .ribbon,
+.page .pricing .price-card .primary,
+body:has(#app.workspace) .editor-actions .primary,
+body:has(#app.workspace) .form-pagination .primary{background:var(--chyper-sky)!important;border-color:var(--chyper-sky-border)!important;color:var(--chyper-sky-ink)!important}
+.page .pricing .price-card .primary:hover,
+body:has(#app.workspace) .editor-actions .primary:hover,
+body:has(#app.workspace) .form-pagination .primary:hover{background:#c2e7f8!important;color:var(--chyper-sky-ink)!important}
+body:has(.hero-reference) #footer,
+body:has(.hero-reference) #footer .footer-shell,
+body:has(.hero-reference) #footer .impact-strip,
+body:has(#app.workspace) #footer,
+body:has(#app.workspace) #footer .footer-shell,
+body:has(#app.workspace) #footer .impact-strip{background:var(--chyper-sky)!important;border-color:rgba(23,56,74,.22)!important;color:var(--chyper-sky-ink)!important}
+body:has(.hero-reference) #footer :is(.wordmark,.footer-col strong,.footer-brand p,.footer-col button,.footer-bottom),
+body:has(#app.workspace) #footer :is(.wordmark,.footer-col strong,.footer-brand p,.footer-col button,.footer-bottom){color:var(--chyper-sky-ink)!important}
+.language-trigger,
+.language-trigger:hover,
+.language-picker.is-open .language-trigger,
+.language-popover{background:var(--chyper-sky)!important;border-color:var(--chyper-sky-border)!important;color:var(--chyper-sky-ink)!important}
+.language-popover-title,.language-option,.language-option.is-selected,.language-option-check,.language-trigger svg{color:var(--chyper-sky-ink)!important}
+.language-option:hover,.language-option:focus-visible{background:rgba(255,255,255,.45)!important;color:var(--chyper-sky-ink)!important}
+.language-option.is-selected{background:rgba(255,255,255,.6)!important}
+@media(max-width:700px){
+ body:has(.hero-reference){background-image:linear-gradient(180deg,rgba(16,56,81,.67),rgba(16,56,81,.43) 50%,rgba(16,56,81,.26)),url('./nature-landscape-4k.jpg')!important}
+ .page .hero-reference::before{background-image:linear-gradient(180deg,rgba(16,56,81,.26),rgba(16,56,81,.12) 52%,transparent)!important}
+ .page .how,.page .pricing{background:rgba(159,211,238,.94)!important}
+}
