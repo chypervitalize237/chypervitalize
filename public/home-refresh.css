@@ -1063,3 +1063,33 @@ body:has(.hero-reference) #footer{
 .hero-template-card .cv-style-tech>section,.example-sheet .cv-style-tech>section{grid-column:2!important;padding:0 40px!important}
 .hero-template-card .cv-style-tech>section:nth-of-type(1),.hero-template-card .cv-style-tech>section:last-child,.example-sheet .cv-style-tech>section:nth-of-type(1),.example-sheet .cv-style-tech>section:last-child{grid-column:1!important;margin:0!important;padding:28px!important;background:#123a31!important;color:#f4efe3!important}
 .hero-template-card .cv-style-tech>section h3,.example-sheet .cv-style-tech>section h3{font-family:Arial,sans-serif!important;color:#9e7b3d!important;border:0!important;border-left:4px solid #bd9a55!important;padding-left:10px!important;letter-spacing:2px!important;background:transparent!important}
+
+
+/* Pricing plan availability markers. */
+.page .pricing .feature-status{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ width:18px;
+ height:18px;
+ border:0;
+ border-radius:50%;
+ color:#fff;
+ font-size:13px;
+ font-weight:800;
+ line-height:1;
+}
+.page .pricing .feature-included .feature-status{
+ background:#2f8f55;
+ box-shadow:0 3px 8px rgba(47,143,85,.2);
+}
+.page .pricing .feature-excluded{
+ color:#68736c;
+}
+.page .pricing .feature-excluded .feature-status{
+ background:#b85b5b;
+ box-shadow:0 3px 8px rgba(184,91,91,.17);
+}
+.page .pricing .plan-features li{
+ grid-template-columns:18px minmax(0,1fr);
+}
