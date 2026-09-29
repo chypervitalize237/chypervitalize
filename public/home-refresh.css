@@ -947,3 +947,42 @@ body:has(.hero-reference) #footer{
 #modal:has(.auth-tabs) .primary:focus-visible,
 #modal:has(.auth-tabs) .auth-tabs button:focus-visible{outline:3px solid #256b93!important;outline-offset:3px}
 #modal:has(.auth-tabs)::backdrop{background:rgba(14,54,78,.36);backdrop-filter:blur(4px)}
+
+
+/* Pricing comparison rows: shared copy now, ready for per-plan check and x states. */
+.page .pricing .price-card{display:flex;flex-direction:column}
+.page .pricing .price-card>p{min-height:66px}
+.page .pricing .plan-features{
+ list-style:none;
+ display:grid;
+ gap:0;
+ margin:22px 0 24px;
+ padding:0;
+ border-top:1px solid rgba(23,56,74,.18);
+}
+.page .pricing .plan-features li{
+ display:grid;
+ grid-template-columns:13px minmax(0,1fr);
+ gap:10px;
+ align-items:center;
+ min-height:39px;
+ padding:9px 2px;
+ border-bottom:1px solid rgba(23,56,74,.14);
+ color:#17384a;
+ font-size:13px;
+ line-height:1.35;
+}
+.page .pricing .feature-status{
+ width:7px;
+ height:7px;
+ border:1.5px solid #5486a1;
+ border-radius:50%;
+ background:rgba(255,255,255,.35);
+}
+.page .pricing .price-card>.primary,
+.page .pricing .price-card>.secondary{margin-top:auto}
+@media(max-width:700px){
+ .page .pricing .price-card>p{min-height:0}
+ .page .pricing .plan-features{margin-top:18px}
+ .page .pricing .plan-features li{font-size:12px;min-height:37px}
+}
