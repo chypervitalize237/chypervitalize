@@ -909,3 +909,7 @@ body:has(.hero-reference) #footer{
  .page .how{background:linear-gradient(180deg,rgba(143,196,225,0),rgba(143,196,225,.92) 15%,rgba(143,196,225,.92))!important}
  .page .pricing{background:linear-gradient(180deg,rgba(143,196,225,.92),rgba(143,196,225,.92) 84%,rgba(143,196,225,0))!important}
 }
+
+/* Avoid separate blur layers creating a visible line between adjacent sky panels. */
+.page .how,.page .why,.page .pricing{backdrop-filter:none!important;box-shadow:none!important}
+.page .why::before{opacity:0!important}
