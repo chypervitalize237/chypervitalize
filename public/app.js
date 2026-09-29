@@ -1,6 +1,9 @@
 import {locales,strings} from './i18n.js?v=20260925-prices';
 import {fieldExample} from './examples.js';
-import {getCvExamples,getCvExample} from './cv-examples.js?v=20260929-premium-eight';
+import {getCvExamples as getOriginalCvExamples} from './cv-examples.js?v=20260929-premium-eight';
+import {PREMIUM_STYLE_MAP,renderPremiumCv,buildFeaturedExamples} from './premium-templates.js?v=20260929-exclusive-eight';
+function getCvExamples(lang){const existing=getOriginalCvExamples(lang);return [...buildFeaturedExamples(lang,existing),...existing];}
+function getCvExample(id,lang){return getCvExamples(lang).find(x=>x.id===id);}
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const sections=['personal','summary','experience','education','skills','languages','projects','awards','volunteer','certifications'];
 const blank={name:'',title:'',email:'',phone:'',city:'',link:'',summary:'',skills:'',languages:'',languageLevels:[5],photo:'',experience:[],education:[],projects:[],awards:[],volunteer:[],certifications:[]};
@@ -92,12 +95,20 @@ function paperIsDark(){const rgb=[1,3,5].map(i=>parseInt(state.cvBackground.slic
 function basicCvMarkup(d,lang,example=false){const l=strings[lang];const has=Object.values(d).some(v=>typeof v==='string'?!!v.trim():Array.isArray(v)&&v.some(r=>Object.values(r).some(value=>typeof value==='string'&&value.trim())));if(!has&&!example)return cvMarkup(d,lang,example);const part=(k,txt)=>txt?`<section><h3>${esc(l[k])}</h3><p>${esc(txt).replace(/\\n/g,'<br>')}</p></section>`:'';return `<article class="cv-paper basic-cv ${paperIsDark()?'paper-dark ':''}basic-side-${esc(state.basicSide)}" style="--basic-accent:${esc(state.basicAccent)};--basic-accent-2:${esc(state.basicAccent2)};--basic-shade:${Number(state.basicShade)||0}%;--cv-paper-bg:${esc(state.cvBackground)}"><header class="basic-head">${d.photo?`<img class="basic-photo" src="${esc(d.photo)}" alt="">`:''}<div><h2>${esc(d.name)}</h2><p class="basic-title">${esc(d.title)}</p><p class="basic-contact">${[d.email,d.phone,d.city,d.link].filter(Boolean).map(esc).join(' · ')}</p></div></header><div class="basic-body"><aside>${part('skills',d.skills)}${languageMarkup(d,l)}</aside><main>${part('summary',d.summary)}${['experience','education','projects','awards','volunteer','certifications'].map(k=>(d[k]||[]).some(r=>r.heading||r.details)?`<section><h3>${esc(l[k])}</h3>${d[k].map(r=>`<div class="basic-entry"><strong>${esc(r.heading)}</strong><small>${esc(r.dates)}</small><p class="basic-org">${[r.organization,r.location].filter(Boolean).map(esc).join(' · ')}</p><p>${esc(r.details).replace(/\\n/g,'<br>')}</p></div>`).join('')}</section>`:'').join('')}</main></div></article>`;}
 function styledCvMarkup(d,lang,example=false){
  const style=state.cvStyle||state.resumeType||'ats';
+ if(PREMIUM_STYLE_MAP[style]){
+  const has=Object.values(d).some(v=>typeof v==='string'?!!v.trim():Array.isArray(v)&&v.some(r=>Object.values(r).some(value=>typeof value==='string'&&value.trim())));
+  if(!has&&!example)return cvMarkup(d,lang,example);
+  const markup=renderPremiumCv(PREMIUM_STYLE_MAP[style],d,strings[lang],esc);
+  const bg=/^#[0-9a-f]{6}$/i.test(state.cvBackground)?state.cvBackground:'#ffffff';
+  return bg.toLowerCase()==='#ffffff'?markup:markup.replace('class="cv-paper premium-cv','style="--cv-paper-bg:'+bg+'" class="cv-paper premium-cv'+(paperIsDark()?' paper-dark':''));
+ }
  if(style==='basic')return basicCvMarkup(d,lang,example);
  const base=cvMarkup(d,lang,example);
   return base.replace('class="cv-paper','style="--template-accent:'+esc(state.basicAccent)+';--template-accent-2:'+esc(state.basicAccent2)+';--template-shade:'+Number(state.basicShade||0)+'%;--cv-paper-bg:'+esc(state.cvBackground)+'" class="cv-paper '+(paperIsDark()?'paper-dark ':'')+'cv-style-'+esc(style));
 }
 function activeCvMarkup(d,lang,example=false){return styledCvMarkup(d,lang,example);}
 function exampleCvMarkup(d,lang,style){
+ if(PREMIUM_STYLE_MAP[style])return renderPremiumCv(PREMIUM_STYLE_MAP[style],d,strings[lang],esc);
  if(style==='basic')return basicCvMarkup(d,lang,true);
  return cvMarkup(d,lang,true).replace('class="cv-paper','class="cv-paper cv-style-'+esc(style));
 }
@@ -158,7 +169,7 @@ function exampleGallery(){
  const hu=state.lang==='hu';
   const examples=getCvExamples(state.lang).slice(0,6);
  return `<section class="example-collection" id="cv-examples" aria-labelledby="examples-title">
-   <div class="examples-heading"><div><p class="eyebrow">CHYPERVITALIZE / ${hu?'PÉLDATÁR':'EXAMPLES'}</p><h2 id="examples-title">${hu?'A legtöbbet választott sablonok.':'Most popular templates.'}</h2></div><p>${hu?'Ezekkel nem nyúlsz félre. Válassz egyet, és alakítsd a sajátodra.':'You can’t go wrong with these. Choose one and make it yours.'}</p></div>
+   <div class="examples-heading"><div><p class="eyebrow">CHYPERVITALIZE / ${hu?'PÉLDATÁR':'EXAMPLES'}</p><h2 id="examples-title">${hu?'Kiemelt prémium sablonok.':'Featured premium templates.'}</h2></div><p>${hu?'Ezekkel nem nyúlsz félre. Válassz egyet, és alakítsd a sajátodra.':'You can’t go wrong with these. Choose one and make it yours.'}</p></div>
    <div class="examples-grid">${examples.map((example,index)=>{
    return `<article class="example-card" style="--example-accent:${esc(example.accent)};--card-delay:${index*65}ms">
      <div class="example-card-top"><span class="example-index">${String(index+1).padStart(2,'0')} / ${String(examples.length).padStart(2,'0')}</span><span class="example-category">${esc(example.category)}</span></div>
@@ -237,7 +248,7 @@ function resumeChooser(){
   ['tech','Emerald Prestige','Mély smaragdzöld, exkluzív modern megjelenés','Deep emerald with exclusive modern polish','tech-mini']
  ];
  const visibleStyles=styles;
- openModal(`<p class="eyebrow">CHYPERVITALIZE / CV STYLE</p><h2>${hu?'Válassz a 10 CV-stílus közül':'Choose from 10 CV styles'}</h2><p>${hu?'Válaszd ki azt a prémium CV-dizájnt, amelyik legjobban illik hozzád. Mindegyik teljesen szerkeszthető.':'Choose the premium CV design that suits you best. Every template is fully editable.'}</p><div class="resume-choices resume-choices-10">${visibleStyles.map((x,i)=>`<button class="resume-choice ${i===1?'recommended-choice':''}" data-action="choose-style-${x[0]}">${i===1?`<span class="choice-badge">${hu?'AJÁNLOTT':'RECOMMENDED'}</span>`:''}<div class="resume-mini ${x[4]}"><b>${i%2?'Alex Morgan':'Braden Peters'}</b><small>${i%2?'Marketing specialist':'Professional profile'}</small><hr><i></i><i></i><hr><i></i></div><strong>${x[1]}</strong><small>Chypervitalize ${i+1}</small><p>${hu?x[2]:x[3]}</p><em>${hu?'Ezt választom':'Choose this style'} →</em></button>`).join('')}</div>`);
+ openModal(`<p class="eyebrow">CHYPERVITALIZE / CV STYLE</p><h2>${hu?'Válassz a 10 CV-stílus közül':'Choose from 10 CV styles'}</h2><p>${hu?'Válaszd ki azt a prémium CV-dizájnt, amelyik legjobban illik hozzád. Mindegyik teljesen szerkeszthető.':'Choose the premium CV design that suits you best. Every template is fully editable.'}</p><div class="resume-choices resume-choices-10">${visibleStyles.map((x,i)=>`<button class="resume-choice ${i===1?'recommended-choice':''}" data-action="choose-style-${x[0]}">${i===1?`<span class="choice-badge">${hu?'AJÁNLOTT':'RECOMMENDED'}</span>`:''}${PREMIUM_STYLE_MAP[x[0]] ? `<div class="premium-choice-preview" aria-hidden="true">${renderPremiumCv(PREMIUM_STYLE_MAP[x[0]],getCvExamples(state.lang).find(e=>e.id==="premium-"+PREMIUM_STYLE_MAP[x[0]]).cv,strings[state.lang],esc)}</div>` : `<div class="resume-mini ${x[4]}"><b>${i%2?'Alex Morgan':'Braden Peters'}</b><small>${i%2?'Marketing specialist':'Professional profile'}</small><hr><i></i><i></i><hr><i></i></div>`}<strong>${x[1]}</strong><small>Chypervitalize ${i+1}</small><p>${hu?x[2]:x[3]}</p><em>${hu?'Ezt választom':'Choose this style'} →</em></button>`).join('')}</div>`);
 }
 function setup(){return `<section class="setup"><p class="eyebrow">CHYPERVITALIZE / 01</p><h1>${t('setupTitle')}</h1><p>${t('setupDesc')}</p><div class="setup-card"><label>${t('appLang')}${languageSelect('setup-language',state.lang)}</label><div class="field-divider"></div><label>${t('cvLang')}${languageSelect('cv-language',state.cvLang)}</label><p class="hint">${t('cvLanguageNote')}</p>${button(t('next'),'edit')}</div><button class="text-button" data-action="home">← ${t('back')}</button></section>`;}
 function field(key,placeholder='',type='text',row=null){const val=row===null?state.cv[key]:(state.cv[sections[state.section]][row]?.[key]||'');placeholder=fieldExample(state.cvLang,sections[state.section],key,row??0,strings[state.cvLang])||placeholder;return `<label class="field ${['summary','skills','languages','details'].includes(key)?'wide':''}"><span>${t(key)}</span>${['summary','skills','languages','details'].includes(key)?`<textarea rows="${key==='summary'||key==='details'?6:4}" data-field="${key}" ${row===null?'':`data-row="${row}"`} placeholder="${esc(placeholder)}">${esc(val)}</textarea>`:`<input type="${type}" data-field="${key}" ${row===null?'':`data-row="${row}"`} value="${esc(val)}" placeholder="${esc(placeholder)}" maxlength="500">`}</label>`;}

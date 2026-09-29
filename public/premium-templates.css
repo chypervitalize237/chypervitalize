@@ -1,0 +1,261 @@
+/* Eight bespoke paper systems. Selectors intentionally stay beneath .premium-cv
+   so the existing editor and its other resume styles remain untouched. */
+.premium-cv{
+  --p-ink:#292a26;
+  --p-muted:#73746d;
+  --p-rule:#d9d5c9;
+  --p-accent:#927b48;
+  position:relative;
+  isolation:isolate;
+  width:100%;
+  min-height:760px;
+  padding:0;
+  overflow:visible;
+  color:var(--p-ink);
+  background:#fffdf7;
+  font-family:"DM Sans", "Trebuchet MS", sans-serif;
+  font-size:11px;
+  line-height:1.65;
+  overflow-wrap:anywhere;
+  box-shadow:0 7px 26px rgba(38,35,26,.1);
+}
+.premium-cv *{box-sizing:border-box}
+.premium-cv .premium-head,
+.premium-cv .premium-main,
+.premium-cv .premium-rail{min-width:0}
+.premium-cv .premium-head{position:relative;display:flex;align-items:center;gap:18px}
+.premium-cv .premium-identity{min-width:0;flex:1}
+.premium-cv .premium-name{margin:0;font:400 29px/1.12 "Libre Caslon Display",Georgia,serif;letter-spacing:.015em;color:inherit}
+.premium-cv .premium-title{margin:8px 0 0;font-size:9px;line-height:1.55;letter-spacing:.16em;text-transform:uppercase}
+.premium-cv .premium-contact{list-style:none;display:flex;flex-wrap:wrap;gap:3px 13px;margin:11px 0 0;padding:0;font-size:8px;line-height:1.55;color:var(--p-muted)}
+.premium-cv .premium-contact li{min-width:0;overflow-wrap:anywhere}
+.premium-cv .premium-contact li+li::before{content:"";display:inline-block;width:3px;height:3px;margin:0 8px 2px 0;border-radius:50%;background:currentColor}
+.premium-cv .premium-photo{display:block;width:64px;height:76px;flex:0 0 auto;object-fit:cover}
+.premium-cv .premium-main{padding:26px 34px 38px}
+.premium-cv .premium-section{margin:0 0 21px;break-inside:avoid}
+.premium-cv .premium-section>h3{margin:0 0 10px;padding:0 0 6px;border-bottom:1px solid var(--p-rule);font:700 8px/1.4 "DM Sans",sans-serif;letter-spacing:.19em;text-transform:uppercase;color:var(--p-accent)}
+.premium-cv .premium-copy{margin:0;font-size:9px;line-height:1.7;color:inherit}
+.premium-cv .premium-entry{margin:0 0 12px;break-inside:avoid}
+.premium-cv .premium-entry:last-child{margin-bottom:0}
+.premium-cv .premium-entry-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.premium-cv .premium-entry h4{margin:0;font:600 10px/1.45 "DM Sans",sans-serif}
+.premium-cv .premium-dates{flex:0 0 auto;font-size:7px;line-height:1.4;color:var(--p-muted);text-align:right}
+.premium-cv .premium-org{margin:3px 0 5px;color:var(--p-muted);font-size:7.5px;line-height:1.5}
+.premium-cv .premium-org span{padding:0 2px}
+.premium-cv .premium-skill-list,.premium-cv .premium-language-list{list-style:none;margin:0;padding:0}
+.premium-cv .premium-skill-list{display:flex;flex-wrap:wrap;gap:5px 12px}
+.premium-cv .premium-skill-list li{font-size:8px}
+.premium-cv .premium-language-list{display:grid;gap:6px}
+.premium-cv .premium-language-list li{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:8px}
+.premium-cv .premium-language-level{display:inline-flex;gap:3px;flex:0 0 auto}
+.premium-cv .premium-language-level i{width:5px;height:5px;border:1px solid currentColor;border-radius:50%;opacity:.35}
+.premium-cv .premium-language-level i.is-filled{background:currentColor;opacity:1}
+.premium-cv .premium-columns{display:grid;grid-template-columns:minmax(145px,31%) minmax(0,1fr);min-height:100%}
+.premium-cv .premium-rail{padding:26px 18px;background:#e8eee9}
+.premium-cv .premium-rail .premium-section>h3{border-color:rgba(38,65,56,.24)}
+.premium-cv .premium-rail .premium-photo{margin:0 auto 22px;width:54px;height:60px;border-radius:50%}
+
+/* 01 — framed, centered black-and-gold executive stationery */
+.premium-executive-gold{padding:12px;background:#25241f;color:#29271f}
+.premium-executive-gold .premium-gold-frame{min-height:736px;border:1px solid #c8b77d;padding:34px 32px;background:#fffdf6}
+.premium-executive-gold .premium-head-centered{display:block;text-align:center;padding:8px 0 17px;border-bottom:1px solid #c8b77d}
+.premium-executive-gold .premium-head-centered .premium-photo{margin:0 auto 12px;width:52px;height:62px;border:1px solid #c8b77d}
+.premium-executive-gold .premium-head-centered .premium-title{color:#80734f}
+.premium-executive-gold .premium-head-centered .premium-contact{justify-content:center}
+.premium-executive-gold .premium-name{font-size:27px;text-transform:uppercase;letter-spacing:.13em}
+.premium-executive-gold .premium-main{padding:17px 2px 10px}
+.premium-executive-gold .premium-section>h3{text-align:center;letter-spacing:.22em;color:#806d3e;border-color:#cfc39d}
+.premium-executive-gold .premium-entry h4{font-family:"Libre Caslon Display",Georgia,serif;font-size:12px}
+.premium-executive-gold .premium-contact{color:#746d5a}
+
+/* 02 — confident ink masthead with cool, narrow information rail */
+.premium-midnight-modern{--p-accent:#365f51;--p-rule:#cddbd5;background:#fbfcf8;color:#202a27}
+.premium-midnight-modern .premium-head-midnight{min-height:142px;padding:27px 34px;background:#152b27;color:#f6f4eb;border-bottom:5px solid #b5cbbd}
+.premium-midnight-modern .premium-head-midnight .premium-photo{order:2;width:58px;height:58px;border-radius:50%;border:1px solid #b6c7ba}
+.premium-midnight-modern .premium-name{font:700 28px/1.02 "DM Sans",sans-serif;letter-spacing:-.045em;text-transform:uppercase}
+.premium-midnight-modern .premium-title{color:#c2d5c9}
+.premium-midnight-modern .premium-contact{color:#d8e1d9}
+.premium-midnight-modern .premium-columns{grid-template-columns:minmax(125px,30%) minmax(0,1fr)}
+.premium-midnight-modern .premium-rail{background:#e6eee8;padding:24px 16px}
+.premium-midnight-modern .premium-main{padding:25px 28px}
+.premium-midnight-modern .premium-section>h3{text-align:left}
+.premium-midnight-modern .premium-rail .premium-section>h3{font-size:7px}
+
+/* 03 — art director's deep green folio and pale mint working page */
+.premium-atelier{--p-accent:#314d43;--p-rule:#c8d8ce;background:#f7faf5;color:#1e3029}
+.premium-atelier .premium-columns-atelier{grid-template-columns:minmax(118px,28%) minmax(0,1fr)}
+.premium-atelier .premium-rail{padding:24px 15px;background:#1d4037;color:#eef4ec}
+.premium-atelier .premium-rail .premium-copy,.premium-atelier .premium-rail .premium-org,.premium-atelier .premium-rail .premium-dates{color:#d3e1d8}
+.premium-atelier .premium-rail .premium-section>h3{color:#d5c79b;border-color:#769187}
+.premium-atelier .premium-rail .premium-photo{width:54px;height:54px;border-radius:50%;border:1px solid #d5c79b}
+.premium-atelier .premium-head-atelier{padding:29px 25px 19px;background:#d4e7dc}
+.premium-atelier .premium-head-atelier .premium-photo{display:none}
+.premium-atelier .premium-portrait-mark{display:none}
+.premium-atelier .premium-name{font:700 25px/1.02 "DM Sans",sans-serif;letter-spacing:-.035em;text-transform:uppercase}
+.premium-atelier .premium-title{color:#567364}
+.premium-atelier .premium-contact{color:#50675c}
+.premium-atelier .premium-main{padding:0 25px 30px}
+.premium-atelier .premium-main .premium-section>h3{text-align:left}
+
+/* 04 — quiet ivory signature with a fine gold baseline */
+.premium-pure-signature{--p-accent:#9a835c;--p-rule:#d9d1c1;padding:0 0 9px;background:#fffefa;color:#33332d;border-bottom:8px solid #c5ad7f}
+.premium-pure-signature .premium-head-pure{padding:35px 38px 23px;border-bottom:1px solid #d8cfbd}
+.premium-pure-signature .premium-head-pure .premium-photo{width:40px;height:40px;border-radius:50%}
+.premium-pure-signature .premium-name{font-size:26px;letter-spacing:0}
+.premium-pure-signature .premium-title{font-size:8px;color:#8a7754;letter-spacing:.18em}
+.premium-pure-signature .premium-main{padding:22px 38px 30px}
+.premium-pure-signature .premium-section>h3{border:0;padding:0;margin-bottom:8px}
+.premium-pure-signature .premium-entry h4{font-size:10px}
+.premium-pure-signature .premium-entry .premium-org{font-size:7px;text-transform:uppercase;letter-spacing:.04em}
+.premium-pure-signature .premium-contact{font-size:7px}
+
+/* 05 — architectural black rule and measured, asymmetric whitespace */
+.premium-architectural{--p-accent:#816a53;--p-rule:#d1c8bb;padding-left:12px;background:#fffefa;color:#292a26}
+.premium-architectural::before{content:"";position:absolute;z-index:-1;inset:0 auto 0 0;width:9px;background:#17211e}
+.premium-architectural-wrap{padding:34px 36px 32px}
+.premium-architectural .premium-head-architectural{display:block;padding:0 0 20px;border-bottom:1px solid #696a62}
+.premium-architectural .premium-head-architectural .premium-photo{float:right;width:54px;height:66px;margin-left:15px}
+.premium-architectural .premium-name{font:700 27px/.98 "DM Sans",sans-serif;letter-spacing:-.045em;text-transform:uppercase}
+.premium-architectural .premium-title{color:#7c6954}
+.premium-architectural .premium-contact{clear:both;padding-top:9px}
+.premium-architectural .premium-main{padding:20px 0 0}
+.premium-architectural .premium-section>h3{border:0;padding:0;margin-bottom:9px}
+
+/* 06 — Monaco's navy framed masthead, crest-like monogram photo, centered seal */
+.premium-monaco{--p-accent:#957c57;--p-rule:#d7cebd;background:#faf8f1;color:#34332d}
+.premium-monaco .premium-head-monaco{display:block;min-height:164px;padding:20px 27px 30px;background:#1d3040;color:#fbf7ec;text-align:center}
+.premium-monaco .premium-head-monaco::before{content:"";position:absolute;inset:12px;border:1px solid #927f5e;pointer-events:none}
+.premium-monaco .premium-head-monaco .premium-photo{position:relative;z-index:1;width:44px;height:44px;margin:1px auto 7px;border:2px solid #f2ead9;border-radius:50%}
+.premium-monaco .premium-monaco-plaque{position:relative;z-index:1}
+.premium-monaco .premium-name{font-size:27px;letter-spacing:.08em;text-transform:uppercase}
+.premium-monaco .premium-title{color:#d4c9ac;font-size:8px}
+.premium-monaco .premium-contact{justify-content:center;color:#e6e0d1}
+.premium-monaco .premium-main{padding:20px 36px 34px}
+.premium-monaco .premium-section>h3{text-align:center}
+.premium-monaco .premium-summary{text-align:center;padding-bottom:2px}
+.premium-monaco .premium-entry h4{font-family:"Libre Caslon Display",Georgia,serif;font-size:12px}
+
+/* 07 — Swiss modular red marker and numbered-feeling section hierarchy */
+.premium-swiss-grid{--p-accent:#bd4939;--p-rule:#cfc9c2;padding-top:9px;background:#fff;color:#202020}
+.premium-swiss-grid::before{content:"";position:absolute;top:0;left:0;right:0;height:7px;background:#c74737}
+.premium-swiss-grid .premium-head-swiss{display:grid;grid-template-columns:minmax(0,1fr) 53px;gap:12px;padding:23px 28px 17px;border-bottom:2px solid #252525}
+.premium-swiss-grid .premium-swiss-id{min-width:0}
+.premium-swiss-grid .premium-swiss-id .premium-name{font:800 29px/.94 "DM Sans",sans-serif;letter-spacing:-.07em;text-transform:uppercase}
+.premium-swiss-grid .premium-swiss-id .premium-title{color:#b54335;font-weight:700}
+.premium-swiss-grid .premium-head-swiss>.premium-photo{grid-column:2;grid-row:1 / span 2;width:53px;height:53px;object-fit:cover}
+.premium-swiss-grid .premium-swiss-contact{grid-column:1/-1}
+.premium-swiss-grid .premium-swiss-contact .premium-contact{margin:0}
+.premium-swiss-grid .premium-main{padding:19px 28px 32px}
+.premium-swiss-grid .premium-section{display:grid;grid-template-columns:minmax(100px,27%) minmax(0,1fr);gap:12px;margin-bottom:17px}
+.premium-swiss-grid .premium-section>h3{grid-column:1;margin:0;border:0;padding:0;color:#c74737;font-size:8px}
+.premium-swiss-grid .premium-section>*:not(h3){grid-column:2}
+.premium-swiss-grid .premium-entry{margin-bottom:10px}
+.premium-swiss-grid .premium-entry h4{font-size:10px}
+.premium-swiss-grid .premium-skill-list{gap:5px 8px}
+
+/* 08 — green prestige sidebar and warm editorial paper */
+.premium-emerald-prestige{--p-accent:#927d51;--p-rule:#d9d0bc;background:#fbf8ef;color:#30352e}
+.premium-emerald-prestige .premium-columns-emerald{grid-template-columns:minmax(130px,30%) minmax(0,1fr)}
+.premium-emerald-prestige .premium-rail{padding:28px 17px;background:#194638;color:#f3f3e9}
+.premium-emerald-prestige .premium-rail .premium-photo{width:48px;height:48px;margin:0 auto 22px;border-radius:50%;border:1px solid #e4dfc6}
+.premium-emerald-prestige .premium-rail .premium-contact{display:grid;gap:6px;margin:0 0 24px;color:#e1e9db;font-size:7px}
+.premium-emerald-prestige .premium-rail .premium-contact li+li::before{display:none}
+.premium-emerald-prestige .premium-rail .premium-section>h3{color:#d8c898;border-color:#688879}
+.premium-emerald-prestige .premium-rail .premium-language-level{color:#c3d6bf}
+.premium-emerald-prestige .premium-main{padding:31px 24px}
+.premium-emerald-prestige .premium-head-emerald{display:block;padding:0 0 16px;margin-bottom:18px;border-bottom:1px solid #d2c9b6}
+.premium-emerald-prestige .premium-head-emerald .premium-name{font-size:25px}
+.premium-emerald-prestige .premium-head-emerald .premium-title{color:#9b8357}
+.premium-emerald-prestige .premium-section>h3{letter-spacing:.17em}
+
+@media(max-width:640px){
+  .premium-cv{min-height:0;font-size:10px}
+  .premium-cv .premium-main{padding:22px 20px 28px}
+  .premium-cv .premium-name{font-size:25px}
+  .premium-cv .premium-head{gap:12px}
+  .premium-cv .premium-head-midnight{padding:24px 21px;min-height:125px}
+  .premium-cv .premium-columns{grid-template-columns:minmax(100px,32%) minmax(0,1fr)}
+  .premium-cv .premium-rail{padding:21px 12px}
+  .premium-cv .premium-entry-top{align-items:flex-start}
+  .premium-cv .premium-entry h4{font-size:9px}
+  .premium-cv .premium-dates{font-size:6.5px}
+  .premium-executive-gold{padding:8px}
+  .premium-executive-gold .premium-gold-frame{min-height:0;padding:25px 20px}
+  .premium-executive-gold .premium-main{padding:16px 0}
+  .premium-atelier .premium-columns-atelier{grid-template-columns:minmax(95px,31%) minmax(0,1fr)}
+  .premium-atelier .premium-rail{padding:19px 10px}
+  .premium-atelier .premium-head-atelier{padding:23px 18px 16px}
+  .premium-atelier .premium-main{padding:0 18px 24px}
+  .premium-pure-signature .premium-head-pure{padding:28px 22px 18px}
+  .premium-pure-signature .premium-main{padding:20px 22px 25px}
+  .premium-architectural{padding-left:9px}
+  .premium-architectural::before{width:6px}
+  .premium-architectural-wrap{padding:28px 22px}
+  .premium-monaco .premium-main{padding:18px 22px 27px}
+  .premium-swiss-grid .premium-head-swiss{padding:21px 20px 15px}
+  .premium-swiss-grid .premium-main{padding:18px 20px 25px}
+  .premium-swiss-grid .premium-section{grid-template-columns:minmax(78px,26%) minmax(0,1fr);gap:8px}
+  .premium-emerald-prestige .premium-columns-emerald{grid-template-columns:minmax(104px,32%) minmax(0,1fr)}
+  .premium-emerald-prestige .premium-rail{padding:22px 12px}
+  .premium-emerald-prestige .premium-main{padding:25px 18px}
+}
+@media(max-width:390px){
+  .premium-cv .premium-columns,.premium-atelier .premium-columns-atelier,.premium-emerald-prestige .premium-columns-emerald{grid-template-columns:1fr}
+  .premium-cv .premium-rail{padding:18px 20px}
+  .premium-cv .premium-rail .premium-photo{margin-left:0}
+  .premium-swiss-grid .premium-section{grid-template-columns:1fr}
+  .premium-swiss-grid .premium-section>h3,.premium-swiss-grid .premium-section>*:not(h3){grid-column:1}
+}
+@media print{
+  .premium-cv{min-height:0;box-shadow:none;break-inside:auto;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .premium-cv .premium-section,.premium-cv .premium-entry{break-inside:avoid}
+  .premium-cv .premium-main,.premium-cv .premium-rail,.premium-cv .premium-gold-frame{height:auto;overflow:visible}
+}
+
+/* Keep the full-size editor paper and scaled marketing previews on the same renderer. */
+.premium-executive-gold{--p-paper:#25241f}
+.premium-midnight-modern{--p-paper:#f5f7f3}
+.premium-atelier{--p-paper:#f7f8f5}
+.premium-pure-signature{--p-paper:#fffdf7}
+.premium-architectural{--p-paper:#fcfaf6}
+.premium-monaco{--p-paper:#faf8f2}
+.premium-swiss-grid{--p-paper:#faf9f4}
+.premium-emerald-prestige{--p-paper:#f9fbf8}
+.workspace .cv-paper.premium-cv{background-color:var(--cv-paper-bg,var(--p-paper))!important}
+.workspace .premium-executive-gold .premium-gold-frame{background-color:var(--cv-paper-bg,#fffdf6)}
+.workspace .premium-cv.paper-dark .premium-main,
+.workspace .premium-cv.paper-dark .premium-gold-frame{color:#fff}
+.workspace .premium-cv.paper-dark .premium-main :is(.premium-copy,.premium-org,.premium-dates,.premium-contact),
+.workspace .premium-cv.paper-dark .premium-gold-frame :is(.premium-copy,.premium-org,.premium-dates,.premium-contact){color:#e8ebe7}
+.workspace .premium-cv.paper-dark .premium-main .premium-section>h3,
+.workspace .premium-cv.paper-dark .premium-gold-frame .premium-section>h3{color:#e8dbc0;border-color:#a9a9a0}
+.page .hero-reference .hero-template-card .cv-paper.premium-cv,
+.example-sheet .cv-paper.premium-cv{
+  background-color:var(--p-paper)!important;
+  padding:0!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+.page .hero-reference .hero-template-card .cv-paper.premium-cv{
+  min-height:0!important;
+  height:100%!important;
+  overflow:hidden!important;
+}
+.example-sheet .cv-paper.premium-cv{min-height:760px}
+.resume-choice .premium-choice-preview{
+  height:165px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid #ddd8cb;
+  background:#f4f3ed;
+  box-shadow:0 6px 18px #3331;
+}
+.resume-choice .premium-choice-preview .cv-paper.premium-cv{
+  width:430px!important;
+  min-height:760px!important;
+  margin:0!important;
+  transform:scale(.39);
+  transform-origin:top left;
+  pointer-events:none;
+  box-shadow:none!important;
+}
