@@ -856,3 +856,56 @@ body:has(.hero-reference) #footer .impact-strip{background:transparent!important
  .page .how{background:linear-gradient(180deg,rgba(107,162,194,.36),rgba(107,162,194,.9) 13%,rgba(107,162,194,.9))!important}
  .page .pricing{background:linear-gradient(180deg,rgba(107,162,194,.9),rgba(107,162,194,.9) 85%,rgba(107,162,194,.28))!important}
 }
+
+
+/* Light photographic sky: soften the tint and dissolve panels at their edges. */
+:root{--chyper-sky:#8fc4e1;--chyper-sky-border:#79afd0}
+body:has(.hero-reference){
+ background-color:#8fc4e1!important;
+ background-image:
+  linear-gradient(180deg,rgba(13,54,82,.04) 0%,rgba(13,54,82,.06) 22%,rgba(13,54,82,.28) 55%,rgba(13,54,82,.32) 100%),
+  url('./nature-landscape-4k.jpg')!important;
+}
+body:has(.hero-reference) #header{
+ background:linear-gradient(180deg,rgba(143,196,225,.68),rgba(143,196,225,.25) 68%,transparent)!important;
+}
+body:has(.hero-reference) #header .nav .wordmark,
+body:has(.hero-reference) #header .nav .login,
+body:has(.hero-reference) #header .nav .language{color:#123c56!important;text-shadow:0 1px 12px rgba(245,252,255,.48)}
+body:has(.hero-reference) #header .language-trigger{
+ background:rgba(232,247,255,.46)!important;
+ border-color:rgba(18,60,86,.25)!important;
+ color:#123c56!important;
+}
+body:has(.hero-reference) #header .language-trigger svg{color:#123c56!important}
+body:has(.hero-reference) #header .language-picker.is-open .language-trigger,
+body:has(.hero-reference) #header .language-trigger:hover{background:rgba(232,247,255,.75)!important}
+.page .hero-reference h1,
+.page .hero-reference .intro,
+.page .hero-reference .hero-price,
+.page .hero-reference .hero-proof{text-shadow:0 2px 18px rgba(7,34,55,.8)}
+.page .promise-strip{
+ background:linear-gradient(180deg,rgba(143,196,225,0),rgba(143,196,225,.76) 38%,rgba(143,196,225,.72) 72%,rgba(143,196,225,0))!important;
+}
+.page .example-collection{
+ background:linear-gradient(180deg,rgba(143,196,225,0),rgba(143,196,225,.88) 12%,rgba(143,196,225,.88) 88%,rgba(143,196,225,0))!important;
+}
+.page .how{
+ background:linear-gradient(180deg,rgba(143,196,225,0),rgba(143,196,225,.91) 15%,rgba(143,196,225,.91))!important;
+}
+.page .why{background:rgba(143,196,225,.91)!important}
+.page .pricing{
+ background:linear-gradient(180deg,rgba(143,196,225,.91),rgba(143,196,225,.91) 84%,rgba(143,196,225,0))!important;
+}
+body:has(.hero-reference) #footer{
+ background:linear-gradient(180deg,rgba(143,196,225,0),rgba(143,196,225,.85) 22%,#8fc4e1 62%)!important;
+}
+@media(max-width:700px){
+ body:has(.hero-reference){
+  background-image:linear-gradient(180deg,rgba(13,54,82,.08) 0%,rgba(13,54,82,.21) 42%,rgba(13,54,82,.33) 100%),url('./nature-landscape-4k.jpg')!important;
+ }
+ body:has(.hero-reference) #header{background:linear-gradient(180deg,rgba(143,196,225,.76),rgba(143,196,225,.24) 68%,transparent)!important}
+ .page .hero-reference::before{background-image:linear-gradient(180deg,rgba(13,54,82,.08),rgba(13,54,82,.28) 65%,transparent)!important}
+ .page .how{background:linear-gradient(180deg,rgba(143,196,225,0),rgba(143,196,225,.92) 15%,rgba(143,196,225,.92))!important}
+ .page .pricing{background:linear-gradient(180deg,rgba(143,196,225,.92),rgba(143,196,225,.92) 84%,rgba(143,196,225,0))!important}
+}
