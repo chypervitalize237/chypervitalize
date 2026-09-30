@@ -119,3 +119,10 @@ html,body{max-width:100%;overflow-x:clip}
 @media(max-width:900px){#app .hero-reference{padding:28px!important}#app .hero-reference .hero-template-carousel{height:500px!important}#app .hero-reference .hero-cv-examples,#app .hero-reference .hero-template-card.is-front{height:460px!important}}
 @media(max-width:650px){#app .hero-reference{padding:25px 16px!important;border-radius:20px;gap:24px!important}#app .hero-reference .hero-copy h1{font-size:38px!important}#app .hero-reference .hero-copy>.primary{width:100%;max-width:340px}#app .hero-reference .hero-template-carousel{height:440px!important}#app .hero-reference .hero-cv-examples,#app .hero-reference .hero-template-card.is-front{height:400px!important}#app .hero-reference .hero-template-card.is-front{width:calc(100% - 48px)!important}.example-filters{gap:8px}.example-filters button{padding:9px 12px;font-size:12px}}
 #app .hero-reference .hero-price strong,#app .hero-reference .hero-live-label span,#app .hero-reference .hero-feature-result strong,#app .hero-reference .hero-feature-result small{color:#244b3c!important;text-shadow:none!important}
+
+/* Apply selected decoration colors to fixed-color premium details. */
+.workspace .premium-cv.custom-accent .premium-title{color:var(--p-accent)!important}
+.workspace .premium-cv.custom-accent .premium-section>h3{border-color:var(--user-accent)!important}
+.workspace .premium-swiss-grid.custom-accent{border-top-color:var(--user-accent)!important}
+.workspace .premium-pure-signature.custom-accent{border-bottom-color:var(--user-accent)!important}
+.workspace .premium-swiss-grid.custom-accent::before{background:var(--user-accent)!important}

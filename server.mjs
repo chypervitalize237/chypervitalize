@@ -116,7 +116,7 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
    pdf.registerFont('regular',fontFiles[0]);pdf.registerFont('bold',fontFiles[1]);pdf.registerFont('serif',fontFiles[2]);
    res.writeHead(200,{'Content-Type':'application/pdf','Content-Disposition':'attachment; filename=Chypervitalize-CV.pdf'});pdf.pipe(res);
   const left=style==='minimal'?62:(style==='professional'||style==='tech'?66:48),right=pdf.page.width-48,width=right-left,contact=[d.email,d.phone,d.city,d.link].filter(Boolean).join('  •  ');
-   const paintPage=()=>{const x=pdf.x,y=pdf.y;pdf.rect(0,0,pdf.page.width,pdf.page.height).fill(bg);if(style==='minimal')pdf.rect(0,0,10,pdf.page.height).fill(accent2);if(style==='professional')pdf.rect(0,0,18,pdf.page.height).fill('#1d2722');if(style==='elegant')pdf.rect(0,0,pdf.page.width,14).fill('#b6252c');if(style==='tech')pdf.rect(0,0,16,pdf.page.height).fill('#123a31');pdf.x=x;pdf.y=y;pdf.fillColor(customInk);};pdf.on('pageAdded',paintPage);paintPage();
+   const paintPage=()=>{const x=pdf.x,y=pdf.y;pdf.rect(0,0,pdf.page.width,pdf.page.height).fill(bg);if(style==='minimal')pdf.rect(0,0,10,pdf.page.height).fill(accent2);if(style==='professional')pdf.rect(0,0,18,pdf.page.height).fill('#1d2722');if(style==='elegant')pdf.rect(0,0,pdf.page.width,14).fill(b.customAccent?accent:'#b6252c');if(style==='tech')pdf.rect(0,0,16,pdf.page.height).fill('#123a31');pdf.x=x;pdf.y=y;pdf.fillColor(customInk);};pdf.on('pageAdded',paintPage);paintPage();
   const photo=(x,y,w=50,h=60)=>{if(!d.photo)return false;try{pdf.image(Buffer.from(String(d.photo).split(',')[1],'base64'),x,y,{fit:[w,h],align:'center',valign:'center'});return true;}catch{return false;}};
   const name=d.name||'',title=d.title||'';
   if(style==='basic'){
@@ -143,7 +143,7 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   const pageCheck=()=>{if(pdf.y>700){pdf.addPage();pdf.y=48;}};
   const section=(heading,txt)=>{
    if(!String(txt||'').trim())return;pageCheck();pdf.moveDown(style==='compact'?.55:.9);
-    const centered=['ats','executive','compact'].includes(style),headColor=customHeading||readableColor(style==='elegant'?'#b6252c':style==='professional'?'#a55f3a':style==='tech'?'#9e7b3d':['executive','minimal','compact'].includes(style)?accent2:accent,bg);
+    const centered=['ats','executive','compact'].includes(style),headColor=customHeading||readableColor(style==='elegant'?(b.customAccent?accent:'#b6252c'):style==='professional'?'#a55f3a':style==='tech'?'#9e7b3d':['executive','minimal','compact'].includes(style)?accent2:accent,bg);
    pdf.font('bold').fillColor(headColor).fontSize(style==='compact'?8:9).text(String(heading||'').toUpperCase(),left,pdf.y,{width,align:centered?'center':'left',characterSpacing:style==='elegant'?1.7:.8});
    const lineY=pdf.y+4;
    if(style==='ats'||style==='professional'||style==='elegant')pdf.moveTo(left,lineY).lineTo(right,lineY).strokeColor(headColor).lineWidth(.5).stroke();
