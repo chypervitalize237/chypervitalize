@@ -166,7 +166,8 @@ const featured = [
   ["architectural", "professional", "project", "#ad7556", "Határozott szerkezet", "Confident structure"],
   ["monaco", "compact", "graduate", "#233f57", "Időtlen kék és arany", "Timeless navy and gold"],
   ["swiss-grid", "elegant", "electrician", "#b62f33", "Karakteres tipográfia", "Expressive typography"],
-  ["emerald-prestige", "tech", "emerald-director", "#23564b", "Smaragdzöld prémium", "Emerald refinement"]
+  ["emerald-prestige", "tech", "emerald-director", "#23564b", "Smaragdzöld prémium", "Emerald refinement"],
+  ["monaco-care", "compact", "nurse", "#233f57", "Átlátható minta egészségügyi pályázathoz", "A clear example for healthcare applications"]
 ];
 
 function buildFeaturedExamples(lang, originals) {
