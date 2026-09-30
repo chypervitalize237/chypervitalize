@@ -1,0 +1,2 @@
+export function luminance(hex){const channels=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return channels[0]*.2126+channels[1]*.7152+channels[2]*.0722;}
+export function readableColor(color,background){if(!/^#[a-f0-9]{6}$/i.test(color)||!/^#[a-f0-9]{6}$/i.test(background))return '#252921';const a=luminance(color),b=luminance(background);return (Math.max(a,b)+.05)/(Math.min(a,b)+.05)>=4.5?color:b<.179?'#ffffff':'#252921';}

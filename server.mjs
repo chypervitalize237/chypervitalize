@@ -1,4 +1,6 @@
 import http from 'node:http';
+import {requireSandboxKey,cancelRenewal} from './subscription-policy.mjs';
+import {readableColor} from './color-utils.mjs';
 import {checkoutPrice,applyCheckoutPrice} from './pricing.mjs';
 import {readFileSync,mkdirSync,existsSync} from 'node:fs';
 import {join,extname} from 'node:path';
@@ -7,20 +9,29 @@ import {DatabaseSync} from 'node:sqlite';
 import PDFDocument from 'pdfkit';
 const root=import.meta.dirname, dir=process.env.DATA_DIR||join(root,'data');mkdirSync(dir,{recursive:true});
 const db=new DatabaseSync(join(dir,'chypermax.sqlite'));db.exec(`PRAGMA journal_mode=WAL; CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email TEXT UNIQUE,hash TEXT,salt TEXT,draft TEXT,expires INTEGER DEFAULT 0,plan TEXT,ref TEXT UNIQUE,referred TEXT); CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,uid TEXT,expires INTEGER); CREATE TABLE IF NOT EXISTS reviews(id INTEGER PRIMARY KEY AUTOINCREMENT,uid TEXT UNIQUE,rating INTEGER,text TEXT,created INTEGER);`);try{db.exec('ALTER TABLE users ADD COLUMN day_download_used INTEGER DEFAULT 0')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN credits INTEGER DEFAULT 0')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN credited_sessions TEXT DEFAULT "[]"')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN paid_projects TEXT DEFAULT "[]"')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN stripe_customer_id TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN stripe_subscription_id TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN subscription_status TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN access_until INTEGER DEFAULT 0')}catch{}
+try{db.exec('ALTER TABLE users ADD COLUMN cancel_at_period_end INTEGER DEFAULT 0')}catch{}
 db.exec('CREATE TABLE IF NOT EXISTS site_metrics(name TEXT PRIMARY KEY, count INTEGER NOT NULL DEFAULT 0)');
 const limits=new Map();
 function json(res,data,status=200){res.writeHead(status,{'Content-Type':'application/json'});res.end(JSON.stringify(data));}
 function user(req){let token=(req.headers.cookie||'').match(/(?:^|; )session=([a-f0-9]+)/)?.[1];return token?db.prepare('SELECT u.* FROM users u JOIN sessions s ON u.id=s.uid WHERE s.token=? AND s.expires>?').get(token,Date.now()):null;}
 function hasAccess(u){return !!u&&['active','trialing'].includes(String(u.subscription_status||''))&&Number(u.access_until||0)>Date.now();}
-function safe(u){return u?{email:u.email,expires:u.expires,plan:u.plan,ref:u.ref,credits:hasAccess(u)?1:0,subscriptionStatus:u.subscription_status||null,accessUntil:Number(u.access_until||0)}:null;}
-function syncSubscription(uid,sub){if(!uid||!sub)return;const status=String(sub.status||''),periods=(sub.items?.data||[]).map(x=>Number(x.current_period_end)).filter(Number.isFinite),periodEnd=periods.length?Math.min(...periods):Number(sub.current_period_end||sub.trial_end||0),until=periodEnd*1000;db.prepare('UPDATE users SET stripe_customer_id=?,stripe_subscription_id=?,subscription_status=?,access_until=? WHERE id=?').run(typeof sub.customer==='string'?sub.customer:null,sub.id||null,status,until,uid);}
-async function stripeGet(path){const r=await fetch('https://api.stripe.com/v1/'+path,{headers:{Authorization:'Bearer '+process.env.STRIPE_SECRET_KEY},signal:AbortSignal.timeout(15000)});const d=await r.json();if(!r.ok)throw Error(d?.error?.message||'stripe');return d;}
+function safe(u){return u?{email:u.email,expires:u.expires,plan:u.plan,ref:u.ref,credits:hasAccess(u)?1:0,subscriptionStatus:u.subscription_status||null,accessUntil:Number(u.access_until||0),cancelAtPeriodEnd:!!u.cancel_at_period_end,canCancel:!!u.stripe_subscription_id}:null;}
+function syncSubscription(uid,sub){if(!uid||!sub)return;const status=String(sub.status||''),periods=(sub.items?.data||[]).map(x=>Number(x.current_period_end)).filter(Number.isFinite),periodEnd=periods.length?Math.min(...periods):Number(sub.current_period_end||sub.trial_end||0),until=periodEnd*1000;db.prepare('UPDATE users SET stripe_customer_id=?,stripe_subscription_id=?,subscription_status=?,access_until=?,cancel_at_period_end=? WHERE id=?').run(typeof sub.customer==='string'?sub.customer:null,sub.id||null,status,until,sub.cancel_at_period_end||sub.cancel_at?1:0,uid);}
+async function stripeGet(path){requireSandboxKey(process.env.STRIPE_SECRET_KEY);const r=await fetch('https://api.stripe.com/v1/'+path,{headers:{Authorization:'Bearer '+process.env.STRIPE_SECRET_KEY},signal:AbortSignal.timeout(15000)});const d=await r.json();if(!r.ok)throw Error(d?.error?.message||'stripe');return d;}
 async function rawBody(req){let v='';for await(const chunk of req){v+=chunk;if(v.length>3000000)throw Error('Request too large');}return v;}
 async function body(req){return JSON.parse((await rawBody(req))||'{}');}
 function validStripeSignature(raw,header,secret){if(!header||!secret)return false;const values={};for(const part of String(header).split(',')){const i=part.indexOf('=');if(i<1)continue;const k=part.slice(0,i),v=part.slice(i+1);(values[k]??=[]).push(v);}const t=Number(values.t?.[0]),sigs=values.v1||[];if(!t||!sigs.length||Math.abs(Date.now()/1000-t)>300)return false;const expected=createHmac('sha256',secret).update(t+'.'+raw).digest('hex');return sigs.some(sig=>{try{return timingSafeEqual(Buffer.from(sig,'hex'),Buffer.from(expected,'hex'));}catch{return false;}});}
 http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','same-origin');res.setHeader('X-Frame-Options','DENY');const url=new URL(req.url,'http://localhost');try{
  if(req.method==='POST'&&req.headers.origin&&new URL(req.headers.origin).host!==req.headers.host)return json(res,{error:'Origin rejected'},403);
  const u=user(req);
+ if(url.pathname.startsWith('/api/checkout')||url.pathname==='/api/subscription/cancel'){
+  try{requireSandboxKey(process.env.STRIPE_SECRET_KEY);}catch{return json(res,{error:'Stripe sandbox nincs beállítva. Csak tesztkulcs használható.'},503);}
+ }
+ if(url.pathname==='/api/subscription/cancel'&&req.method==='POST'){
+  if(!u)return json(res,{error:'auth'},401);
+  try{const sub=await cancelRenewal({key:process.env.STRIPE_SECRET_KEY,subscriptionId:u.stripe_subscription_id,customerId:u.stripe_customer_id});syncSubscription(u.id,sub);return json(res,{user:safe(db.prepare('SELECT * FROM users WHERE id=?').get(u.id))});}
+  catch{return json(res,{error:'A megújulás leállítása nem sikerült. Próbáld újra vagy írj az ügyfélszolgálatnak.'},502);}
+ }
       if(url.pathname==='/api/visits'&&(req.method==='GET'||req.method==='POST')){
        res.setHeader('Cache-Control','no-store');
        if(req.method==='POST')db.prepare("INSERT INTO site_metrics(name,count) VALUES('visits',1) ON CONFLICT(name) DO UPDATE SET count=count+1").run();
@@ -32,6 +43,7 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   const raw=await rawBody(req);
   if(!validStripeSignature(raw,req.headers['stripe-signature'],process.env.STRIPE_WEBHOOK_SECRET))return json(res,{error:'signature'},400);
   let event;try{event=JSON.parse(raw)}catch{return json(res,{error:'json'},400);}
+  if(event.livemode!==false)return json(res,{error:'Only sandbox events accepted'},400);
   const obj=event.data?.object||{};
   if(event.type.startsWith('customer.subscription.')){
    const uid=obj.metadata?.uid;
@@ -97,7 +109,7 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   const allowed=['basic','ats','modern','executive','minimal','creative','professional','compact','elegant','tech'],style=allowed.includes(b.cvStyle)?b.cvStyle:(b.resumeType==='basic'?'basic':'ats');
   const validColor=v=>/^#[0-9a-f]{6}$/i.test(String(v||'')),bg=validColor(b.cvBackground)?String(b.cvBackground).toLowerCase():'#ffffff',accent=validColor(b.basicAccent)?String(b.basicAccent):'#74866b',accent2=validColor(b.basicAccent2)?String(b.basicAccent2):'#b49a68';
    const rgb=[1,3,5].map(i=>parseInt(bg.slice(i,i+2),16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4),darkPaper=rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722<.179,ink=darkPaper?'#ffffff':'#252921',muted=darkPaper?'#d5dbd5':'#626960';
-   const layout=b.layout&&typeof b.layout==='object'?b.layout:{},customInk=validColor(layout.textColor)?layout.textColor:ink,customHeading=validColor(layout.headingColor)?layout.headingColor:null;
+   const layout=b.layout&&typeof b.layout==='object'?b.layout:{},customInk=readableColor(validColor(layout.textColor)?layout.textColor:ink,bg),customHeading=validColor(layout.headingColor)?readableColor(layout.headingColor,bg):null;
    const fontFiles=['DejaVuSans.ttf','DejaVuSans-Bold.ttf','DejaVuSerif.ttf'].map(name=>join(root,'fonts',name));
    if(fontFiles.some(file=>!existsSync(file)))return json(res,{error:'pdf_fonts_missing'},500);
    const pdf=new PDFDocument({size:'A4',margin:48,info:{Title:(d.name||'CV')+' — Chypervitalize',Author:d.name||''}});
@@ -131,13 +143,13 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   const pageCheck=()=>{if(pdf.y>700){pdf.addPage();pdf.y=48;}};
   const section=(heading,txt)=>{
    if(!String(txt||'').trim())return;pageCheck();pdf.moveDown(style==='compact'?.55:.9);
-    const centered=['ats','executive','compact'].includes(style),headColor=customHeading||(style==='elegant'?'#b6252c':style==='professional'?'#a55f3a':style==='tech'?'#9e7b3d':['executive','minimal','compact'].includes(style)?accent2:accent);
+    const centered=['ats','executive','compact'].includes(style),headColor=customHeading||readableColor(style==='elegant'?'#b6252c':style==='professional'?'#a55f3a':style==='tech'?'#9e7b3d':['executive','minimal','compact'].includes(style)?accent2:accent,bg);
    pdf.font('bold').fillColor(headColor).fontSize(style==='compact'?8:9).text(String(heading||'').toUpperCase(),left,pdf.y,{width,align:centered?'center':'left',characterSpacing:style==='elegant'?1.7:.8});
    const lineY=pdf.y+4;
    if(style==='ats'||style==='professional'||style==='elegant')pdf.moveTo(left,lineY).lineTo(right,lineY).strokeColor(headColor).lineWidth(.5).stroke();
    else if(style==='executive'||style==='compact')pdf.moveTo(left+45,lineY).lineTo(right-45,lineY).strokeColor(headColor).lineWidth(.45).stroke();
    else if(style==='modern'||style==='creative'||style==='tech')pdf.rect(left,lineY-2,20,3).fill(headColor);
-    pdf.moveDown(style==='compact'?.5:.72).font(layout.font==='serif'?'serif':'regular').fillColor(customInk).fontSize(style==='compact'?8.5:9.5).text(String(txt),left,pdf.y,{width,lineGap:style==='compact'?2:3});
+    pdf.y=lineY+10;pdf.font(layout.font==='serif'?'serif':'regular').fillColor(customInk).fontSize(style==='compact'?8.5:9.5).text(String(txt),left,pdf.y,{width,lineGap:style==='compact'?2:3});
   };
    const defaultOrder=['summary','experience','education','projects','awards','volunteer','certifications','skills','languages'];
    const ordered=Array.isArray(layout.order)?[...new Set(layout.order.filter(key=>defaultOrder.includes(key))),...defaultOrder.filter(key=>!layout.order.includes(key))]:defaultOrder;
@@ -153,7 +165,7 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
    const gap=18,railWidth=railActive?Math.round(width*.29):0,mainWidth=width-railWidth-(railActive?gap:0);
    const sideRight=b.basicSide==='right',mainLeft=left+(railActive&&!sideRight?railWidth+gap:0),railLeft=sideRight?right-railWidth:left;
    const bodyFont=layout.font==='serif'?'serif':'regular',bodySize=style==='compact'?8.5:9.5,lineGap=style==='compact'?2:3;
-   const headColor=customHeading||(style==='elegant'?'#b6252c':style==='professional'?'#a55f3a':style==='tech'?'#9e7b3d':['executive','minimal','compact'].includes(style)?accent2:accent);
+   const headColor=customHeading||readableColor(style==='elegant'?'#b6252c':style==='professional'?'#a55f3a':style==='tech'?'#9e7b3d':['executive','minimal','compact'].includes(style)?accent2:accent,bg);
    const pageTop=48,pageBottom=pdf.page.height-49,firstY=Math.max(pdf.y+16,pageTop);
    const measure=(item,w)=>{
     pdf.font('bold').fontSize(style==='compact'?8:9);
@@ -212,5 +224,6 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
    pdf.end();return;
  }
  if(url.pathname.startsWith('/api/'))return json(res,{error:'Not found'},404);
- const path=url.pathname==='/'?'/index.html':url.pathname;const portraitMatch=path.match(/^\/chypermax_portraits_9\/person-([1-9])\.png$/);const portrait=!!portraitMatch;if(!portrait&&!['/index.html','/app.js','/examples.js','/style.css','/i18n.js','/favicon.svg','/cv-examples.js','/home-refresh.css','/premium-templates.js','/premium-templates.css','/nature-landscape.jpg','/nature-landscape-4k.jpg'].includes(path)){res.writeHead(404);res.end('Not found');return;}if(portrait){const file=join(root,'public','chypermax_portraits_9',`person-${portraitMatch[1]}.png`);if(!existsSync(file)){res.writeHead(404,{'Content-Type':'text/plain'});res.end('Portrait missing');return;}const img=readFileSync(file);res.writeHead(200,{'Content-Type':'image/png','Content-Length':img.length,'Cache-Control':'no-store'});res.end(img);return;}res.setHeader('Cache-Control','no-cache');res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg'})[extname(path)]);res.end(readFileSync(join(root,'public',path)));
+ const path=url.pathname==='/'?'/index.html':url.pathname;const portraitMatch=path.match(/^\/chypermax_portraits_9\/person-([1-9])\.png$/);const portrait=!!portraitMatch;if(!portrait&&!['/index.html','/terms.html','/privacy.html','/contact.html','/app.js','/examples.js','/style.css','/launch-polish.css','/i18n.js','/favicon.svg','/cv-examples.js','/home-refresh.css','/premium-templates.js','/premium-templates.css','/nature-landscape.jpg','/nature-landscape-4k.jpg'].includes(path)){res.writeHead(404);res.end('Not found');return;}if(portrait){const file=join(root,'public','chypermax_portraits_9',`person-${portraitMatch[1]}.png`);if(!existsSync(file)){res.writeHead(404,{'Content-Type':'text/plain'});res.end('Portrait missing');return;}const img=readFileSync(file);res.writeHead(200,{'Content-Type':'image/png','Content-Length':img.length,'Cache-Control':'no-store'});res.end(img);return;}res.setHeader('Cache-Control','no-cache');res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg'})[extname(path)]);res.end(readFileSync(join(root,'public',path)));
  }catch(e){if(!res.headersSent)json(res,{error:'server'},500);else res.end();console.error(e.message);}}).listen(process.env.PORT||3000,'0.0.0.0');
+
