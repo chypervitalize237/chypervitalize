@@ -50,10 +50,10 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
    if(uid)syncSubscription(uid,obj);
   }else if(event.type==='checkout.session.completed'||event.type==='checkout.session.async_payment_succeeded'){
    const uid=obj.metadata?.uid||obj.client_reference_id,subId=typeof obj.subscription==='string'?obj.subscription:null;
-   if(uid&&subId){try{syncSubscription(uid,await stripeGet('subscriptions/'+encodeURIComponent(subId)));}catch(e){console.error('Stripe checkout sync:',e.message);}}
+   if(uid&&subId){try{syncSubscription(uid,await stripeGet('subscriptions/'+encodeURIComponent(subId)));}catch(e){console.error('Stripe checkout sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
   }else if(event.type==='invoice.paid'||event.type==='invoice.payment_failed'){
-   const subId=typeof obj.subscription==='string'?obj.subscription:null;
-   if(subId){try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));const account=db.prepare('SELECT id FROM users WHERE stripe_subscription_id=?').get(subId);const uid=sub.metadata?.uid||account?.id;if(uid)syncSubscription(uid,sub);}catch(e){console.error('Stripe invoice sync:',e.message);}}
+   const invoiceSubscription=obj.parent?.subscription_details?.subscription||obj.subscription;const subId=typeof invoiceSubscription==='string'?invoiceSubscription:invoiceSubscription?.id;
+   if(subId){try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));const account=db.prepare('SELECT id FROM users WHERE stripe_subscription_id=?').get(subId);const uid=sub.metadata?.uid||account?.id;if(uid)syncSubscription(uid,sub);}catch(e){console.error('Stripe invoice sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
   }
   return json(res,{received:true});
  }
