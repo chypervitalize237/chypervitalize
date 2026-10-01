@@ -182,3 +182,5 @@ html,body{max-width:100%;overflow-x:clip}
 
 #app.page .hero-reference .hero-template-carousel{align-items:flex-start!important;justify-content:flex-start!important;padding-top:0!important}
 
+
+.support-composer{border-top:1px solid #cad8d0;margin-top:14px;padding-top:10px}.support-composer label{display:grid;gap:8px;font-size:14px;font-weight:600}.support-composer textarea{width:100%;min-height:120px;resize:vertical;padding:12px;border:1px solid #a8bfb4;border-radius:8px;background:#fff;color:#24382e;line-height:1.5;font-weight:400}.support-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.subscription-help .support-actions a{text-decoration:none;font-size:13px;min-height:44px;padding:10px 14px}.support-composer .support-note{font-size:12px;margin-top:10px}
