@@ -176,6 +176,9 @@ html,body{max-width:100%;overflow-x:clip}
 #app.page .hero-reference .hero-template-carousel,#app.page .hero-reference .hero-cv-examples{max-height:none!important}
 
 
-@media(min-width:751px){#app.page .hero-reference .hero-template-carousel{height:710px!important}}
-@media(min-width:1500px){#app.page .hero-reference .hero-template-carousel{height:770px!important}}
+@media(min-width:751px){#app.page .hero-reference .hero-template-carousel{height:650px!important}}
+@media(min-width:1500px){#app.page .hero-reference .hero-template-carousel{height:710px!important}}
+
+
+#app.page .hero-reference .hero-template-carousel{align-items:flex-start!important;justify-content:flex-start!important;padding-top:0!important}
 
