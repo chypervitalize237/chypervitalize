@@ -110,7 +110,7 @@ function customizeCvMarkup(markup,lang){
  paper.classList.toggle('custom-serif',state.layout.font==='serif');
  if(state.layout.textColor){paper.classList.add('custom-ink');paper.style.setProperty('--user-ink',readableColor(state.layout.textColor,state.cvBackground));}
  if(state.layout.headingColor){paper.classList.add('custom-heading');paper.style.setProperty('--user-heading',readableColor(state.layout.headingColor,state.cvBackground));}
- if(state.customAccent){paper.classList.add('custom-accent');paper.style.setProperty('--user-accent',state.basicAccent);paper.style.setProperty('--p-accent',readableColor(state.basicAccent,state.cvBackground));}
+ if(state.customAccent){paper.classList.add('custom-accent');paper.style.setProperty('--user-accent',state.basicAccent);paper.style.setProperty('--on-user-accent',readableColor('#ffffff',state.basicAccent));paper.style.setProperty('--p-accent',readableColor(state.basicAccent,state.cvBackground));}
  if(state.customAccent2){paper.classList.add('custom-accent-two');paper.style.setProperty('--user-accent-two',state.basicAccent2);}
  if(!paper.classList.contains('premium-cv')){
   const main=paper.classList.contains('basic-cv')?paper.querySelector('.basic-body>main'):paper;

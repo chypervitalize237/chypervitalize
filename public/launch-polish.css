@@ -144,3 +144,31 @@ html,body{max-width:100%;overflow-x:clip}
 #modal:has(.plan-choice-grid) .subscription-help details{margin:0;padding:12px;font-size:13px}
 #modal:has(.plan-choice-grid)>.fx-note{margin:10px 0 0;font-size:11px;line-height:1.4}
 @media(max-width:650px){#modal:has(.plan-choice-grid){padding:26px 16px 16px;width:calc(100vw - 24px)}#modal:has(.plan-choice-grid) .subscription-help{grid-template-columns:1fr}#modal .plan-choice-grid .price-card{padding:16px}#modal .plan-choice-grid .plan-features{grid-template-columns:1fr}}
+
+/* Larger live HTML previews: retain sharp text instead of enlarging images. */
+@media(min-width:751px){#app.page .hero-reference .hero-template-carousel{max-width:640px!important;height:620px!important}#app.page .hero-reference .hero-cv-examples{height:575px!important}#app.page .hero-reference .hero-template-card{width:min(420px,calc(100% - 64px))!important;height:575px!important;padding:4px!important}#app.page .hero-reference{grid-template-columns:minmax(0,1fr) minmax(0,1.05fr)!important}}
+.example-sheet{height:440px!important}
+@media(min-width:1500px){#app.page .hero-reference .hero-template-carousel{height:680px!important}#app.page .hero-reference .hero-cv-examples,#app.page .hero-reference .hero-template-card{height:635px!important}#app.page .hero-reference .hero-template-card{width:min(460px,calc(100% - 64px))!important}}
+/* Distinct default palettes; green remains only on the Emerald design. */
+.premium-midnight-modern .premium-head-midnight{background:#243b60!important;border-bottom-color:#92b6dc}
+.premium-midnight-modern .premium-rail{background:#eaf0f8}
+.premium-midnight-modern{--p-accent:#304e7a;--p-rule:#c6d4e7}
+.premium-atelier .premium-rail{background:#56394f!important}
+.premium-atelier .premium-head-atelier{background:#f0e4ed!important}
+.premium-atelier{--p-accent:#704b65;--p-rule:#ddccda}
+.premium-atelier .premium-title,.premium-atelier .premium-contact{color:#62445a}
+/* Primary decoration color controls solid headers, rails and frames too. */
+.workspace .premium-cv.custom-accent :is(.premium-head-midnight,.premium-head-monaco,.premium-head-atelier),
+.workspace .premium-cv.custom-accent:is(.premium-atelier,.premium-emerald-prestige) .premium-rail{background:var(--user-accent)!important;color:var(--on-user-accent)!important}
+.workspace .premium-cv.custom-accent :is(.premium-head-midnight,.premium-head-monaco,.premium-head-atelier) :is(.premium-name,.premium-title,.premium-contact),
+.workspace .premium-cv.custom-accent:is(.premium-atelier,.premium-emerald-prestige) .premium-rail :is(.premium-section>h3,.premium-copy,.premium-org,.premium-dates,.premium-contact,.premium-language-level,.premium-entry h4,.premium-skill-list,.premium-language-list){color:var(--on-user-accent)!important}
+.workspace .premium-executive-gold.custom-accent{background:var(--user-accent)!important}
+.workspace .premium-cv.custom-accent :is(.premium-gold-frame,.premium-head-centered,.premium-head-pure,.premium-head-architectural,.premium-head-emerald,.premium-head-monaco::before){border-color:var(--user-accent)!important}
+.workspace .premium-architectural.custom-accent::before{background:var(--user-accent)!important}
+
+.workspace .premium-monaco.custom-accent .premium-head-monaco::before{border-color:var(--on-user-accent)!important}
+.workspace .premium-executive-gold.custom-accent .premium-gold-frame{outline:12px solid var(--user-accent);outline-offset:0}
+
+
+#app.page .hero-reference .hero-template-card{max-height:none!important}
+
