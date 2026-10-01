@@ -126,3 +126,21 @@ html,body{max-width:100%;overflow-x:clip}
 .workspace .premium-swiss-grid.custom-accent{border-top-color:var(--user-accent)!important}
 .workspace .premium-pure-signature.custom-accent{border-bottom-color:var(--user-accent)!important}
 .workspace .premium-swiss-grid.custom-accent::before{background:var(--user-accent)!important}
+
+/* Roomy plan comparison without narrow, overflowing columns. */
+#modal:has(.plan-choice-grid){width:min(1040px,calc(100vw - 32px));padding:24px 28px;max-height:calc(100dvh - 32px)}
+#modal:has(.plan-choice-grid)>h2{font-size:32px;margin:6px 0 16px}
+#modal:has(.plan-choice-grid)>.eyebrow{margin:0;font-size:11px}
+#modal .plan-choice-grid .price-card{padding:18px 22px}
+#modal .plan-choice-grid .price-card h3{margin:8px 0 4px}
+#modal .plan-choice-grid .price-card>p{font-size:14px;line-height:1.45;margin:4px 0;min-height:0}
+#modal .plan-choice-grid .price-card .current-price{font-size:32px;margin:8px 0 4px!important}
+#modal .plan-choice-grid .plan-scenario{padding:12px;margin:12px 0}
+#modal .plan-choice-grid .plan-scenario p{margin:4px 0 0;font-size:13px;line-height:1.45!important}
+#modal .plan-choice-grid .plan-features{grid-template-columns:1fr 1fr;gap:8px 12px;margin:2px 0 16px}
+#modal .plan-choice-grid .plan-features li{font-size:13px;line-height:1.4;gap:7px}
+#modal .plan-choice-grid .primary{min-height:46px;padding:10px 14px}
+#modal:has(.plan-choice-grid) .subscription-help{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 0;align-items:start}
+#modal:has(.plan-choice-grid) .subscription-help details{margin:0;padding:12px;font-size:13px}
+#modal:has(.plan-choice-grid)>.fx-note{margin:10px 0 0;font-size:11px;line-height:1.4}
+@media(max-width:650px){#modal:has(.plan-choice-grid){padding:26px 16px 16px;width:calc(100vw - 24px)}#modal:has(.plan-choice-grid) .subscription-help{grid-template-columns:1fr}#modal .plan-choice-grid .price-card{padding:16px}#modal .plan-choice-grid .plan-features{grid-template-columns:1fr}}
