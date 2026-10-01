@@ -11,12 +11,13 @@ const root=import.meta.dirname, dir=process.env.DATA_DIR||join(root,'data');mkdi
 const db=new DatabaseSync(join(dir,'chypermax.sqlite'));db.exec(`PRAGMA journal_mode=WAL; CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email TEXT UNIQUE,hash TEXT,salt TEXT,draft TEXT,expires INTEGER DEFAULT 0,plan TEXT,ref TEXT UNIQUE,referred TEXT); CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,uid TEXT,expires INTEGER); CREATE TABLE IF NOT EXISTS reviews(id INTEGER PRIMARY KEY AUTOINCREMENT,uid TEXT UNIQUE,rating INTEGER,text TEXT,created INTEGER);`);try{db.exec('ALTER TABLE users ADD COLUMN day_download_used INTEGER DEFAULT 0')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN credits INTEGER DEFAULT 0')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN credited_sessions TEXT DEFAULT "[]"')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN paid_projects TEXT DEFAULT "[]"')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN stripe_customer_id TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN stripe_subscription_id TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN subscription_status TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN access_until INTEGER DEFAULT 0')}catch{}
 try{db.exec('ALTER TABLE users ADD COLUMN cancel_at_period_end INTEGER DEFAULT 0')}catch{}
 db.exec('CREATE TABLE IF NOT EXISTS site_metrics(name TEXT PRIMARY KEY, count INTEGER NOT NULL DEFAULT 0)');
+try{db.exec("ALTER TABLE users ADD COLUMN payment_confirmed INTEGER DEFAULT 0; UPDATE users SET payment_confirmed=1 WHERE stripe_subscription_id IS NOT NULL AND subscription_status IN ('active','trialing')")}catch{}
 const limits=new Map();
 function json(res,data,status=200){res.writeHead(status,{'Content-Type':'application/json'});res.end(JSON.stringify(data));}
 function user(req){let token=(req.headers.cookie||'').match(/(?:^|; )session=([a-f0-9]+)/)?.[1];return token?db.prepare('SELECT u.* FROM users u JOIN sessions s ON u.id=s.uid WHERE s.token=? AND s.expires>?').get(token,Date.now()):null;}
-function hasAccess(u){return !!u&&['active','trialing'].includes(String(u.subscription_status||''))&&Number(u.access_until||0)>Date.now();}
+function hasAccess(u){return !!u&&u.payment_confirmed===1&&['active','trialing'].includes(String(u.subscription_status||''))&&Number(u.access_until||0)>Date.now();}
 function safe(u){return u?{email:u.email,expires:u.expires,plan:u.plan,ref:u.ref,credits:hasAccess(u)?1:0,subscriptionStatus:u.subscription_status||null,accessUntil:Number(u.access_until||0),cancelAtPeriodEnd:!!u.cancel_at_period_end,canCancel:!!u.stripe_subscription_id}:null;}
-function syncSubscription(uid,sub){if(!uid||!sub)return;const status=String(sub.status||''),periods=(sub.items?.data||[]).map(x=>Number(x.current_period_end)).filter(Number.isFinite),periodEnd=periods.length?Math.min(...periods):Number(sub.current_period_end||sub.trial_end||0),until=periodEnd*1000;db.prepare('UPDATE users SET stripe_customer_id=?,stripe_subscription_id=?,subscription_status=?,access_until=?,cancel_at_period_end=?,plan=COALESCE(?,plan) WHERE id=?').run(typeof sub.customer==='string'?sub.customer:null,sub.id||null,status,until,sub.cancel_at_period_end||sub.cancel_at?1:0,['day','month'].includes(sub.metadata?.plan)?sub.metadata.plan:null,uid);}
+function syncSubscription(uid,sub,confirmed=false){if(!uid||!sub)return;const status=String(sub.status||''),periods=(sub.items?.data||[]).map(x=>Number(x.current_period_end)).filter(Number.isFinite),periodEnd=periods.length?Math.min(...periods):Number(sub.current_period_end||sub.trial_end||0),until=periodEnd*1000;db.prepare('UPDATE users SET stripe_customer_id=?,stripe_subscription_id=?,subscription_status=?,access_until=?,cancel_at_period_end=?,plan=COALESCE(?,plan),payment_confirmed=MAX(payment_confirmed,?) WHERE id=?').run(typeof sub.customer==='string'?sub.customer:null,sub.id||null,status,until,sub.cancel_at_period_end||sub.cancel_at?1:0,['day','month'].includes(sub.metadata?.plan)?sub.metadata.plan:null,confirmed?1:0,uid);}
 async function stripeGet(path){requireSandboxKey(process.env.STRIPE_SECRET_KEY);const r=await fetch('https://api.stripe.com/v1/'+path,{headers:{Authorization:'Bearer '+process.env.STRIPE_SECRET_KEY},signal:AbortSignal.timeout(15000)});const d=await r.json();if(!r.ok)throw Error(d?.error?.message||'stripe');return d;}
 async function rawBody(req){let v='';for await(const chunk of req){v+=chunk;if(v.length>3000000)throw Error('Request too large');}return v;}
 async function body(req){return JSON.parse((await rawBody(req))||'{}');}
@@ -50,10 +51,10 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
    if(uid)syncSubscription(uid,obj);
   }else if(event.type==='checkout.session.completed'||event.type==='checkout.session.async_payment_succeeded'){
    const uid=obj.metadata?.uid||obj.client_reference_id,subId=typeof obj.subscription==='string'?obj.subscription:null;
-   if(obj.payment_status==='paid'&&uid&&subId){try{syncSubscription(uid,await stripeGet('subscriptions/'+encodeURIComponent(subId)));}catch(e){console.error('Stripe checkout sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
+   if(obj.payment_status==='paid'&&uid&&subId){try{syncSubscription(uid,await stripeGet('subscriptions/'+encodeURIComponent(subId)),true);}catch(e){console.error('Stripe checkout sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
   }else if(event.type==='invoice.paid'||event.type==='invoice.payment_failed'){
    const invoiceSubscription=obj.parent?.subscription_details?.subscription||obj.subscription;const subId=typeof invoiceSubscription==='string'?invoiceSubscription:invoiceSubscription?.id;
-   if(subId){try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));const account=db.prepare('SELECT id FROM users WHERE stripe_subscription_id=?').get(subId);const uid=account?.id||sub.metadata?.uid;if(uid)syncSubscription(uid,sub);}catch(e){console.error('Stripe invoice sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
+   if(subId){try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));const account=db.prepare('SELECT id FROM users WHERE stripe_subscription_id=?').get(subId);const uid=account?.id||sub.metadata?.uid;if(uid)syncSubscription(uid,sub,event.type==='invoice.paid');}catch(e){console.error('Stripe invoice sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
   }
   return json(res,{received:true});
  }
@@ -91,7 +92,7 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   if(!['day','week','month'].includes(plan))return json(res,{error:'plan'},400);
   if(!session.subscription)return json(res,{error:'subscription'},502);
   const sub=await stripeGet('subscriptions/'+encodeURIComponent(session.subscription));
-  syncSubscription(u.id,sub);
+  syncSubscription(u.id,sub,true);
   db.prepare('UPDATE users SET plan=? WHERE id=?').run(plan,u.id);
   const account=db.prepare('SELECT * FROM users WHERE id=?').get(u.id);
   return json(res,{user:safe(account),paid:hasAccess(account)});
