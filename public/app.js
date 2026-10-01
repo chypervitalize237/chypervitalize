@@ -330,6 +330,7 @@ async function startCheckout(){
  }finally{state.checkoutBusy=false;}
 }
 async function resumeAfterAuth(){
+ if(state.pendingAccount){state.pendingAccount=false;account();return;}
  if(state.pendingCheckout){await startCheckout();return;}
  if(state.pendingDownload){state.pendingDownload=false;await download();}
 }
@@ -506,6 +507,7 @@ api('me').then(async r=>{
    state.basicShade=Math.min(45,Math.max(0,Number(draft.basicShade)||0));state.basicSide=draft.basicSide==='right'?'right':'left';
   }}catch{}}
  if(checkoutResult==='success'){await verifyPayment();return;}else if(checkoutSession){localStorage.removeItem('chypervitalize-checkout-session');checkoutSession=null;}
+ if(new URLSearchParams(location.search).get('account')==='1'){render();if(!state.user){state.authMode='login';state.pendingAccount=true;}account();return;}
  if(checkoutResult==='cancelled'){localStorage.removeItem('chypervitalize-checkout-session');state.route='editor';render();return;}
  if(state.user){
   if(!(Number(state.user.credits||0)>0)){try{const paid=await api('checkout-status',{});state.user=paid.user||state.user;if(paid.paid&&Number(state.user.credits||0)>0){state.route='editor';render();showDownloadModal();return;}}catch{}}
