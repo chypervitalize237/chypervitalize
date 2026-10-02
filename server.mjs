@@ -8,12 +8,15 @@ import {randomBytes,scryptSync,timingSafeEqual,createHmac} from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
 import PDFDocument from 'pdfkit';
 import {startAutomaticBackup} from './ops/automatic-backup.mjs';
+import {initWithdrawals,submitWithdrawal,publicWithdrawal,withdrawalReceipt,adminAuthorized,receiptPdf} from './withdrawal.mjs';
 const root=import.meta.dirname, dir=process.env.DATA_DIR||join(root,'data');mkdirSync(dir,{recursive:true});
 const db=new DatabaseSync(join(dir,'chypermax.sqlite'));db.exec(`PRAGMA journal_mode=WAL; CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email TEXT UNIQUE,hash TEXT,salt TEXT,draft TEXT,expires INTEGER DEFAULT 0,plan TEXT,ref TEXT UNIQUE,referred TEXT); CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,uid TEXT,expires INTEGER); CREATE TABLE IF NOT EXISTS reviews(id INTEGER PRIMARY KEY AUTOINCREMENT,uid TEXT UNIQUE,rating INTEGER,text TEXT,created INTEGER);`);try{db.exec('ALTER TABLE users ADD COLUMN day_download_used INTEGER DEFAULT 0')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN credits INTEGER DEFAULT 0')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN credited_sessions TEXT DEFAULT "[]"')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN paid_projects TEXT DEFAULT "[]"')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN stripe_customer_id TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN stripe_subscription_id TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN subscription_status TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN access_until INTEGER DEFAULT 0')}catch{}
 try{db.exec('ALTER TABLE users ADD COLUMN cancel_at_period_end INTEGER DEFAULT 0')}catch{}
 db.exec('CREATE TABLE IF NOT EXISTS site_metrics(name TEXT PRIMARY KEY, count INTEGER NOT NULL DEFAULT 0)');
 try{db.exec("ALTER TABLE users ADD COLUMN payment_confirmed INTEGER DEFAULT 0; UPDATE users SET payment_confirmed=1 WHERE stripe_subscription_id IS NOT NULL AND subscription_status IN ('active','trialing')")}catch{}
 const limits=new Map();
+setInterval(()=>{const cutoff=Date.now()-3600000;for(const [key,value] of limits)if(value.t<cutoff)limits.delete(key);},60000).unref();
+initWithdrawals(db);
 startAutomaticBackup({source:join(dir,'chypermax.sqlite'),stateDirectory:dir});
 function json(res,data,status=200){res.writeHead(status,{'Content-Type':'application/json'});res.end(JSON.stringify(data));}
 function user(req){let token=(req.headers.cookie||'').match(/(?:^|; )session=([a-f0-9]+)/)?.[1];return token?db.prepare('SELECT u.* FROM users u JOIN sessions s ON u.id=s.uid WHERE s.token=? AND s.expires>?').get(token,Date.now()):null;}
@@ -27,6 +30,41 @@ function validStripeSignature(raw,header,secret){if(!header||!secret)return fals
 http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','same-origin');res.setHeader('X-Frame-Options','DENY');const url=new URL(req.url,'http://localhost');try{
  if(req.method==='POST'&&req.headers.origin&&new URL(req.headers.origin).host!==req.headers.host)return json(res,{error:'Origin rejected'},403);
  const u=user(req);
+ if(url.pathname.startsWith('/api/withdrawals')){
+  res.setHeader('Cache-Control','no-store');
+  const receiptId=url.pathname.match(/^\/api\/withdrawals\/receipt\/(EL-[0-9]{8}-[a-f0-9]{16})\.pdf$/)?.[1];
+  if(receiptId&&req.method==='GET'){
+   const key=(req.headers.cookie||'').match(/(?:^|; )withdrawal_receipt=([a-f0-9]{64})/)?.[1],record=withdrawalReceipt(db,receiptId,key);
+   if(!record)return json(res,{error:'A visszaigazolás nem található. A beküldéshez használt böngészőből töltsd le.'},404);
+   return receiptPdf(record,res,join(root,'fonts','DejaVuSans.ttf'));
+  }
+  if(req.method!=='POST')return json(res,{error:'Method not allowed'},405);
+  const ip=String(req.headers['x-forwarded-for']||req.socket.remoteAddress||'').split(',')[0].trim();
+  const rateKey='withdrawal:'+ip,now=Date.now();
+  // Keep this anonymous endpoint bounded without storing visitor IPs in the database.
+  if(limits.size>10000)for(const [key,value] of limits)if(now-value.t>3600000)limits.delete(key);
+  let rate=limits.get(rateKey);if(!rate||now-rate.t>3600000){rate={n:0,t:now};limits.set(rateKey,rate);}
+  if(++rate.n>60){res.setHeader('Retry-After','3600');return json(res,{error:'Túl sok kérés. Próbáld később, vagy írj e-mailben: chypervitalize@gmail.com.'},429);}
+  if(url.pathname.startsWith('/api/withdrawals/admin/')&&!adminAuthorized(req.headers.authorization,process.env.WITHDRAWAL_ADMIN_TOKEN))return json(res,{error:'A kezelőkulcs hibás vagy nincs beállítva.'},401);
+  let b;try{b=await body(req);}catch{return json(res,{error:'Hibás kérés.'},400);}
+  if(url.pathname==='/api/withdrawals'){
+   try{const record=submitWithdrawal(db,b);res.setHeader('Set-Cookie',`withdrawal_receipt=${b.requestKey}; HttpOnly; SameSite=Strict; Path=/api/withdrawals/receipt/; Max-Age=3600${process.env.NODE_ENV==='production'?'; Secure':''}`);return json(res,publicWithdrawal(record),201);}
+   catch(e){if(!['validation','conflict'].includes(e.message))throw e;return json(res,{error:e.message==='conflict'?'Ezzel a beküldési azonosítóval már más tartalmú nyilatkozat érkezett. Új kérelemhez nyisd meg az oldalt új lapon.':'Ellenőrizd a nevet, az e-mail-címet és az érintett szerződés adatait.'},e.message==='conflict'?409:400);}
+  }
+  if(url.pathname==='/api/withdrawals/receipt'){
+   const record=withdrawalReceipt(db,b?.id,b?.requestKey);if(!record)return json(res,{error:'A visszaigazolás nem található.'},404);
+   return receiptPdf(record,res,join(root,'fonts','DejaVuSans.ttf'));
+  }
+  if(url.pathname==='/api/withdrawals/admin/list'){
+   const records=db.prepare('SELECT id,name,email,contract_ref,created,status,updated,receipt FROM withdrawal_requests ORDER BY created DESC LIMIT 200').all();return json(res,{requests:records});
+  }
+  if(url.pathname==='/api/withdrawals/admin/status'){
+   if(!['received','processing','completed'].includes(b?.status))return json(res,{error:'Hibás státusz.'},400);
+   const result=db.prepare('UPDATE withdrawal_requests SET status=?,updated=? WHERE id=?').run(b.status,new Date().toISOString(),String(b.id||''));
+   return json(res,{ok:result.changes>0},result.changes?200:404);
+  }
+  return json(res,{error:'Not found'},404);
+ }
  if(url.pathname.startsWith('/api/checkout')||url.pathname==='/api/subscription/cancel'){
   try{requireSandboxKey(process.env.STRIPE_SECRET_KEY);}catch{return json(res,{error:'Stripe sandbox nincs beállítva. Csak tesztkulcs használható.'},503);}
  }
@@ -229,6 +267,6 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
    pdf.end();return;
  }
  if(url.pathname.startsWith('/api/'))return json(res,{error:'Not found'},404);
- const path=url.pathname==='/'?'/index.html':url.pathname;const portraitMatch=path.match(/^\/chypermax_portraits_9\/person-([1-9])\.png$/);const portrait=!!portraitMatch;if(!portrait&&!['/index.html','/terms.html','/privacy.html','/contact.html','/app.js','/examples.js','/style.css','/launch-polish.css','/i18n.js','/favicon.svg','/cv-examples.js','/home-refresh.css','/premium-templates.js','/premium-templates.css','/nature-landscape.jpg','/nature-landscape-4k.jpg'].includes(path)){res.writeHead(404);res.end('Not found');return;}if(portrait){const file=join(root,'public','chypermax_portraits_9',`person-${portraitMatch[1]}.png`);if(!existsSync(file)){res.writeHead(404,{'Content-Type':'text/plain'});res.end('Portrait missing');return;}const img=readFileSync(file);res.writeHead(200,{'Content-Type':'image/png','Content-Length':img.length,'Cache-Control':'no-store'});res.end(img);return;}res.setHeader('Cache-Control','no-cache');res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg'})[extname(path)]);res.end(readFileSync(join(root,'public',path)));
+ const path=url.pathname==='/'?'/index.html':url.pathname;const portraitMatch=path.match(/^\/chypermax_portraits_9\/person-([1-9])\.png$/);const portrait=!!portraitMatch;if(!portrait&&!['/withdrawal.html','/withdrawal.js','/withdrawals-admin.html','/withdrawals-admin.js','/legal-forms.css','/index.html','/terms.html','/privacy.html','/contact.html','/app.js','/examples.js','/style.css','/launch-polish.css','/i18n.js','/favicon.svg','/cv-examples.js','/home-refresh.css','/premium-templates.js','/premium-templates.css','/nature-landscape.jpg','/nature-landscape-4k.jpg'].includes(path)){res.writeHead(404);res.end('Not found');return;}if(portrait){const file=join(root,'public','chypermax_portraits_9',`person-${portraitMatch[1]}.png`);if(!existsSync(file)){res.writeHead(404,{'Content-Type':'text/plain'});res.end('Portrait missing');return;}const img=readFileSync(file);res.writeHead(200,{'Content-Type':'image/png','Content-Length':img.length,'Cache-Control':'no-store'});res.end(img);return;}res.setHeader('Cache-Control','no-cache');res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg'})[extname(path)]);res.end(readFileSync(join(root,'public',path)));
  }catch(e){if(!res.headersSent)json(res,{error:'server'},500);else res.end();console.error(e.message);}}).listen(process.env.PORT||3000,'0.0.0.0');
 
