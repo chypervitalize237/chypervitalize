@@ -7,12 +7,14 @@ import {join,extname} from 'node:path';
 import {randomBytes,scryptSync,timingSafeEqual,createHmac} from 'node:crypto';
 import {DatabaseSync} from 'node:sqlite';
 import PDFDocument from 'pdfkit';
+import {startAutomaticBackup} from './ops/automatic-backup.mjs';
 const root=import.meta.dirname, dir=process.env.DATA_DIR||join(root,'data');mkdirSync(dir,{recursive:true});
 const db=new DatabaseSync(join(dir,'chypermax.sqlite'));db.exec(`PRAGMA journal_mode=WAL; CREATE TABLE IF NOT EXISTS users(id TEXT PRIMARY KEY,email TEXT UNIQUE,hash TEXT,salt TEXT,draft TEXT,expires INTEGER DEFAULT 0,plan TEXT,ref TEXT UNIQUE,referred TEXT); CREATE TABLE IF NOT EXISTS sessions(token TEXT PRIMARY KEY,uid TEXT,expires INTEGER); CREATE TABLE IF NOT EXISTS reviews(id INTEGER PRIMARY KEY AUTOINCREMENT,uid TEXT UNIQUE,rating INTEGER,text TEXT,created INTEGER);`);try{db.exec('ALTER TABLE users ADD COLUMN day_download_used INTEGER DEFAULT 0')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN credits INTEGER DEFAULT 0')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN credited_sessions TEXT DEFAULT "[]"')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN paid_projects TEXT DEFAULT "[]"')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN stripe_customer_id TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN stripe_subscription_id TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN subscription_status TEXT')}catch{} try{db.exec('ALTER TABLE users ADD COLUMN access_until INTEGER DEFAULT 0')}catch{}
 try{db.exec('ALTER TABLE users ADD COLUMN cancel_at_period_end INTEGER DEFAULT 0')}catch{}
 db.exec('CREATE TABLE IF NOT EXISTS site_metrics(name TEXT PRIMARY KEY, count INTEGER NOT NULL DEFAULT 0)');
 try{db.exec("ALTER TABLE users ADD COLUMN payment_confirmed INTEGER DEFAULT 0; UPDATE users SET payment_confirmed=1 WHERE stripe_subscription_id IS NOT NULL AND subscription_status IN ('active','trialing')")}catch{}
 const limits=new Map();
+startAutomaticBackup({source:join(dir,'chypermax.sqlite'),stateDirectory:dir});
 function json(res,data,status=200){res.writeHead(status,{'Content-Type':'application/json'});res.end(JSON.stringify(data));}
 function user(req){let token=(req.headers.cookie||'').match(/(?:^|; )session=([a-f0-9]+)/)?.[1];return token?db.prepare('SELECT u.* FROM users u JOIN sessions s ON u.id=s.uid WHERE s.token=? AND s.expires>?').get(token,Date.now()):null;}
 function hasAccess(u){return !!u&&u.payment_confirmed===1&&['active','trialing'].includes(String(u.subscription_status||''))&&Number(u.access_until||0)>Date.now();}
