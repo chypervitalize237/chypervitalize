@@ -1093,3 +1093,9 @@ body:has(.hero-reference) #footer{
 .page .pricing .plan-features li{
  grid-template-columns:18px minmax(0,1fr);
 }
+/* Global brand positioning beside the wordmark. */
+.brand-lockup{display:flex;align-items:baseline;gap:12px;min-width:0}
+.brand-tagline{color:var(--muted);font-size:12px;font-weight:500;letter-spacing:.02em;white-space:nowrap}
+.brand-tagline::before{content:"•";color:var(--darkgreen);margin-right:8px}
+@media(max-width:650px){.brand-lockup{gap:6px}.brand-tagline{font-size:10px;max-width:145px;overflow:hidden;text-overflow:ellipsis}.brand-tagline::before{margin-right:4px}}
+
