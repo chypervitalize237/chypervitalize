@@ -232,3 +232,6 @@ html,body{max-width:100%;overflow-x:clip}
 /* Keep headings readable when the decoration is faded toward white. */
 #app .cv-fit .cv-paper.premium-cv.custom-accent:not(.custom-heading) .premium-section>h3{color:var(--p-accent)!important}
 #app .cv-fit .cv-paper:is(.premium-atelier,.premium-emerald-prestige).custom-accent .premium-rail .premium-section>h3{color:var(--on-user-accent)!important}
+#cv-preview .cv-example-hint{opacity:.35;pointer-events:none}
+#cv-preview .cv-example-hint-hidden{visibility:hidden}
+@media print{.cv-example-hint{display:none!important}}
