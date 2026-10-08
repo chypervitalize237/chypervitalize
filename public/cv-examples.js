@@ -1,3 +1,4 @@
+import {localizeCvExample} from './cv-example-locales.js?v=20261008-locales';
 // Original fictional profiles informed by public CV-writing guidance:
 // https://careerservices.fas.harvard.edu/blog/2025/08/14/45-rare-action-verbs-for-your-resume-with-examples/
 // https://www.indeed.com/career-advice/resumes-cover-letters/ats-resume
@@ -307,7 +308,7 @@ const examples = [
 
 export function getCvExamples(lang) {
   const locale = lang === 'hu' ? 'hu' : 'en';
-  return examples.map(({id, style, accent, ...copy}) => ({id, style, accent, ...copy[locale]}));
+  return examples.map(({id, style, accent, ...copy}) => localizeCvExample({id, style, accent, ...copy[locale]},lang));
 }
 
 export function getCvExample(id, lang) {

@@ -1,3 +1,4 @@
+import {strings} from './i18n.js';
 "use strict";
 
   const PREMIUM_STYLE_IDS = [
@@ -182,8 +183,8 @@ function buildFeaturedExamples(lang, originals) {
       accent,
       category: `${String(index + 1).padStart(2, "0")} / ${hu ? "PRÉMIUM" : "PREMIUM"}`,
       label,
-      note: hu ? noteHu : noteEn,
-      result: hu ? "Szerkeszthető CV-sablon" : "Editable CV template",
+      note: hu ? noteHu : lang === "en" ? noteEn : strings[lang].editDesc,
+      result: hu ? "Szerkeszthető CV-sablon" : lang === "en" ? "Editable CV template" : strings[lang].preview,
       cv: { ...base.cv }
     };
   });
