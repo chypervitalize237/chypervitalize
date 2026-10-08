@@ -98,11 +98,11 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
    if(uid)syncSubscription(uid,obj);
   }else if(event.type==='checkout.session.completed'||event.type==='checkout.session.async_payment_succeeded'){
    const uid=obj.metadata?.uid||obj.client_reference_id,subId=typeof obj.subscription==='string'?obj.subscription:null;
-   if(obj.payment_status==='paid'&&uid&&subId){referrals.completeCheckout(obj);try{syncSubscription(uid,await stripeGet('subscriptions/'+encodeURIComponent(subId)),true);}catch(e){console.error('Stripe checkout sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
+   if(obj.payment_status==='paid'&&uid&&subId){referrals.completeCheckout(obj);try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));syncSubscription(uid,sub,true);referrals.qualifyPayment(uid,sub,obj);}catch(e){console.error('Stripe checkout sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
   }else if(event.type==='invoice.paid'||event.type==='invoice.payment_failed'){
    const invoiceSubscription=obj.parent?.subscription_details?.subscription||obj.subscription;const subId=typeof invoiceSubscription==='string'?invoiceSubscription:invoiceSubscription?.id;
    if(event.type==='invoice.paid')referrals.settleInvoice(obj);
-   if(subId){try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));const account=db.prepare('SELECT id FROM users WHERE stripe_subscription_id=?').get(subId);const uid=account?.id||sub.metadata?.uid;if(uid)syncSubscription(uid,sub,event.type==='invoice.paid');}catch(e){console.error('Stripe invoice sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
+   if(subId){try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));const account=db.prepare('SELECT id FROM users WHERE stripe_subscription_id=?').get(subId);const uid=account?.id||sub.metadata?.uid;if(uid){syncSubscription(uid,sub,event.type==='invoice.paid');if(event.type==='invoice.paid')referrals.qualifyPayment(uid,sub,obj);}}catch(e){console.error('Stripe invoice sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
   }
   return json(res,{received:true});
  }
@@ -111,7 +111,7 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
  const b=await body(req),email=String(b.email||'').trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||(String(b.password||'').length<10||String(b.password||'').length>200))return json(res,{error:'credentials'},400);
  const ip=String(req.headers['x-forwarded-for']||req.socket.remoteAddress||'').split(',')[0].trim(),rateKey='auth:'+ip+':'+email,l=limits.get(rateKey)||{n:0,t:Date.now()};if(Date.now()-l.t>600000){l.n=0;l.t=Date.now();}limits.set(rateKey,l);if(++l.n>12)return json(res,{error:'rate'},429);
  let account=db.prepare('SELECT * FROM users WHERE email=?').get(email);
- if(b.mode==='register'){if(account)return json(res,{error:'exists'},409);const salt=randomBytes(16).toString('hex'),id=randomBytes(16).toString('hex');db.prepare('INSERT INTO users(id,email,hash,salt,ref,referred) VALUES(?,?,?,?,?,?)').run(id,email,scryptSync(b.password,salt,64).toString('hex'),salt,randomBytes(8).toString('hex'),String(b.ref||'').slice(0,32));const inviter=grantReferral(db,id,b.ref);if(inviter)void referrals.applyPending(inviter).catch(e=>console.error('Referral scheduling:',e.message));account=db.prepare('SELECT * FROM users WHERE id=?').get(id);}else if(!account||!timingSafeEqual(Buffer.from(account.hash,'hex'),scryptSync(b.password,account.salt,64)))return json(res,{error:'credentials'},401);
+ if(b.mode==='register'){if(account)return json(res,{error:'exists'},409);const salt=randomBytes(16).toString('hex'),id=randomBytes(16).toString('hex');db.prepare('INSERT INTO users(id,email,hash,salt,ref,referred) VALUES(?,?,?,?,?,?)').run(id,email,scryptSync(b.password,salt,64).toString('hex'),salt,randomBytes(8).toString('hex'),String(b.ref||'').slice(0,32));grantReferral(db,id,b.ref);account=db.prepare('SELECT * FROM users WHERE id=?').get(id);}else if(!account||!timingSafeEqual(Buffer.from(account.hash,'hex'),scryptSync(b.password,account.salt,64)))return json(res,{error:'credentials'},401);
  const token=randomBytes(32).toString('hex');db.prepare('INSERT INTO sessions VALUES(?,?,?)').run(token,account.id,Date.now()+30*86400000);res.setHeader('Set-Cookie',`session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=2592000${process.env.NODE_ENV==='production'?'; Secure':''}`);return json(res,{user:safe(account)});}
  if(url.pathname==='/api/logout'&&req.method==='POST'){const token=(req.headers.cookie||'').match(/session=([a-f0-9]+)/)?.[1];if(token)db.prepare('DELETE FROM sessions WHERE token=?').run(token);res.setHeader('Set-Cookie','session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0');return json(res,{ok:true});}
  if(url.pathname==='/api/draft'){if(!u)return json(res,{error:'auth'},401);if(req.method==='POST'){const b=await body(req);db.prepare('UPDATE users SET draft=? WHERE id=?').run(JSON.stringify(b),u.id);return json(res,{ok:true});}return json(res,{draft:u.draft?JSON.parse(u.draft):null});}
@@ -160,6 +160,7 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   referrals.completeCheckout(session);
   const sub=await stripeGet('subscriptions/'+encodeURIComponent(session.subscription));
   syncSubscription(u.id,sub,true);
+  referrals.qualifyPayment(u.id,sub,session);
   db.prepare('UPDATE users SET plan=? WHERE id=?').run(plan,u.id);
   const account=db.prepare('SELECT * FROM users WHERE id=?').get(u.id);
   return json(res,{user:safe(account),paid:hasAccess(account)});

@@ -6,7 +6,7 @@ db.exec('CREATE TABLE users(id TEXT PRIMARY KEY,email TEXT,ref TEXT,stripe_custo
 const add=(id,email,ref)=>db.prepare('INSERT INTO users(id,email,ref) VALUES(?,?,?)').run(id,email,ref);
 add('owner','owner@gmail.com','0123456789abcdef');add('friend','friend@example.com','1111111111111111');add('friend2','friend2@example.com','2222222222222222');add('alias','o.w.n.e.r+test@gmail.com','3333333333333333');
 assert.equal(grantReferral(db,'owner','0123456789abcdef'),null);assert.equal(grantReferral(db,'alias','0123456789abcdef'),null);assert.equal(grantReferral(db,'friend','bad'),null);
-grantReferral(db,'friend','0123456789abcdef');grantReferral(db,'friend','0123456789abcdef');grantReferral(db,'friend2','0123456789abcdef');assert.equal(referralSummary(db,'owner').available,2);
+grantReferral(db,'friend','0123456789abcdef');grantReferral(db,'friend','0123456789abcdef');grantReferral(db,'friend2','0123456789abcdef');assert.equal(referralSummary(db,'owner').available,0);assert.equal(referralSummary(db,'owner').waiting,2);
 let calls=[],coupons=new Map(),sessions=new Map(),sub={id:'sub_test',customer:'cus_test',livemode:false,status:'active',items:{data:[{price:{currency:'usd',unit_amount:1249,recurring:{interval:'month'}}}]},discounts:[]},invoice=null;
 const request=async(url,options)=>{
  const path=new URL(url).pathname.replace('/v1/','');calls.push({path,options});let data;
@@ -18,6 +18,10 @@ const request=async(url,options)=>{
  return {ok:!!data,json:async()=>data||{error:{message:'missing'}}};
 };
 const service=createReferralService(db,{key:'sk_test_fixture',request});
+const qualify=(id,overrides={})=>service.qualifyPayment(id,{id:'sub_'+id,customer:'cus_'+id,livemode:false,status:'active',metadata:{uid:id,plan:'month'}},{object:'checkout.session',id:'cs_'+id,mode:'subscription',status:'complete',payment_status:'paid',amount_total:1249,livemode:false,customer:'cus_'+id,subscription:'sub_'+id,metadata:{uid:id},...overrides});
+assert.equal(await service.reserveCheckout('owner','month'),null);
+for(const overrides of [{payment_status:'unpaid'},{status:'open'},{amount_total:0},{livemode:true},{customer:'cus_other'},{subscription:'sub_other'},{metadata:{uid:'other'}}])assert.equal(qualify('friend',overrides),false);
+assert.equal(referralSummary(db,'owner').available,0);assert.equal(qualify('friend'),true);assert.equal(qualify('friend'),false);assert.equal(qualify('friend2'),true);assert.equal(referralSummary(db,'owner').available,2);
 assert.equal(await service.reserveCheckout('owner','day'),null);assert.equal(calls.length,0);
 const reward=await service.reserveCheckout('owner','month');assert.equal(reward.coupon,'chy_ref_friend');service.recordCheckout(reward.row.invitee,{id:'cs_test_first'});sessions.set('cs_test_first',{id:'cs_test_first',status:'open',url:'https://checkout.example/test'});
 assert.equal((await service.reserveCheckout('owner','month')).sessionId,'cs_test_first');assert.equal(referralSummary(db,'owner').scheduled,1);
@@ -29,7 +33,7 @@ await Promise.all([service.applyPending('owner'),service.applyPending('owner')])
 const paidInvoice={id:'in_test',livemode:false,status:'paid',customer:'cus_test',total_discount_amounts:[{amount:625,discount:'di_chy_ref_friend2'}]};
 service.settleInvoice({...paidInvoice,status:'open'});service.settleInvoice({...paidInvoice,customer:'cus_other'});service.settleInvoice({...paidInvoice,livemode:true});assert.equal(referralSummary(db,'owner').used,1);
 service.settleInvoice(paidInvoice);service.settleInvoice(paidInvoice);assert.equal(referralSummary(db,'owner').used,2);
-add('friend3','friend3@example.com','4444444444444444');grantReferral(db,'friend3','0123456789abcdef');await service.applyPending('owner');assert.equal(referralSummary(db,'owner').scheduled,1);assert.equal(sub.discounts[0].source.coupon,'chy_ref_friend3');
-add('badowner','other@example.com','5555555555555555');add('badfriend','new@example.com','6666666666666666');grantReferral(db,'badfriend','5555555555555555');db.prepare("UPDATE users SET stripe_customer_id='cus_other',stripe_subscription_id='sub_test',subscription_status='active' WHERE id='badowner'").run();await service.applyPending('badowner');assert.equal(referralSummary(db,'badowner').available,1);
+add('friend3','friend3@example.com','4444444444444444');grantReferral(db,'friend3','0123456789abcdef');qualify('friend3');await new Promise(resolve=>setImmediate(resolve));await service.applyPending('owner');assert.equal(referralSummary(db,'owner').scheduled,1);assert.equal(sub.discounts[0].source.coupon,'chy_ref_friend3');
+add('badowner','other@example.com','5555555555555555');add('badfriend','new@example.com','6666666666666666');grantReferral(db,'badfriend','5555555555555555');qualify('badfriend');db.prepare("UPDATE users SET stripe_customer_id='cus_other',stripe_subscription_id='sub_test',subscription_status='active' WHERE id='badowner'").run();await service.applyPending('badowner');assert.equal(referralSummary(db,'badowner').available,1);
 const live=createReferralService(db,{key:'sk_live_fixture',request:()=>{throw Error('network should never run')}});await assert.rejects(live.reserveCheckout('badowner','month'),/sandbox/);
-console.log('PASS: signup rewards, self/alias protection, duplicate registration, monthly-only checkout, expired checkout recovery, payment confirmation, active subscription discount, webhook replay, queued months, ownership and sandbox-only keys.');
+console.log('PASS: paid subscription required, unpaid/free/live/ownership guards, duplicate payment protection, self/alias protection, duplicate registration, monthly-only checkout, expired checkout recovery, payment confirmation, active subscription discount, webhook replay, queued months, ownership and sandbox-only keys.');
