@@ -16,7 +16,7 @@ export function createReferralService(db,{key,request=fetch}={}){
  async function stripe(path,form,idempotency){requireSandboxKey(key);const headers={Authorization:'Bearer '+key};if(form){headers['Content-Type']='application/x-www-form-urlencoded';headers['Idempotency-Key']=idempotency;}const r=await request('https://api.stripe.com/v1/'+path,{method:form?'POST':'GET',headers,body:form,signal:AbortSignal.timeout(15000)});const value=await r.json();if(!r.ok)throw Error(value.error?.message||'Stripe referral request failed');if(value.livemode===true)throw Error('Live Stripe object rejected');return value;}
  const couponId=row=>'chy_ref_'+row.invitee;
  const couponOf=discount=>typeof discount==='object'?(discount.source?.coupon?.id||discount.source?.coupon||discount.coupon?.id||discount.coupon):null;
- async function ensureCoupon(row){const id=couponId(row);try{return await stripe('coupons/'+id);}catch{}return stripe('coupons',new URLSearchParams({id,name:'Chypervitalize – friend invitation: 50% for one month',percent_off:'50',duration:'once',max_redemptions:'1'}),'referral-coupon-'+row.invitee);}
+ async function ensureCoupon(row){const id=couponId(row);try{return await stripe('coupons/'+id);}catch{}return stripe('coupons',new URLSearchParams({id,name:'Chypervitalize referral -50% / 1 month',percent_off:'50',duration:'once',max_redemptions:'1'}),'referral-coupon-'+row.invitee);}
  async function reserveCheckout(uid,plan){
   if(plan!=='month')return null;
   if(db.prepare("SELECT 1 FROM referral_rewards WHERE inviter=? AND status IN ('applied','applying')").get(uid))throw Error('Referral discount already scheduled');
