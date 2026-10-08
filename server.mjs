@@ -1,4 +1,5 @@
 import http from 'node:http';
+import {initReferrals,grantReferral,referralSummary,createReferralService} from './referral.mjs';
 import {requireSandboxKey,cancelRenewal} from './subscription-policy.mjs';
 import {readableColor} from './color-utils.mjs';
 import {checkoutPrice,applyCheckoutPrice} from './pricing.mjs';
@@ -17,11 +18,17 @@ try{db.exec("ALTER TABLE users ADD COLUMN payment_confirmed INTEGER DEFAULT 0; U
 const limits=new Map();
 setInterval(()=>{const cutoff=Date.now()-3600000;for(const [key,value] of limits)if(value.t<cutoff)limits.delete(key);},60000).unref();
 initWithdrawals(db);
+initReferrals(db);
+db.prepare("UPDATE referral_rewards SET status='pending' WHERE status='applying'").run();
+const referrals=createReferralService(db,{key:process.env.STRIPE_SECRET_KEY});
+let referralSweepRunning=false;
+async function sweepReferrals(){if(referralSweepRunning||!process.env.STRIPE_SECRET_KEY)return;referralSweepRunning=true;try{await referrals.sweep();}catch(e){console.error('Referral worker:',e.message);}finally{referralSweepRunning=false;}}
+setInterval(sweepReferrals,60000).unref();setTimeout(sweepReferrals,5000).unref();
 startAutomaticBackup({source:join(dir,'chypermax.sqlite'),stateDirectory:dir});
 function json(res,data,status=200){res.writeHead(status,{'Content-Type':'application/json'});res.end(JSON.stringify(data));}
 function user(req){let token=(req.headers.cookie||'').match(/(?:^|; )session=([a-f0-9]+)/)?.[1];return token?db.prepare('SELECT u.* FROM users u JOIN sessions s ON u.id=s.uid WHERE s.token=? AND s.expires>?').get(token,Date.now()):null;}
 function hasAccess(u){return !!u&&u.payment_confirmed===1&&['active','trialing'].includes(String(u.subscription_status||''))&&Number(u.access_until||0)>Date.now();}
-function safe(u){return u?{email:u.email,expires:u.expires,plan:u.plan,ref:u.ref,credits:hasAccess(u)?1:0,subscriptionStatus:u.subscription_status||null,accessUntil:Number(u.access_until||0),cancelAtPeriodEnd:!!u.cancel_at_period_end,canCancel:!!u.stripe_subscription_id}:null;}
+function safe(u){return u?{email:u.email,expires:u.expires,plan:u.plan,ref:u.ref,referral:referralSummary(db,u.id),credits:hasAccess(u)?1:0,subscriptionStatus:u.subscription_status||null,accessUntil:Number(u.access_until||0),cancelAtPeriodEnd:!!u.cancel_at_period_end,canCancel:!!u.stripe_subscription_id}:null;}
 function syncSubscription(uid,sub,confirmed=false){if(!uid||!sub)return;const status=String(sub.status||''),periods=(sub.items?.data||[]).map(x=>Number(x.current_period_end)).filter(Number.isFinite),periodEnd=periods.length?Math.min(...periods):Number(sub.current_period_end||sub.trial_end||0),until=periodEnd*1000;db.prepare('UPDATE users SET stripe_customer_id=?,stripe_subscription_id=?,subscription_status=?,access_until=?,cancel_at_period_end=?,plan=COALESCE(?,plan),payment_confirmed=MAX(payment_confirmed,?) WHERE id=?').run(typeof sub.customer==='string'?sub.customer:null,sub.id||null,status,until,sub.cancel_at_period_end||sub.cancel_at?1:0,['day','month'].includes(sub.metadata?.plan)?sub.metadata.plan:null,confirmed?1:0,uid);}
 async function stripeGet(path){requireSandboxKey(process.env.STRIPE_SECRET_KEY);const r=await fetch('https://api.stripe.com/v1/'+path,{headers:{Authorization:'Bearer '+process.env.STRIPE_SECRET_KEY},signal:AbortSignal.timeout(15000)});const d=await r.json();if(!r.ok)throw Error(d?.error?.message||'stripe');return d;}
 async function rawBody(req){let v='';for await(const chunk of req){v+=chunk;if(v.length>3000000)throw Error('Request too large');}return v;}
@@ -91,9 +98,10 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
    if(uid)syncSubscription(uid,obj);
   }else if(event.type==='checkout.session.completed'||event.type==='checkout.session.async_payment_succeeded'){
    const uid=obj.metadata?.uid||obj.client_reference_id,subId=typeof obj.subscription==='string'?obj.subscription:null;
-   if(obj.payment_status==='paid'&&uid&&subId){try{syncSubscription(uid,await stripeGet('subscriptions/'+encodeURIComponent(subId)),true);}catch(e){console.error('Stripe checkout sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
+   if(obj.payment_status==='paid'&&uid&&subId){referrals.completeCheckout(obj);try{syncSubscription(uid,await stripeGet('subscriptions/'+encodeURIComponent(subId)),true);}catch(e){console.error('Stripe checkout sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
   }else if(event.type==='invoice.paid'||event.type==='invoice.payment_failed'){
    const invoiceSubscription=obj.parent?.subscription_details?.subscription||obj.subscription;const subId=typeof invoiceSubscription==='string'?invoiceSubscription:invoiceSubscription?.id;
+   if(event.type==='invoice.paid')referrals.settleInvoice(obj);
    if(subId){try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));const account=db.prepare('SELECT id FROM users WHERE stripe_subscription_id=?').get(subId);const uid=account?.id||sub.metadata?.uid;if(uid)syncSubscription(uid,sub,event.type==='invoice.paid');}catch(e){console.error('Stripe invoice sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
   }
   return json(res,{received:true});
@@ -103,11 +111,29 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
  const b=await body(req),email=String(b.email||'').trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||(String(b.password||'').length<10||String(b.password||'').length>200))return json(res,{error:'credentials'},400);
  const ip=String(req.headers['x-forwarded-for']||req.socket.remoteAddress||'').split(',')[0].trim(),rateKey='auth:'+ip+':'+email,l=limits.get(rateKey)||{n:0,t:Date.now()};if(Date.now()-l.t>600000){l.n=0;l.t=Date.now();}limits.set(rateKey,l);if(++l.n>12)return json(res,{error:'rate'},429);
  let account=db.prepare('SELECT * FROM users WHERE email=?').get(email);
- if(b.mode==='register'){if(account)return json(res,{error:'exists'},409);const salt=randomBytes(16).toString('hex'),id=randomBytes(16).toString('hex');db.prepare('INSERT INTO users(id,email,hash,salt,ref,referred) VALUES(?,?,?,?,?,?)').run(id,email,scryptSync(b.password,salt,64).toString('hex'),salt,randomBytes(8).toString('hex'),String(b.ref||'').slice(0,32));account=db.prepare('SELECT * FROM users WHERE id=?').get(id);}else if(!account||!timingSafeEqual(Buffer.from(account.hash,'hex'),scryptSync(b.password,account.salt,64)))return json(res,{error:'credentials'},401);
+ if(b.mode==='register'){if(account)return json(res,{error:'exists'},409);const salt=randomBytes(16).toString('hex'),id=randomBytes(16).toString('hex');db.prepare('INSERT INTO users(id,email,hash,salt,ref,referred) VALUES(?,?,?,?,?,?)').run(id,email,scryptSync(b.password,salt,64).toString('hex'),salt,randomBytes(8).toString('hex'),String(b.ref||'').slice(0,32));const inviter=grantReferral(db,id,b.ref);if(inviter)void referrals.applyPending(inviter).catch(e=>console.error('Referral scheduling:',e.message));account=db.prepare('SELECT * FROM users WHERE id=?').get(id);}else if(!account||!timingSafeEqual(Buffer.from(account.hash,'hex'),scryptSync(b.password,account.salt,64)))return json(res,{error:'credentials'},401);
  const token=randomBytes(32).toString('hex');db.prepare('INSERT INTO sessions VALUES(?,?,?)').run(token,account.id,Date.now()+30*86400000);res.setHeader('Set-Cookie',`session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=2592000${process.env.NODE_ENV==='production'?'; Secure':''}`);return json(res,{user:safe(account)});}
  if(url.pathname==='/api/logout'&&req.method==='POST'){const token=(req.headers.cookie||'').match(/session=([a-f0-9]+)/)?.[1];if(token)db.prepare('DELETE FROM sessions WHERE token=?').run(token);res.setHeader('Set-Cookie','session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0');return json(res,{ok:true});}
  if(url.pathname==='/api/draft'){if(!u)return json(res,{error:'auth'},401);if(req.method==='POST'){const b=await body(req);db.prepare('UPDATE users SET draft=? WHERE id=?').run(JSON.stringify(b),u.id);return json(res,{ok:true});}return json(res,{draft:u.draft?JSON.parse(u.draft):null});}
- if(url.pathname==='/api/checkout'&&req.method==='POST'){if(!u)return json(res,{error:'auth'},401);if(!process.env.STRIPE_SECRET_KEY)return json(res,{error:'Payments not configured'},503);const b=await body(req);try{checkoutPrice(b.plan,b.language);}catch{return json(res,{error:'Invalid plan or language'},400);}const configuredOrigin=String(process.env.APP_URL||'').trim().replace(/\/$/,''),requestOrigin=(req.headers['x-forwarded-proto']||'https')+'://'+req.headers.host,origin=/^https?:\/\//i.test(configuredOrigin)?configuredOrigin:requestOrigin,form=new URLSearchParams({'mode':'subscription','line_items[0][quantity]':'1','customer_email':u.email,'success_url':origin+'/?checkout=success&session_id={CHECKOUT_SESSION_ID}','cancel_url':origin+'/?checkout=cancelled','client_reference_id':u.id,'metadata[uid]':u.id,'metadata[plan]':b.plan,'subscription_data[metadata][uid]':u.id,'subscription_data[metadata][plan]':b.plan});applyCheckoutPrice(form,b.plan,b.language);const sr=await fetch('https://api.stripe.com/v1/checkout/sessions',{method:'POST',headers:{Authorization:'Bearer '+process.env.STRIPE_SECRET_KEY,'Content-Type':'application/x-www-form-urlencoded'},body:form,signal:AbortSignal.timeout(15000)});const session=await sr.json();if(!sr.ok){console.error('Stripe checkout error:',session?.error?.type,session?.error?.code,session?.error?.message);return json(res,{error:session?.error?.message||'stripe'},502);}return json(res,{url:session.url,sessionId:session.id});}
+ if(url.pathname==='/api/checkout'&&req.method==='POST'){
+  if(!u)return json(res,{error:'auth'},401);
+  if(hasAccess(u))return json(res,{error:'Active subscription already exists. Use your account to manage it.'},409);
+  const b=await body(req);try{checkoutPrice(b.plan,b.language);}catch{return json(res,{error:'Invalid plan or language'},400);}
+  let reward;
+  try{
+   reward=await referrals.reserveCheckout(u.id,b.plan);if(reward?.url)return json(res,{url:reward.url,sessionId:reward.sessionId});
+   const configuredOrigin=String(process.env.APP_URL||'').trim().replace(/\/$/,''),requestOrigin=(req.headers['x-forwarded-proto']||'https')+'://'+req.headers.host,origin=/^https?:\/\//i.test(configuredOrigin)?configuredOrigin:requestOrigin;
+   const form=new URLSearchParams({'mode':'subscription','line_items[0][quantity]':'1','customer_email':u.email,'success_url':origin+'/?checkout=success&session_id={CHECKOUT_SESSION_ID}','cancel_url':origin+'/?checkout=cancelled','client_reference_id':u.id,'metadata[uid]':u.id,'metadata[plan]':b.plan,'subscription_data[metadata][uid]':u.id,'subscription_data[metadata][plan]':b.plan});
+   applyCheckoutPrice(form,b.plan,b.language);
+   if(reward){form.set('discounts[0][coupon]',reward.coupon);form.set('metadata[referral_reward]',reward.row.invitee);}
+   const headers={Authorization:'Bearer '+process.env.STRIPE_SECRET_KEY,'Content-Type':'application/x-www-form-urlencoded'};
+   if(reward)headers['Idempotency-Key']='referral-checkout-'+reward.row.invitee+'-'+b.language+'-'+reward.row.checkout_attempt;
+   const sr=await fetch('https://api.stripe.com/v1/checkout/sessions',{method:'POST',headers,body:form,signal:AbortSignal.timeout(15000)}),session=await sr.json();
+   if(!sr.ok)throw Error(session?.error?.message||'stripe');
+   if(reward)referrals.recordCheckout(reward.row.invitee,session);
+   return json(res,{url:session.url,sessionId:session.id});
+  }catch(e){if(reward)referrals.releaseCheckout(reward.row.invitee);console.error('Stripe referral checkout:',e.message);return json(res,{error:'Checkout could not be prepared. Please try again.'},502);}
+ }
 
  if(url.pathname==='/api/checkout-status'&&req.method==='POST'){
   if(!u)return json(res,{error:'auth'},401);
@@ -131,6 +157,7 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   const plan=session.metadata?.plan;
   if(!['day','week','month'].includes(plan))return json(res,{error:'plan'},400);
   if(!session.subscription)return json(res,{error:'subscription'},502);
+  referrals.completeCheckout(session);
   const sub=await stripeGet('subscriptions/'+encodeURIComponent(session.subscription));
   syncSubscription(u.id,sub,true);
   db.prepare('UPDATE users SET plan=? WHERE id=?').run(plan,u.id);
@@ -269,4 +296,3 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
  if(url.pathname.startsWith('/api/'))return json(res,{error:'Not found'},404);
  const path=url.pathname==='/'?'/index.html':url.pathname;const portraitMatch=path.match(/^\/chypermax_portraits_9\/person-([1-9])\.png$/);const portrait=!!portraitMatch;if(!portrait&&!['/withdrawal.html','/withdrawal.js','/withdrawals-admin.html','/withdrawals-admin.js','/legal-forms.css','/index.html','/terms.html','/privacy.html','/contact.html','/app.js','/examples.js','/style.css','/launch-polish.css','/i18n.js','/favicon.svg','/cv-examples.js','/home-refresh.css','/premium-templates.js','/premium-templates.css','/nature-landscape.jpg','/nature-landscape-4k.jpg'].includes(path)){res.writeHead(404);res.end('Not found');return;}if(portrait){const file=join(root,'public','chypermax_portraits_9',`person-${portraitMatch[1]}.png`);if(!existsSync(file)){res.writeHead(404,{'Content-Type':'text/plain'});res.end('Portrait missing');return;}const img=readFileSync(file);res.writeHead(200,{'Content-Type':'image/png','Content-Length':img.length,'Cache-Control':'no-store'});res.end(img);return;}res.setHeader('Cache-Control','no-cache');res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg'})[extname(path)]);res.end(readFileSync(join(root,'public',path)));
  }catch(e){if(!res.headersSent)json(res,{error:'server'},500);else res.end();console.error(e.message);}}).listen(process.env.PORT||3000,'0.0.0.0');
-
