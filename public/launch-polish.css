@@ -241,3 +241,10 @@ html,body{max-width:100%;overflow-x:clip}
 .referral-link{display:block;width:100%;min-width:0;padding:12px;margin-top:6px;border:1px solid #afc9c0;border-radius:8px;background:white;color:#173f35;font-size:14px}
 .referral-status{font-size:13px;line-height:1.8}
 .referral-checkout-note{padding:12px;border-radius:10px;background:#e4f5e8;color:#173f35;font-size:14px}
+/* Center the portrait above the centered identity in the classic ATS example. */
+#app .cv-fit .cv-paper:not(.premium-cv):not(.basic-cv) .cv-head .cv-photo,
+.example-modal-sheet .cv-paper:not(.premium-cv):not(.basic-cv) .cv-head .cv-photo{
+ position:static!important;float:none!important;display:block!important;
+ width:105px!important;height:118px!important;margin:0 auto 16px!important;
+ object-fit:cover!important;
+}
