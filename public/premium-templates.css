@@ -341,4 +341,10 @@
  .workspace .premium-cv.custom-side-right .premium-columns{grid-template-columns:1fr!important}
  .workspace .premium-cv.custom-side-right .premium-columns>.premium-rail,
  .workspace .premium-cv.custom-side-right .premium-columns>.premium-main{grid-column:1;grid-row:auto}
-}
+}/* Photos stay in normal header flow so divider lines always sit below them. */
+.premium-architectural .premium-head-architectural{display:flex;align-items:flex-start}
+.premium-architectural .premium-head-architectural .premium-photo{float:none;order:2;margin:0;align-self:flex-start}
+.premium-architectural .premium-head-architectural .premium-identity{min-width:0;flex:1}
+.premium-architectural .premium-head-architectural .premium-contact{clear:none}
+/* Website navigation height must not constrain CV document headers. */
+.cv-paper header{height:auto}
