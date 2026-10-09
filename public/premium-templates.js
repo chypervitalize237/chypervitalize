@@ -1,5 +1,8 @@
 import {strings} from './i18n.js';
 "use strict";
+// Scalable photo placeholder used only in fictional sample profiles.
+const EXAMPLE_PHOTO='data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 210"><defs><linearGradient id="bg" x2="1" y2="1"><stop stop-color="#edf1ef"/><stop offset="1" stop-color="#ced9d3"/></linearGradient></defs><rect width="180" height="210" rx="12" fill="url(#bg)"/><rect x="9" y="9" width="162" height="192" rx="8" fill="none" stroke="#82998e" stroke-opacity=".5"/><circle cx="90" cy="77" r="30" fill="#82998e"/><path d="M32 187c0-43 23-68 58-68s58 25 58 68" fill="#82998e"/><path d="M18 28v-10h10m124 0h10v10M18 182v10h10m124 0h10v-10" fill="none" stroke="#506c5e" stroke-width="2"/></svg>');
+const examplePhotoForStyle=style=>['basic','ats','modern','creative','minimal','professional','elegant','tech'].includes(style)?EXAMPLE_PHOTO:'';
 
   const PREMIUM_STYLE_IDS = [
     "executive-gold",
@@ -185,9 +188,9 @@ function buildFeaturedExamples(lang, originals) {
       label,
       note: hu ? noteHu : lang === "en" ? noteEn : strings[lang].editDesc,
       result: hu ? "Szerkeszthető CV-sablon" : lang === "en" ? "Editable CV template" : strings[lang].preview,
-      cv: { ...base.cv }
+      cv: { ...base.cv, photo:examplePhotoForStyle(style) }
     };
   });
 }
 
-export { PREMIUM_STYLE_IDS, PREMIUM_STYLE_MAP, renderPremiumCv, buildFeaturedExamples };
+export { examplePhotoForStyle, PREMIUM_STYLE_IDS, PREMIUM_STYLE_MAP, renderPremiumCv, buildFeaturedExamples };

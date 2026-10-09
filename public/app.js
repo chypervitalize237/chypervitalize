@@ -1,7 +1,7 @@
 import {locales,strings} from './i18n.js?v=20260925-prices';
 import {fieldExample} from './examples.js';
-import {getCvExamples as getOriginalCvExamples} from './cv-examples.js?v=20261008-locales';
-import {PREMIUM_STYLE_MAP,renderPremiumCv,buildFeaturedExamples} from './premium-templates.js?v=20261008-locales';
+import {getCvExamples as getOriginalCvExamples} from './cv-examples.js?v=20261009-photo-placeholders';
+import {PREMIUM_STYLE_MAP,renderPremiumCv,buildFeaturedExamples} from './premium-templates.js?v=20261009-photo-placeholders';
 function getCvExamples(lang){const existing=getOriginalCvExamples(lang);return [...buildFeaturedExamples(lang,existing),...existing];}
 function getCvExample(id,lang){return getCvExamples(lang).find(x=>x.id===id);}
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -330,6 +330,7 @@ function editorPreviewMarkup(){
   }).join('');
  };
  const data=structuredClone(state.cv);
+ if(!data.photo)data.photo=example.cv.photo||'';
  for(const key of ['name','title','email','phone','city','link','summary','skills','languages'])data[key]=fallback(data[key],example.cv[key],key);
  for(const key of ['experience','education','projects','awards','volunteer','certifications']){
   const own=data[key]||[],samples=example.cv[key]||[];
