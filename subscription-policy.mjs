@@ -4,7 +4,10 @@ export function stripeLivemode(mode=process.env.STRIPE_MODE||'test'){
 }
 export function requireStripeKey(key,mode=process.env.STRIPE_MODE||'test'){
  stripeLivemode(mode);
- if(typeof key!=='string'||!new RegExp('^(?:sk|rk)_'+mode+'_[A-Za-z0-9]+$').test(key))throw new Error('Stripe '+mode+' key required');
+ if(typeof key!=='string'||!new RegExp('^(?:sk|rk)_'+mode+'_[A-Za-z0-9]+$').test(key)){
+  console.error('[payments] key check failed', {mode, type: typeof key, prefix: typeof key==='string'?key.slice(0,8):null, length: typeof key==='string'?key.length:0});
+  throw new Error('Stripe '+mode+' key required');
+ }
  return key;
 }
 export function requireStripeObject(object,mode=process.env.STRIPE_MODE||'test'){
