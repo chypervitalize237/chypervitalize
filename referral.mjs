@@ -1,73 +1,110 @@
-import {requireSandboxKey} from './subscription-policy.mjs';
+import {requireStripeKey,stripeLivemode,requireStripeObject} from './subscription-policy.mjs';
+const configuredMode=()=>process.env.STRIPE_MODE||'test';
+const rewardTable="CREATE TABLE referral_rewards(invitee TEXT NOT NULL,inviter TEXT NOT NULL,created INTEGER NOT NULL,status TEXT NOT NULL DEFAULT 'pending',coupon TEXT,session_id TEXT,subscription_id TEXT,discount_id TEXT,invoice_id TEXT,checkout_attempt INTEGER NOT NULL DEFAULT 0,qualifying_payment TEXT,stripe_mode TEXT NOT NULL DEFAULT 'test' CHECK(stripe_mode IN ('test','live')),PRIMARY KEY(invitee,stripe_mode))";
 export function initReferrals(db){
- db.exec(`CREATE TABLE IF NOT EXISTS referral_rewards(invitee TEXT PRIMARY KEY,inviter TEXT NOT NULL,created INTEGER NOT NULL,status TEXT NOT NULL DEFAULT 'pending',coupon TEXT,session_id TEXT,subscription_id TEXT,discount_id TEXT,invoice_id TEXT); CREATE INDEX IF NOT EXISTS referral_owner ON referral_rewards(inviter,status)`);
- try{db.exec('ALTER TABLE referral_rewards ADD COLUMN checkout_attempt INTEGER NOT NULL DEFAULT 0')}catch{}
- try{db.exec('ALTER TABLE referral_rewards ADD COLUMN qualifying_payment TEXT')}catch{}
+ db.exec(rewardTable.replace('CREATE TABLE ','CREATE TABLE IF NOT EXISTS '));
+ for(const column of ['checkout_attempt INTEGER NOT NULL DEFAULT 0','qualifying_payment TEXT',"stripe_mode TEXT NOT NULL DEFAULT 'test'"]){try{db.exec('ALTER TABLE referral_rewards ADD COLUMN '+column)}catch{}}
+ // Legacy rewards belong to the sandbox. A composite key allows a separate live reward.
+ const key=db.prepare('PRAGMA table_info(referral_rewards)').all().filter(column=>column.pk).map(column=>column.name);
+ if(!key.includes('stripe_mode')){
+  db.exec('SAVEPOINT referral_mode_migration');
+  try{db.exec('ALTER TABLE referral_rewards RENAME TO referral_rewards_legacy; '+rewardTable+'; INSERT INTO referral_rewards(invitee,inviter,created,status,coupon,session_id,subscription_id,discount_id,invoice_id,checkout_attempt,qualifying_payment,stripe_mode) SELECT invitee,inviter,created,status,coupon,session_id,subscription_id,discount_id,invoice_id,checkout_attempt,qualifying_payment,stripe_mode FROM referral_rewards_legacy; DROP TABLE referral_rewards_legacy; RELEASE referral_mode_migration;');}
+  catch(error){db.exec('ROLLBACK TO referral_mode_migration; RELEASE referral_mode_migration');throw error;}
+ }
+ db.exec('CREATE INDEX IF NOT EXISTS referral_owner ON referral_rewards(inviter,stripe_mode,status)');
  db.prepare("UPDATE referral_rewards SET status=CASE WHEN status='pending' THEN 'awaiting_payment' ELSE 'revoking' END WHERE qualifying_payment IS NULL AND status IN ('pending','reserved','applied','applying')").run();
 }
 const identity=email=>{let [local,domain]=String(email).toLowerCase().split('@');if(['gmail.com','googlemail.com'].includes(domain)){domain='gmail.com';local=local.split('+')[0].replaceAll('.','');}return local+'@'+domain;};
-export function grantReferral(db,invitee,code){
+const idOf=value=>typeof value==='string'?value:value?.id;
+export function grantReferral(db,invitee,code,mode=configuredMode()){
+ stripeLivemode(mode);
  if(!/^[a-f0-9]{16}$/.test(String(code||'')))return null;
  const friend=db.prepare('SELECT id,email FROM users WHERE id=?').get(invitee),owner=db.prepare('SELECT id,email FROM users WHERE ref=?').get(code);
  if(!friend||!owner||owner.id===friend.id||identity(owner.email)===identity(friend.email))return null;
- db.prepare("INSERT OR IGNORE INTO referral_rewards(invitee,inviter,created,status) VALUES(?,?,?,'awaiting_payment')").run(friend.id,owner.id,Date.now());return owner.id;
+ db.prepare("INSERT OR IGNORE INTO referral_rewards(invitee,inviter,created,status,stripe_mode) VALUES(?,?,?,'awaiting_payment',?)").run(friend.id,owner.id,Date.now(),mode);return owner.id;
 }
-export function referralSummary(db,uid){const rows=db.prepare('SELECT status,COUNT(*) n FROM referral_rewards WHERE inviter=? GROUP BY status').all(uid);const count=status=>Number(rows.find(r=>r.status===status)?.n||0);return {waiting:count('awaiting_payment')+count('revoking'),earned:rows.filter(r=>!['awaiting_payment','revoking'].includes(r.status)).reduce((n,r)=>n+Number(r.n),0),available:count('pending'),scheduled:count('applied')+count('reserved'),used:count('used'),percent:50};}
-export function createReferralService(db,{key,request=fetch}={}){
- const busy=new Set();
+export function referralSummary(db,uid,mode=configuredMode()){
+ stripeLivemode(mode);
+ const rows=db.prepare('SELECT status,COUNT(*) n FROM referral_rewards WHERE inviter=? AND stripe_mode=? GROUP BY status').all(uid,mode),count=status=>Number(rows.find(row=>row.status===status)?.n||0);
+ return {waiting:count('awaiting_payment')+count('revoking'),earned:rows.filter(row=>!['awaiting_payment','revoking'].includes(row.status)).reduce((n,row)=>n+Number(row.n),0),available:count('pending'),scheduled:count('applied')+count('reserved'),used:count('used'),percent:50};
+}
+export function createReferralService(db,{key,request=fetch,mode=configuredMode()}={}){
+ const busy=new Set(),livemode=stripeLivemode(mode);
+ const matchesMode=value=>value?.livemode===livemode;
  function qualifyPayment(uid,sub,proof){
-  if(!uid||sub?.livemode!==false||proof?.livemode!==false||sub.metadata?.uid!==uid||!['active','trialing'].includes(sub.status)||!['day','month'].includes(sub.metadata?.plan))return false;
-  const idOf=x=>typeof x==='string'?x:x?.id;
+  if(!uid||!matchesMode(sub)||!matchesMode(proof)||sub.metadata?.uid!==uid||!['active','trialing'].includes(sub.status)||!['day','month'].includes(sub.metadata?.plan))return false;
   if(!sub.customer||idOf(proof.customer)!==idOf(sub.customer))return false;
   if(proof.object==='checkout.session'){if(proof.mode!=='subscription'||proof.status!=='complete'||proof.payment_status!=='paid'||!(proof.amount_total>0)||proof.metadata?.uid!==uid||idOf(proof.subscription)!==sub.id)return false;}
   else if(proof.object!=='invoice'||proof.status!=='paid'||!(proof.amount_paid>0)||idOf(proof.parent?.subscription_details?.subscription||proof.subscription)!==sub.id)return false;
-  const result=db.prepare("UPDATE referral_rewards SET status='pending',qualifying_payment=? WHERE invitee=? AND status='awaiting_payment' AND qualifying_payment IS NULL").run(proof.id,uid);
-  if(result.changes){const row=db.prepare('SELECT inviter FROM referral_rewards WHERE invitee=?').get(uid);void applyPending(row.inviter).catch(e=>console.error('Referral scheduling:',e.message));}
+  const result=db.prepare("UPDATE referral_rewards SET status='pending',qualifying_payment=? WHERE invitee=? AND stripe_mode=? AND status='awaiting_payment' AND qualifying_payment IS NULL").run(proof.id,uid,mode);
+  if(result.changes){const row=db.prepare('SELECT inviter FROM referral_rewards WHERE invitee=? AND stripe_mode=?').get(uid,mode);void applyPending(row.inviter).catch(error=>console.error('Referral scheduling:',error.message));}
   return !!result.changes;
  }
- async function stripe(path,form,idempotency){requireSandboxKey(key);const headers={Authorization:'Bearer '+key};if(form){headers['Content-Type']='application/x-www-form-urlencoded';headers['Idempotency-Key']=idempotency;}const r=await request('https://api.stripe.com/v1/'+path,{method:form?'POST':'GET',headers,body:form,signal:AbortSignal.timeout(15000)});const value=await r.json();if(!r.ok)throw Error(value.error?.message||'Stripe referral request failed');if(value.livemode===true)throw Error('Live Stripe object rejected');return value;}
- const couponId=row=>'chy_ref_'+row.invitee;
+ async function stripe(path,form,idempotency){
+  requireStripeKey(key,mode);const headers={Authorization:'Bearer '+key};
+  if(form){headers['Content-Type']='application/x-www-form-urlencoded';headers['Idempotency-Key']=mode+'-'+idempotency;}
+  const response=await request('https://api.stripe.com/v1/'+path,{method:form?'POST':'GET',headers,body:form,signal:AbortSignal.timeout(15000)}),value=await response.json();
+  if(!response.ok){const error=Error(value.error?.message||'Stripe referral request failed');error.status=response.status;throw error;}requireStripeObject(value,mode);return value;
+ }
+ const couponId=row=>'chy_ref_'+(mode==='live'?'live_':'')+row.invitee;
  const couponOf=discount=>typeof discount==='object'?(discount.source?.coupon?.id||discount.source?.coupon||discount.coupon?.id||discount.coupon):null;
- async function ensureCoupon(row){const id=couponId(row);try{return await stripe('coupons/'+id);}catch{}return stripe('coupons',new URLSearchParams({id,name:'Chypervitalize referral -50% / 1 month',percent_off:'50',duration:'once',max_redemptions:'1'}),'referral-coupon-'+row.invitee);}
+ function verifyCoupon(coupon){if(coupon.percent_off!==50||coupon.duration!=='once'||coupon.max_redemptions!==1)throw Error('Referral coupon terms do not match');return coupon;}
+ async function ensureCoupon(row){
+  const id=couponId(row);try{return verifyCoupon(await stripe('coupons/'+id));}catch(error){if(error.status!==404)throw error;}
+  return verifyCoupon(await stripe('coupons',new URLSearchParams({id,name:'Chypervitalize referral -50% / 1 month',percent_off:'50',duration:'once',max_redemptions:'1'}),'referral-coupon-'+row.invitee));
+ }
  async function reserveCheckout(uid,plan){
   if(plan!=='month')return null;
-  if(db.prepare("SELECT 1 FROM referral_rewards WHERE inviter=? AND status IN ('applied','applying')").get(uid))throw Error('Referral discount already scheduled');
-  let row=db.prepare("SELECT * FROM referral_rewards WHERE inviter=? AND status='reserved' ORDER BY created LIMIT 1").get(uid);
-  if(row?.session_id){const session=await stripe('checkout/sessions/'+row.session_id);if(session.status==='open')return {row,url:session.url,sessionId:session.id};if(session.status==='complete')throw Error('Previous referral checkout is being confirmed');db.prepare("UPDATE referral_rewards SET status='pending',session_id=NULL,checkout_attempt=checkout_attempt+1 WHERE invitee=? AND status='reserved'").run(row.invitee);row=null;}
-  if(!row){row=db.prepare("SELECT * FROM referral_rewards WHERE inviter=? AND status='pending' ORDER BY created,invitee LIMIT 1").get(uid);if(!row)return null;db.prepare("UPDATE referral_rewards SET status='reserved' WHERE invitee=? AND status='pending'").run(row.invitee);}
+  if(db.prepare("SELECT 1 FROM referral_rewards WHERE inviter=? AND stripe_mode=? AND status IN ('applied','applying')").get(uid,mode))throw Error('Referral discount already scheduled');
+  let row=db.prepare("SELECT * FROM referral_rewards WHERE inviter=? AND stripe_mode=? AND status='reserved' ORDER BY created LIMIT 1").get(uid,mode);
+  if(row?.session_id){const session=await stripe('checkout/sessions/'+row.session_id);if(session.status==='open')return {row,url:session.url,sessionId:session.id};if(session.status==='complete')throw Error('Previous referral checkout is being confirmed');db.prepare("UPDATE referral_rewards SET status='pending',session_id=NULL,checkout_attempt=checkout_attempt+1 WHERE invitee=? AND stripe_mode=? AND status='reserved'").run(row.invitee,mode);row=null;}
+  if(!row){row=db.prepare("SELECT * FROM referral_rewards WHERE inviter=? AND stripe_mode=? AND status='pending' ORDER BY created,invitee LIMIT 1").get(uid,mode);if(!row)return null;const claimed=db.prepare("UPDATE referral_rewards SET status='reserved' WHERE invitee=? AND stripe_mode=? AND status='pending'").run(row.invitee,mode);if(!claimed.changes)return null;}
   const coupon=await ensureCoupon(row);if(coupon.times_redeemed>0)throw Error('Referral discount is being confirmed');return {row,coupon:coupon.id};
  }
- function recordCheckout(invitee,session){db.prepare("UPDATE referral_rewards SET session_id=?,coupon=? WHERE invitee=? AND status='reserved'").run(session.id,couponId({invitee}),invitee);}
- function releaseCheckout(invitee){db.prepare("UPDATE referral_rewards SET status='pending' WHERE invitee=? AND session_id IS NULL AND status='reserved'").run(invitee);}
- function completeCheckout(session){if(session.payment_status!=='paid'||session.status!=='complete'||session.metadata?.plan!=='month')return;db.prepare("UPDATE referral_rewards SET status='used',subscription_id=? WHERE invitee=? AND inviter=? AND session_id=? AND status='reserved'").run(typeof session.subscription==='string'?session.subscription:null,session.metadata?.referral_reward||'',session.metadata?.uid||'',session.id);}
- function settleInvoice(invoice){if(invoice.status!=='paid'||invoice.livemode!==false)return;const customer=typeof invoice.customer==='string'?invoice.customer:invoice.customer?.id;const owner=db.prepare('SELECT id FROM users WHERE stripe_customer_id=?').get(customer);if(!owner)return;for(const item of invoice.total_discount_amounts||[]){if(!(item.amount>0))continue;const id=typeof item.discount==='string'?item.discount:item.discount?.id;db.prepare("UPDATE referral_rewards SET status='used',invoice_id=? WHERE inviter=? AND discount_id=? AND status='applied'").run(invoice.id,owner.id,id||'');}}
+ function recordCheckout(invitee,session){
+  requireStripeObject(session,mode);
+  db.prepare("UPDATE referral_rewards SET session_id=?,coupon=? WHERE invitee=? AND stripe_mode=? AND inviter=? AND status='reserved'").run(session.id,couponId({invitee}),invitee,mode,session.metadata?.uid||'');
+ }
+ function releaseCheckout(invitee){db.prepare("UPDATE referral_rewards SET status='pending' WHERE invitee=? AND stripe_mode=? AND session_id IS NULL AND status='reserved'").run(invitee,mode);}
+ function completeCheckout(session){
+  if(!matchesMode(session)||session.mode!=='subscription'||session.payment_status!=='paid'||session.status!=='complete'||session.metadata?.plan!=='month'||!(session.amount_total>0))return;
+  db.prepare("UPDATE referral_rewards SET status='used',subscription_id=? WHERE invitee=? AND stripe_mode=? AND inviter=? AND session_id=? AND status='reserved'").run(idOf(session.subscription)||null,session.metadata?.referral_reward||'',mode,session.metadata?.uid||'',session.id);
+ }
+ function settleInvoice(invoice){
+  if(invoice.status!=='paid'||!matchesMode(invoice))return;
+  const owner=db.prepare('SELECT id FROM users WHERE stripe_customer_id=? AND stripe_mode=?').get(idOf(invoice.customer),mode);if(!owner)return;
+  for(const item of invoice.total_discount_amounts||[]){if(!(item.amount>0))continue;db.prepare("UPDATE referral_rewards SET status='used',invoice_id=? WHERE inviter=? AND stripe_mode=? AND discount_id=? AND status='applied'").run(invoice.id,owner.id,mode,idOf(item.discount)||'');}
+ }
  async function applyPending(uid){
   if(busy.has(uid))return;busy.add(uid);
   try{
-   if(db.prepare("SELECT 1 FROM referral_rewards WHERE inviter=? AND status IN ('applied','reserved')").get(uid))return;
-   const row=db.prepare("SELECT * FROM referral_rewards WHERE inviter=? AND status='pending' ORDER BY created,invitee LIMIT 1").get(uid),owner=db.prepare('SELECT * FROM users WHERE id=?').get(uid);if(!row||!owner?.stripe_subscription_id||owner.cancel_at_period_end||!['active','trialing'].includes(owner.subscription_status))return;
-   const sub=await stripe('subscriptions/'+encodeURIComponent(owner.stripe_subscription_id)+'?expand[]=discounts');if(sub.customer!==owner.stripe_customer_id||!['active','trialing'].includes(sub.status)||sub.cancel_at_period_end||sub.cancel_at)return;
+   if(db.prepare("SELECT 1 FROM referral_rewards WHERE inviter=? AND stripe_mode=? AND status IN ('applied','reserved')").get(uid,mode))return;
+   const row=db.prepare("SELECT * FROM referral_rewards WHERE inviter=? AND stripe_mode=? AND status='pending' ORDER BY created,invitee LIMIT 1").get(uid,mode),owner=db.prepare('SELECT * FROM users WHERE id=? AND stripe_mode=?').get(uid,mode);
+   if(!row||!owner?.stripe_subscription_id||owner.cancel_at_period_end||!['active','trialing'].includes(owner.subscription_status))return;
+   const sub=await stripe('subscriptions/'+encodeURIComponent(owner.stripe_subscription_id)+'?expand[]=discounts');if(idOf(sub.customer)!==owner.stripe_customer_id||sub.metadata?.uid!==uid||!['active','trialing'].includes(sub.status)||sub.cancel_at_period_end||sub.cancel_at)return;
    const items=sub.items?.data||[];if(items.length!==1||items[0].price?.recurring?.interval!=='month'||items[0].price?.currency!=='usd'||items[0].price?.unit_amount!==1249)return;
-   const discounts=(sub.discounts||[sub.discount].filter(Boolean)).filter(d=>!db.prepare("SELECT 1 FROM referral_rewards WHERE inviter=? AND coupon=? AND status='used'").get(uid,couponOf(d)||'')),existing=discounts.find(d=>couponOf(d)===couponId(row));
+   const discounts=(sub.discounts||[sub.discount].filter(Boolean)).filter(discount=>!db.prepare("SELECT 1 FROM referral_rewards WHERE inviter=? AND stripe_mode=? AND coupon=? AND status='used'").get(uid,mode,couponOf(discount)||'')),existing=discounts.find(discount=>couponOf(discount)===couponId(row));
    if(discounts.length&&!existing)return;
-   const claimed=db.prepare("UPDATE referral_rewards SET status='applying' WHERE invitee=? AND status='pending'").run(row.invitee);if(!claimed.changes)return;
-   let discount=existing;try{if(!discount){const coupon=await ensureCoupon(row);const updated=await stripe('subscriptions/'+sub.id,new URLSearchParams({'discounts[0][coupon]':coupon.id,proration_behavior:'none','expand[]':'discounts'}),'referral-subscription-'+row.invitee+'-'+sub.id);discount=(updated.discounts||[updated.discount].filter(Boolean)).find(d=>couponOf(d)===coupon.id)||updated.discounts?.[0]||updated.discount;}}catch(e){db.prepare("UPDATE referral_rewards SET status='pending' WHERE invitee=? AND status='applying'").run(row.invitee);throw e;}
-   const id=typeof discount==='string'?discount:discount?.id;if(!id){db.prepare("UPDATE referral_rewards SET status='pending' WHERE invitee=? AND status='applying'").run(row.invitee);throw Error('Referral discount not confirmed');}
-   db.prepare("UPDATE referral_rewards SET status='applied',coupon=?,subscription_id=?,discount_id=? WHERE invitee=? AND status='applying'").run(couponId(row),sub.id,id,row.invitee);
+   const claimed=db.prepare("UPDATE referral_rewards SET status='applying' WHERE invitee=? AND stripe_mode=? AND status='pending'").run(row.invitee,mode);if(!claimed.changes)return;
+   let discount=existing;
+   try{if(!discount){const coupon=await ensureCoupon(row),updated=await stripe('subscriptions/'+sub.id,new URLSearchParams({'discounts[0][coupon]':coupon.id,proration_behavior:'none','expand[]':'discounts'}),'referral-subscription-'+row.invitee+'-'+sub.id);discount=(updated.discounts||[updated.discount].filter(Boolean)).find(value=>couponOf(value)===coupon.id)||updated.discounts?.[0]||updated.discount;}}
+   catch(error){db.prepare("UPDATE referral_rewards SET status='pending' WHERE invitee=? AND stripe_mode=? AND status='applying'").run(row.invitee,mode);throw error;}
+   const id=idOf(discount);if(!id){db.prepare("UPDATE referral_rewards SET status='pending' WHERE invitee=? AND stripe_mode=? AND status='applying'").run(row.invitee,mode);throw Error('Referral discount not confirmed');}
+   db.prepare("UPDATE referral_rewards SET status='applied',coupon=?,subscription_id=?,discount_id=? WHERE invitee=? AND stripe_mode=? AND status='applying'").run(couponId(row),sub.id,id,row.invitee,mode);
   }finally{busy.delete(uid);}
  }
  async function sweep(){
-  for(const row of db.prepare("SELECT * FROM referral_rewards WHERE status='revoking'").all()){try{
+  for(const row of db.prepare("SELECT * FROM referral_rewards WHERE stripe_mode=? AND status='revoking'").all(mode)){try{
    if(row.session_id){const session=await stripe('checkout/sessions/'+row.session_id);if(session.status==='open')await stripe('checkout/sessions/'+row.session_id+'/expire',new URLSearchParams(),'referral-revoke-'+row.invitee);}
-   if(row.discount_id&&row.subscription_id){const sub=await stripe('subscriptions/'+row.subscription_id+'?expand[]=discounts');const remaining=(sub.discounts||[]).filter(d=>(typeof d==='string'?d:d.id)!==row.discount_id);const form=new URLSearchParams({proration_behavior:'none'});if(!remaining.length)form.set('discounts','');else remaining.forEach((d,i)=>form.set('discounts['+i+'][discount]',typeof d==='string'?d:d.id));await stripe('subscriptions/'+row.subscription_id,form,'referral-revoke-sub-'+row.invitee);}
-   db.prepare("UPDATE referral_rewards SET status='awaiting_payment',session_id=NULL,discount_id=NULL,subscription_id=NULL,checkout_attempt=checkout_attempt+1 WHERE invitee=? AND status='revoking'").run(row.invitee);
-  }catch(e){console.error('Referral eligibility migration:',e.message);}}
-
-  for(const row of db.prepare("SELECT * FROM referral_rewards WHERE status IN ('applied','reserved')").all()){try{
-   if(row.status==='reserved'&&row.session_id){const session=await stripe('checkout/sessions/'+row.session_id);if(session.status==='expired')db.prepare("UPDATE referral_rewards SET status='pending',session_id=NULL,checkout_attempt=checkout_attempt+1 WHERE invitee=? AND status='reserved'").run(row.invitee);else completeCheckout(session);}
-   if(row.status==='applied'){const sub=await stripe('subscriptions/'+row.subscription_id);const invoiceId=typeof sub.latest_invoice==='string'?sub.latest_invoice:sub.latest_invoice?.id;if(invoiceId)settleInvoice(await stripe('invoices/'+invoiceId));}
-  }catch(e){console.error('Referral reconciliation:',e.message);}}
-  const owners=db.prepare("SELECT DISTINCT inviter FROM referral_rewards WHERE status='pending'").all();for(const row of owners){try{await applyPending(row.inviter);}catch(e){console.error('Referral discount:',e.message);}}
+   if(row.discount_id&&row.subscription_id){const sub=await stripe('subscriptions/'+row.subscription_id+'?expand[]=discounts'),remaining=(sub.discounts||[]).filter(discount=>idOf(discount)!==row.discount_id),form=new URLSearchParams({proration_behavior:'none'});if(!remaining.length)form.set('discounts','');else remaining.forEach((discount,index)=>form.set('discounts['+index+'][discount]',idOf(discount)));await stripe('subscriptions/'+row.subscription_id,form,'referral-revoke-sub-'+row.invitee);}
+   db.prepare("UPDATE referral_rewards SET status='awaiting_payment',session_id=NULL,discount_id=NULL,subscription_id=NULL,checkout_attempt=checkout_attempt+1 WHERE invitee=? AND stripe_mode=? AND status='revoking'").run(row.invitee,mode);
+  }catch(error){console.error('Referral eligibility migration:',error.message);}}
+  for(const row of db.prepare("SELECT * FROM referral_rewards WHERE stripe_mode=? AND status IN ('applied','reserved')").all(mode)){try{
+   if(row.status==='reserved'&&row.session_id){const session=await stripe('checkout/sessions/'+row.session_id);if(session.status==='expired')db.prepare("UPDATE referral_rewards SET status='pending',session_id=NULL,checkout_attempt=checkout_attempt+1 WHERE invitee=? AND stripe_mode=? AND status='reserved'").run(row.invitee,mode);else completeCheckout(session);}
+   if(row.status==='applied'){const sub=await stripe('subscriptions/'+row.subscription_id),invoiceId=idOf(sub.latest_invoice);if(invoiceId)settleInvoice(await stripe('invoices/'+invoiceId));}
+  }catch(error){console.error('Referral reconciliation:',error.message);}}
+  const owners=db.prepare("SELECT DISTINCT inviter FROM referral_rewards WHERE stripe_mode=? AND status='pending'").all(mode);for(const row of owners){try{await applyPending(row.inviter);}catch(error){console.error('Referral discount:',error.message);}}
  }
  return {qualifyPayment,reserveCheckout,recordCheckout,releaseCheckout,completeCheckout,settleInvoice,applyPending,sweep};
 }
+

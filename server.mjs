@@ -1,12 +1,13 @@
 import http from 'node:http';
 import {initReferrals,grantReferral,referralSummary,createReferralService} from './referral.mjs';
-import {requireSandboxKey,cancelRenewal} from './subscription-policy.mjs';
+import {requireStripeKey,requireStripeObject,stripeLivemode,cancelRenewal} from './subscription-policy.mjs';
+import {paymentConfiguration,validatePaymentSetup,validatePaidCheckout,stripeApiVersion} from './payment-runtime.mjs';
 import {readableColor} from './color-utils.mjs';
 import {checkoutPrice,applyCheckoutPrice} from './pricing.mjs';
 import {readFileSync,mkdirSync,existsSync} from 'node:fs';
 import {join,extname} from 'node:path';
 import {randomBytes,scryptSync,timingSafeEqual,createHmac} from 'node:crypto';
-import {DatabaseSync} from 'node:sqlite';
+import {DatabaseSync,backup} from 'node:sqlite';
 import PDFDocument from 'pdfkit';
 import {startAutomaticBackup} from './ops/automatic-backup.mjs';
 import {initWithdrawals,submitWithdrawal,publicWithdrawal,withdrawalReceipt,adminAuthorized,receiptPdf} from './withdrawal.mjs';
@@ -16,27 +17,74 @@ try{db.exec('ALTER TABLE users ADD COLUMN cancel_at_period_end INTEGER DEFAULT 0
 db.exec('CREATE TABLE IF NOT EXISTS site_metrics(name TEXT PRIMARY KEY, count INTEGER NOT NULL DEFAULT 0)');
 try{db.exec("ALTER TABLE users ADD COLUMN payment_confirmed INTEGER DEFAULT 0; UPDATE users SET payment_confirmed=1 WHERE stripe_subscription_id IS NOT NULL AND subscription_status IN ('active','trialing')")}catch{}
 const limits=new Map();
+const paymentConfig=paymentConfiguration();
+if(!db.prepare('PRAGMA table_info(users)').all().some(column=>column.name==='stripe_mode')){
+ await backup(db,join(dir,'pre-stripe-mode-migration.sqlite'));
+ db.exec("ALTER TABLE users ADD COLUMN stripe_mode TEXT NOT NULL DEFAULT 'test'");
+}
+if(!db.prepare('PRAGMA table_info(users)').all().some(column=>column.name==='stripe_checkout_created'))db.exec('ALTER TABLE users ADD COLUMN stripe_checkout_created INTEGER NOT NULL DEFAULT 0');
+db.exec('CREATE TABLE IF NOT EXISTS checkout_pending(uid TEXT NOT NULL,stripe_mode TEXT NOT NULL,plan TEXT NOT NULL,language TEXT NOT NULL,attempt TEXT NOT NULL,form TEXT NOT NULL,session_id TEXT,PRIMARY KEY(uid,stripe_mode))');
+const checkoutBusy=new Set();
+let paymentReady=false,checkingPayments=false;
+async function checkPayments(){if(checkingPayments||paymentReady)return;checkingPayments=true;try{await validatePaymentSetup(paymentConfig);paymentReady=true;}catch{console.error('[payments] configuration unavailable or failed verification');}finally{checkingPayments=false;}}
+await checkPayments();setInterval(checkPayments,60000).unref();
 setInterval(()=>{const cutoff=Date.now()-3600000;for(const [key,value] of limits)if(value.t<cutoff)limits.delete(key);},60000).unref();
 initWithdrawals(db);
 initReferrals(db);
-db.prepare("UPDATE referral_rewards SET status='pending' WHERE status='applying'").run();
-const referrals=createReferralService(db,{key:process.env.STRIPE_SECRET_KEY});
+db.prepare("UPDATE referral_rewards SET status='pending' WHERE status='applying' AND stripe_mode=?").run(paymentConfig.mode);
+const referrals=createReferralService(db,{key:paymentConfig.key,mode:paymentConfig.mode});
 let referralSweepRunning=false;
-async function sweepReferrals(){if(referralSweepRunning||!process.env.STRIPE_SECRET_KEY)return;referralSweepRunning=true;try{await referrals.sweep();}catch(e){console.error('Referral worker:',e.message);}finally{referralSweepRunning=false;}}
+async function sweepReferrals(){if(referralSweepRunning||!paymentReady)return;referralSweepRunning=true;try{await referrals.sweep();}catch(e){console.error('Referral worker:',e.message);}finally{referralSweepRunning=false;}}
 setInterval(sweepReferrals,60000).unref();setTimeout(sweepReferrals,5000).unref();
 startAutomaticBackup({source:join(dir,'chypermax.sqlite'),stateDirectory:dir});
 function json(res,data,status=200){res.writeHead(status,{'Content-Type':'application/json'});res.end(JSON.stringify(data));}
 function user(req){let token=(req.headers.cookie||'').match(/(?:^|; )session=([a-f0-9]+)/)?.[1];return token?db.prepare('SELECT u.* FROM users u JOIN sessions s ON u.id=s.uid WHERE s.token=? AND s.expires>?').get(token,Date.now()):null;}
-function hasAccess(u){return !!u&&u.payment_confirmed===1&&['active','trialing'].includes(String(u.subscription_status||''))&&Number(u.access_until||0)>Date.now();}
-function safe(u){return u?{email:u.email,expires:u.expires,plan:u.plan,ref:u.ref,referral:referralSummary(db,u.id),credits:hasAccess(u)?1:0,subscriptionStatus:u.subscription_status||null,accessUntil:Number(u.access_until||0),cancelAtPeriodEnd:!!u.cancel_at_period_end,canCancel:!!u.stripe_subscription_id}:null;}
-function syncSubscription(uid,sub,confirmed=false){if(!uid||!sub)return;const status=String(sub.status||''),periods=(sub.items?.data||[]).map(x=>Number(x.current_period_end)).filter(Number.isFinite),periodEnd=periods.length?Math.min(...periods):Number(sub.current_period_end||sub.trial_end||0),until=periodEnd*1000;db.prepare('UPDATE users SET stripe_customer_id=?,stripe_subscription_id=?,subscription_status=?,access_until=?,cancel_at_period_end=?,plan=COALESCE(?,plan),payment_confirmed=MAX(payment_confirmed,?) WHERE id=?').run(typeof sub.customer==='string'?sub.customer:null,sub.id||null,status,until,sub.cancel_at_period_end||sub.cancel_at?1:0,['day','month'].includes(sub.metadata?.plan)?sub.metadata.plan:null,confirmed?1:0,uid);}
-async function stripeGet(path){requireSandboxKey(process.env.STRIPE_SECRET_KEY);const r=await fetch('https://api.stripe.com/v1/'+path,{headers:{Authorization:'Bearer '+process.env.STRIPE_SECRET_KEY},signal:AbortSignal.timeout(15000)});const d=await r.json();if(!r.ok)throw Error(d?.error?.message||'stripe');return d;}
-async function rawBody(req){let v='';for await(const chunk of req){v+=chunk;if(v.length>3000000)throw Error('Request too large');}return v;}
+function hasAccess(u){return !!u&&u.stripe_mode===paymentConfig.mode&&u.payment_confirmed===1&&['active','trialing'].includes(String(u.subscription_status||''))&&Number(u.access_until||0)>Date.now();}
+function safe(u){const current=u?.stripe_mode===paymentConfig.mode;return u?{email:u.email,expires:u.expires,plan:current?u.plan:null,ref:u.ref,referral:referralSummary(db,u.id,paymentConfig.mode),credits:hasAccess(u)?1:0,subscriptionStatus:current?u.subscription_status||null:null,accessUntil:current?Number(u.access_until||0):0,cancelAtPeriodEnd:current&&!!u.cancel_at_period_end,canCancel:current&&!!u.stripe_subscription_id}:null;}
+function syncSubscription(uid,sub,confirmed=false,checkoutCreated=0){if(!uid||!sub)return false;requireStripeObject(sub,paymentConfig.mode);if(sub.metadata?.uid!==uid||!['day','month'].includes(sub.metadata?.plan))throw Error('Subscription owner or plan mismatch');const previous=db.prepare('SELECT stripe_mode,stripe_subscription_id,stripe_checkout_created FROM users WHERE id=?').get(uid);if(!previous)return false;const sameMode=previous.stripe_mode===paymentConfig.mode,different=sameMode&&previous.stripe_subscription_id&&previous.stripe_subscription_id!==sub.id;if(different&&(!checkoutCreated||checkoutCreated<=previous.stripe_checkout_created))return false;const status=String(sub.status||''),periods=(sub.items?.data||[]).map(x=>Number(x.current_period_end)).filter(Number.isFinite),periodEnd=periods.length?Math.min(...periods):Number(sub.current_period_end||sub.trial_end||0),until=periodEnd*1000;db.prepare('UPDATE users SET payment_confirmed=CASE WHEN stripe_mode=? AND stripe_subscription_id=? THEN MAX(payment_confirmed,?) ELSE ? END,stripe_customer_id=?,stripe_subscription_id=?,subscription_status=?,access_until=?,cancel_at_period_end=?,plan=?,stripe_mode=?,stripe_checkout_created=? WHERE id=?').run(paymentConfig.mode,sub.id,confirmed?1:0,confirmed?1:0,typeof sub.customer==='string'?sub.customer:null,sub.id||null,status,until,sub.cancel_at_period_end||sub.cancel_at?1:0,sub.metadata.plan,paymentConfig.mode,sameMode?Math.max(Number(previous.stripe_checkout_created||0),checkoutCreated):checkoutCreated,uid);return true;}
+async function stripeGet(path){requireStripeKey(paymentConfig.key,paymentConfig.mode);const r=await fetch('https://api.stripe.com/v1/'+path,{headers:{Authorization:'Bearer '+paymentConfig.key,'Stripe-Version':stripeApiVersion},signal:AbortSignal.timeout(15000)});const d=await r.json();if(!r.ok)throw Error('Stripe request failed');return requireStripeObject(d,paymentConfig.mode);}
+async function stripePost(path,form,attempt){const response=await fetch('https://api.stripe.com/v1/'+path,{method:'POST',headers:{Authorization:'Bearer '+paymentConfig.key,'Content-Type':'application/x-www-form-urlencoded','Stripe-Version':stripeApiVersion,'Idempotency-Key':attempt},body:form,signal:AbortSignal.timeout(15000)});const value=await response.json();if(!response.ok){const error=Error('Stripe request failed');error.checkoutRejected=path==='checkout/sessions'&&response.status===400&&value.error?.type==='invalid_request_error'&&!String(value.error?.code||'').includes('idempotency')&&!['lock_timeout','object_lock_timeout'].includes(value.error?.code)&&response.headers.get('stripe-should-retry')!=='true';throw error;}return requireStripeObject(value,paymentConfig.mode);}
+async function createPendingSession(uid,pending){
+ try{return await stripePost('checkout/sessions',new URLSearchParams(JSON.parse(pending.form)),'chyper-checkout-'+pending.attempt);}
+ catch(error){
+  // Only a definitive parameter rejection proves there was no session to recover.
+  // Network loss, conflicts, rate limits and server errors retain the exact request/key.
+  if(error.checkoutRejected){
+   const removed=db.prepare('DELETE FROM checkout_pending WHERE uid=? AND stripe_mode=? AND attempt=? AND session_id IS NULL').run(uid,paymentConfig.mode,pending.attempt);
+   const reward=new URLSearchParams(JSON.parse(pending.form)).get('metadata[referral_reward]');
+   if(removed.changes&&reward)referrals.releaseCheckout(reward);
+  }
+  throw error;
+ }
+}
+function recordPending(uid,session){db.prepare('UPDATE checkout_pending SET session_id=? WHERE uid=? AND stripe_mode=?').run(session.id,uid,paymentConfig.mode);if(session.metadata?.referral_reward)referrals.recordCheckout(session.metadata.referral_reward,session);}
+function confirmCheckout(uid,session,sub){validatePaidCheckout(session,sub,uid,paymentConfig.mode);if(!syncSubscription(uid,sub,true,session.created))return false;if(session.metadata?.referral_reward)referrals.recordCheckout(session.metadata.referral_reward,session);referrals.completeCheckout(session);referrals.qualifyPayment(uid,sub,session);db.prepare('DELETE FROM checkout_pending WHERE uid=? AND stripe_mode=? AND (session_id=? OR session_id IS NULL)').run(uid,paymentConfig.mode,session.id);return true;}
+async function resumePending(uid,plan,language){
+ const pending=db.prepare('SELECT * FROM checkout_pending WHERE uid=? AND stripe_mode=?').get(uid,paymentConfig.mode);if(!pending)return null;
+ let session;
+ try{session=pending.session_id?await stripeGet('checkout/sessions/'+encodeURIComponent(pending.session_id)):await createPendingSession(uid,pending);}
+ catch(error){if(error.checkoutRejected)return null;throw error;}
+ recordPending(uid,session);
+ if(session.metadata?.uid!==uid||session.client_reference_id!==uid)throw Error('Checkout owner mismatch');
+ if(session.status==='open'){
+  if(pending.plan===plan&&pending.language===language)return {url:session.url,sessionId:session.id};
+  await stripePost('checkout/sessions/'+encodeURIComponent(session.id)+'/expire',new URLSearchParams(),'chyper-expire-'+pending.attempt);
+  if(session.metadata?.referral_reward)referrals.releaseCheckout(session.metadata.referral_reward);
+ }else if(session.status==='complete'){
+  if(session.payment_status!=='paid')return {pending:true};
+  const sub=await stripeGet('subscriptions/'+encodeURIComponent(typeof session.subscription==='string'?session.subscription:session.subscription?.id));
+  if(['active','trialing'].includes(sub.status))confirmCheckout(uid,session,sub);
+  if(['active','trialing','past_due','unpaid','paused'].includes(sub.status))return {subscribed:true};
+ }
+ db.prepare('DELETE FROM checkout_pending WHERE uid=? AND stripe_mode=?').run(uid,paymentConfig.mode);return null;
+}
+async function rawBody(req){const chunks=[];let size=0;for await(const chunk of req){const bytes=Buffer.isBuffer(chunk)?chunk:Buffer.from(chunk);size+=bytes.length;if(size>3000000)throw Error('Request too large');chunks.push(bytes);}return Buffer.concat(chunks).toString('utf8');}
 async function body(req){return JSON.parse((await rawBody(req))||'{}');}
 function validStripeSignature(raw,header,secret){if(!header||!secret)return false;const values={};for(const part of String(header).split(',')){const i=part.indexOf('=');if(i<1)continue;const k=part.slice(0,i),v=part.slice(i+1);(values[k]??=[]).push(v);}const t=Number(values.t?.[0]),sigs=values.v1||[];if(!t||!sigs.length||Math.abs(Date.now()/1000-t)>300)return false;const expected=createHmac('sha256',secret).update(t+'.'+raw).digest('hex');return sigs.some(sig=>{try{return timingSafeEqual(Buffer.from(sig,'hex'),Buffer.from(expected,'hex'));}catch{return false;}});}
 http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','same-origin');res.setHeader('X-Frame-Options','DENY');const url=new URL(req.url,'http://localhost');try{
  if(req.method==='POST'&&req.headers.origin&&new URL(req.headers.origin).host!==req.headers.host)return json(res,{error:'Origin rejected'},403);
  const u=user(req);
+ if(url.pathname==='/api/payment-status'&&req.method==='GET'){res.setHeader('Cache-Control','no-store');return json(res,{mode:paymentConfig.mode,ready:paymentReady});}
  if(url.pathname.startsWith('/api/withdrawals')){
   res.setHeader('Cache-Control','no-store');
   const receiptId=url.pathname.match(/^\/api\/withdrawals\/receipt\/(EL-[0-9]{8}-[a-f0-9]{16})\.pdf$/)?.[1];
@@ -73,11 +121,12 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   return json(res,{error:'Not found'},404);
  }
  if(url.pathname.startsWith('/api/checkout')||url.pathname==='/api/subscription/cancel'){
-  try{requireSandboxKey(process.env.STRIPE_SECRET_KEY);}catch{return json(res,{error:'Stripe sandbox nincs beállítva. Csak tesztkulcs használható.'},503);}
+  if(!paymentReady)return json(res,{error:'A fizetés jelenleg nem elérhető. Próbáld később, vagy írj az ügyfélszolgálatnak.'},503);
  }
  if(url.pathname==='/api/subscription/cancel'&&req.method==='POST'){
   if(!u)return json(res,{error:'auth'},401);
-  try{const sub=await cancelRenewal({key:process.env.STRIPE_SECRET_KEY,subscriptionId:u.stripe_subscription_id,customerId:u.stripe_customer_id});syncSubscription(u.id,sub);return json(res,{user:safe(db.prepare('SELECT * FROM users WHERE id=?').get(u.id))});}
+  if(u.stripe_mode!==paymentConfig.mode)return json(res,{error:'No subscription in this payment environment'},409);
+  try{const sub=await cancelRenewal({key:paymentConfig.key,mode:paymentConfig.mode,subscriptionId:u.stripe_subscription_id,customerId:u.stripe_customer_id});syncSubscription(u.id,sub);return json(res,{user:safe(db.prepare('SELECT * FROM users WHERE id=?').get(u.id))});}
   catch{return json(res,{error:'A megújulás leállítása nem sikerült. Próbáld újra vagy írj az ügyfélszolgálatnak.'},502);}
  }
       if(url.pathname==='/api/visits'&&(req.method==='GET'||req.method==='POST')){
@@ -87,22 +136,24 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
        return json(res,{count:count>=1000?count:null});
       }
  if(url.pathname==='/api/stripe-webhook'&&req.method==='POST'){
+  if(!paymentReady)return json(res,{error:'Payments not configured'},503);
   if(!process.env.STRIPE_WEBHOOK_SECRET)return json(res,{error:'Webhook not configured'},503);
   const raw=await rawBody(req);
   if(!validStripeSignature(raw,req.headers['stripe-signature'],process.env.STRIPE_WEBHOOK_SECRET))return json(res,{error:'signature'},400);
   let event;try{event=JSON.parse(raw)}catch{return json(res,{error:'json'},400);}
-  if(event.livemode!==false)return json(res,{error:'Only sandbox events accepted'},400);
+  if(event.livemode!==stripeLivemode(paymentConfig.mode))return json(res,{error:'Wrong payment environment'},400);
   const obj=event.data?.object||{};
+  if(['checkout.session.completed','checkout.session.async_payment_succeeded','invoice.paid','invoice.payment_failed','customer.subscription.created','customer.subscription.updated','customer.subscription.deleted'].includes(event.type)&&obj.livemode!==event.livemode)return json(res,{error:'Wrong object environment'},400);
   if(event.type.startsWith('customer.subscription.')){
-   const uid=db.prepare('SELECT id FROM users WHERE stripe_subscription_id=?').get(obj.id)?.id||obj.metadata?.uid;
-   if(uid)syncSubscription(uid,obj);
+   const uid=db.prepare('SELECT id FROM users WHERE stripe_subscription_id=? AND stripe_mode=?').get(obj.id,paymentConfig.mode)?.id||obj.metadata?.uid;
+   if(uid){try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(obj.id));syncSubscription(uid,sub);}catch{return json(res,{error:'Subscription sync failed'},502);}}
   }else if(event.type==='checkout.session.completed'||event.type==='checkout.session.async_payment_succeeded'){
    const uid=obj.metadata?.uid||obj.client_reference_id,subId=typeof obj.subscription==='string'?obj.subscription:null;
-   if(obj.payment_status==='paid'&&uid&&subId){referrals.completeCheckout(obj);try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));syncSubscription(uid,sub,true);referrals.qualifyPayment(uid,sub,obj);}catch(e){console.error('Stripe checkout sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
+   if(obj.payment_status==='paid'&&uid&&subId){try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));confirmCheckout(uid,obj,sub);}catch(e){console.error('Stripe checkout sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
   }else if(event.type==='invoice.paid'||event.type==='invoice.payment_failed'){
    const invoiceSubscription=obj.parent?.subscription_details?.subscription||obj.subscription;const subId=typeof invoiceSubscription==='string'?invoiceSubscription:invoiceSubscription?.id;
    if(event.type==='invoice.paid')referrals.settleInvoice(obj);
-   if(subId){try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));const account=db.prepare('SELECT id FROM users WHERE stripe_subscription_id=?').get(subId);const uid=account?.id||sub.metadata?.uid;if(uid){syncSubscription(uid,sub,event.type==='invoice.paid');if(event.type==='invoice.paid')referrals.qualifyPayment(uid,sub,obj);}}catch(e){console.error('Stripe invoice sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
+   if(subId){try{const sub=await stripeGet('subscriptions/'+encodeURIComponent(subId));const account=db.prepare('SELECT id FROM users WHERE stripe_subscription_id=? AND stripe_mode=?').get(subId,paymentConfig.mode);const uid=account?.id||sub.metadata?.uid;if(uid){if((typeof obj.customer==='string'?obj.customer:obj.customer?.id)!==sub.customer)throw Error('Invoice owner mismatch');const synced=syncSubscription(uid,sub,event.type==='invoice.paid'&&obj.status==='paid');if(synced&&event.type==='invoice.paid')referrals.qualifyPayment(uid,sub,obj);}}catch(e){console.error('Stripe invoice sync:',e.message);return json(res,{error:'Subscription sync failed'},502);}}
   }
   return json(res,{received:true});
  }
@@ -111,7 +162,7 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
  const b=await body(req),email=String(b.email||'').trim().toLowerCase();if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)||(String(b.password||'').length<10||String(b.password||'').length>200))return json(res,{error:'credentials'},400);
  const ip=String(req.headers['x-forwarded-for']||req.socket.remoteAddress||'').split(',')[0].trim(),rateKey='auth:'+ip+':'+email,l=limits.get(rateKey)||{n:0,t:Date.now()};if(Date.now()-l.t>600000){l.n=0;l.t=Date.now();}limits.set(rateKey,l);if(++l.n>12)return json(res,{error:'rate'},429);
  let account=db.prepare('SELECT * FROM users WHERE email=?').get(email);
- if(b.mode==='register'){if(account)return json(res,{error:'exists'},409);const salt=randomBytes(16).toString('hex'),id=randomBytes(16).toString('hex');db.prepare('INSERT INTO users(id,email,hash,salt,ref,referred) VALUES(?,?,?,?,?,?)').run(id,email,scryptSync(b.password,salt,64).toString('hex'),salt,randomBytes(8).toString('hex'),String(b.ref||'').slice(0,32));grantReferral(db,id,b.ref);account=db.prepare('SELECT * FROM users WHERE id=?').get(id);}else if(!account||!timingSafeEqual(Buffer.from(account.hash,'hex'),scryptSync(b.password,account.salt,64)))return json(res,{error:'credentials'},401);
+ if(b.mode==='register'){if(account)return json(res,{error:'exists'},409);const salt=randomBytes(16).toString('hex'),id=randomBytes(16).toString('hex');db.prepare('INSERT INTO users(id,email,hash,salt,ref,referred,stripe_mode) VALUES(?,?,?,?,?,?,?)').run(id,email,scryptSync(b.password,salt,64).toString('hex'),salt,randomBytes(8).toString('hex'),String(b.ref||'').slice(0,32),paymentConfig.mode);grantReferral(db,id,b.ref,paymentConfig.mode);account=db.prepare('SELECT * FROM users WHERE id=?').get(id);}else if(!account||!timingSafeEqual(Buffer.from(account.hash,'hex'),scryptSync(b.password,account.salt,64)))return json(res,{error:'credentials'},401);
  const token=randomBytes(32).toString('hex');db.prepare('INSERT INTO sessions VALUES(?,?,?)').run(token,account.id,Date.now()+30*86400000);res.setHeader('Set-Cookie',`session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=2592000${process.env.NODE_ENV==='production'?'; Secure':''}`);return json(res,{user:safe(account)});}
  if(url.pathname==='/api/logout'&&req.method==='POST'){const token=(req.headers.cookie||'').match(/session=([a-f0-9]+)/)?.[1];if(token)db.prepare('DELETE FROM sessions WHERE token=?').run(token);res.setHeader('Set-Cookie','session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0');return json(res,{ok:true});}
  if(url.pathname==='/api/draft'){if(!u)return json(res,{error:'auth'},401);if(req.method==='POST'){const b=await body(req);db.prepare('UPDATE users SET draft=? WHERE id=?').run(JSON.stringify(b),u.id);return json(res,{ok:true});}return json(res,{draft:u.draft?JSON.parse(u.draft):null});}
@@ -119,20 +170,31 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   if(!u)return json(res,{error:'auth'},401);
   if(hasAccess(u))return json(res,{error:'Active subscription already exists. Use your account to manage it.'},409);
   const b=await body(req);try{checkoutPrice(b.plan,b.language);}catch{return json(res,{error:'Invalid plan or language'},400);}
-  let reward;
+  if(checkoutBusy.has(u.id))return json(res,{error:'A fizetés előkészítése már folyamatban van. Próbáld újra néhány másodperc múlva.'},409);
+  checkoutBusy.add(u.id);
+  let reward,submitted=false;
   try{
+   const pending=await resumePending(u.id,b.plan,b.language||'en');
+   if(pending?.url)return json(res,pending);
+   if(pending?.subscribed||pending?.pending)return json(res,{error:'A korábbi fizetés vagy előfizetés még folyamatban van. Ellenőrizd a fiókod állapotát.'},409);
+   const existing=db.prepare('SELECT * FROM users WHERE id=?').get(u.id);
+   if(existing.stripe_mode===paymentConfig.mode&&existing.stripe_subscription_id){const current=await stripeGet('subscriptions/'+encodeURIComponent(existing.stripe_subscription_id));syncSubscription(u.id,current);if(['active','trialing','past_due','unpaid','paused'].includes(current.status))return json(res,{error:'Meglévő előfizetésed van. A fiókodban kezelheted a megújulást.'},409);}
    reward=await referrals.reserveCheckout(u.id,b.plan);if(reward?.url)return json(res,{url:reward.url,sessionId:reward.sessionId});
    const configuredOrigin=String(process.env.APP_URL||'').trim().replace(/\/$/,''),requestOrigin=(req.headers['x-forwarded-proto']||'https')+'://'+req.headers.host,origin=/^https?:\/\//i.test(configuredOrigin)?configuredOrigin:requestOrigin;
    const form=new URLSearchParams({'mode':'subscription','line_items[0][quantity]':'1','customer_email':u.email,'success_url':origin+'/?checkout=success&session_id={CHECKOUT_SESSION_ID}','cancel_url':origin+'/?checkout=cancelled','client_reference_id':u.id,'metadata[uid]':u.id,'metadata[plan]':b.plan,'subscription_data[metadata][uid]':u.id,'subscription_data[metadata][plan]':b.plan});
-   applyCheckoutPrice(form,b.plan,b.language);
+   grantReferral(db,u.id,u.referred,paymentConfig.mode);
+   applyCheckoutPrice(form,b.plan,b.language,{mode:paymentConfig.mode,monthlyPriceId:paymentConfig.monthlyPriceId,introPriceId:paymentConfig.introPriceId});
+   form.set('integration_identifier','chypervitalize_'+Array.from(randomBytes(8),value=>String.fromCharCode(97+value%26)).join(''));
+   form.set('subscription_data[billing_mode][type]','flexible');
    if(reward){form.set('discounts[0][coupon]',reward.coupon);form.set('metadata[referral_reward]',reward.row.invitee);}
-   const headers={Authorization:'Bearer '+process.env.STRIPE_SECRET_KEY,'Content-Type':'application/x-www-form-urlencoded'};
-   if(reward)headers['Idempotency-Key']='referral-checkout-'+reward.row.invitee+'-'+b.language+'-'+reward.row.checkout_attempt;
-   const sr=await fetch('https://api.stripe.com/v1/checkout/sessions',{method:'POST',headers,body:form,signal:AbortSignal.timeout(15000)}),session=await sr.json();
-   if(!sr.ok)throw Error(session?.error?.message||'stripe');
-   if(reward)referrals.recordCheckout(reward.row.invitee,session);
+   const attempt=randomBytes(16).toString('hex');
+   const pendingRequest={attempt,form:JSON.stringify(Object.fromEntries(form))};
+   db.prepare('INSERT INTO checkout_pending(uid,stripe_mode,plan,language,attempt,form) VALUES(?,?,?,?,?,?)').run(u.id,paymentConfig.mode,b.plan,b.language||'en',attempt,pendingRequest.form);
+   submitted=true;
+   const session=await createPendingSession(u.id,pendingRequest);
+   recordPending(u.id,session);
    return json(res,{url:session.url,sessionId:session.id});
-  }catch(e){if(reward)referrals.releaseCheckout(reward.row.invitee);console.error('Stripe referral checkout:',e.message);return json(res,{error:'Checkout could not be prepared. Please try again.'},502);}
+  }catch(e){if(reward&&!submitted)referrals.releaseCheckout(reward.row.invitee);console.error('Stripe checkout:',e.message);return json(res,{error:'Checkout could not be prepared. Please try again.'},502);}finally{checkoutBusy.delete(u.id);}
  }
 
  if(url.pathname==='/api/checkout-status'&&req.method==='POST'){
@@ -140,7 +202,7 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   if(!process.env.STRIPE_SECRET_KEY)return json(res,{error:'Payments not configured'},503);
   const b=await body(req),id=String(b.sessionId||'');
   if(id&&!/^cs_(test_|live_)?[A-Za-z0-9]+$/.test(id))return json(res,{error:'session'},400);
-  const headers={Authorization:'Bearer '+process.env.STRIPE_SECRET_KEY};
+  const headers={Authorization:'Bearer '+paymentConfig.key,'Stripe-Version':stripeApiVersion};
   let session;
   if(id){
    const sr=await fetch('https://api.stripe.com/v1/checkout/sessions/'+encodeURIComponent(id),{headers,signal:AbortSignal.timeout(15000)});
@@ -149,18 +211,17 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
    // Recover recent purchases made with an older return URL lacking a session ID.
    const sr=await fetch('https://api.stripe.com/v1/checkout/sessions?limit=100',{headers,signal:AbortSignal.timeout(15000)});
    const recent=await sr.json();if(!sr.ok)return json(res,{error:'stripe'},502);
-   session=recent.data?.find(x=>x.client_reference_id===u.id&&x.metadata?.uid===u.id&&x.payment_status==='paid'&&x.status==='complete');
+   session=recent.data?.find(x=>x.livemode===stripeLivemode(paymentConfig.mode)&&x.client_reference_id===u.id&&x.metadata?.uid===u.id&&x.payment_status==='paid'&&x.status==='complete');
    if(!session)return json(res,{user:safe(u),paid:false});
   }
   if(session.client_reference_id!==u.id||session.metadata?.uid!==u.id)return json(res,{error:'access'},403);
+  try{requireStripeObject(session,paymentConfig.mode);}catch{return json(res,{error:'Wrong payment environment'},400);}
   if(session.payment_status!=='paid'||session.status!=='complete')return json(res,{user:safe(u),paid:false});
   const plan=session.metadata?.plan;
   if(!['day','week','month'].includes(plan))return json(res,{error:'plan'},400);
   if(!session.subscription)return json(res,{error:'subscription'},502);
-  referrals.completeCheckout(session);
   const sub=await stripeGet('subscriptions/'+encodeURIComponent(session.subscription));
-  syncSubscription(u.id,sub,true);
-  referrals.qualifyPayment(u.id,sub,session);
+  if(!confirmCheckout(u.id,session,sub))return json(res,{error:'A newer subscription already exists'},409);
   db.prepare('UPDATE users SET plan=? WHERE id=?').run(plan,u.id);
   const account=db.prepare('SELECT * FROM users WHERE id=?').get(u.id);
   return json(res,{user:safe(account),paid:hasAccess(account)});
@@ -297,3 +358,5 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
  if(url.pathname.startsWith('/api/'))return json(res,{error:'Not found'},404);
  const path=url.pathname==='/'?'/index.html':url.pathname;const portraitMatch=path.match(/^\/chypermax_portraits_9\/person-([1-9])\.png$/);const portrait=!!portraitMatch;if(!portrait&&!['/withdrawal.html','/withdrawal.js','/withdrawals-admin.html','/withdrawals-admin.js','/legal-forms.css','/index.html','/terms.html','/privacy.html','/contact.html','/app.js','/examples.js','/style.css','/launch-polish.css','/i18n.js','/favicon.svg','/cv-examples.js','/cv-example-locales.js','/home-refresh.css','/premium-templates.js','/premium-templates.css','/nature-landscape.jpg','/nature-landscape-4k.jpg'].includes(path)){res.writeHead(404);res.end('Not found');return;}if(portrait){const file=join(root,'public','chypermax_portraits_9',`person-${portraitMatch[1]}.png`);if(!existsSync(file)){res.writeHead(404,{'Content-Type':'text/plain'});res.end('Portrait missing');return;}const img=readFileSync(file);res.writeHead(200,{'Content-Type':'image/png','Content-Length':img.length,'Cache-Control':'no-store'});res.end(img);return;}res.setHeader('Cache-Control','no-cache');res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg'})[extname(path)]);res.end(readFileSync(join(root,'public',path)));
  }catch(e){if(!res.headersSent)json(res,{error:'server'},500);else res.end();console.error(e.message);}}).listen(process.env.PORT||3000,'0.0.0.0');
+
+
