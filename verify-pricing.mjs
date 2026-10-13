@@ -17,6 +17,7 @@ for(const mode of ['test','live']){
  assert.equal(form.get('line_items[1][quantity]'),'1');
  assert.equal(form.get('subscription_data[trial_period_days]'),'7');
  assert.equal(form.get('locale'),'hu');
+ assert.equal(form.get('managed_payments[enabled]'),'false');
  assert.equal(form.get('adaptive_pricing[enabled]'),'false');
  assert.equal(form.get('metadata[language]'),'hu');
  if(mode==='live'){
@@ -33,6 +34,8 @@ for(const mode of ['test','live']){
  }
  applyCheckoutPrice(form,'month','en',options);
  assert.equal(form.get('mode'),'subscription');
+ assert.equal(form.get('managed_payments[enabled]'),'false');
+ assert.equal(form.get('adaptive_pricing[enabled]'),'false');
  assert.equal(form.has('subscription_data[trial_period_days]'),false);
  assert.equal(Array.from(form.keys()).some(key=>key.startsWith('line_items[1]')),false);
 }

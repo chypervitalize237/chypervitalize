@@ -15,6 +15,10 @@ globalThis.fetch=async(input,options={})=>{
  if(route==='checkout/sessions'&&options.method==='POST'){
   const form=Object.fromEntries(options.body),key=options.headers['Idempotency-Key'];
   state.createRequests??=[];state.createRequests.push({key,form});
+  // Mirror the live account's default that rejected fixed-USD Checkout.
+  if(form['managed_payments[enabled]']!=='false'&&form['adaptive_pricing[enabled]']==='false'){
+   save();return respond({error:{type:'invalid_request_error',param:'adaptive_pricing[enabled]',message:'Managed Payments requires Adaptive Pricing'}},400);
+  }
   const failure=state.createFailures?.shift();
   if(failure?.status){save();return respond({error:{type:failure.type||'invalid_request_error',code:failure.code||'parameter_invalid',param:'locale'}},failure.status);}
   const cached=state.idempotency?.[key];

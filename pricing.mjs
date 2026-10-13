@@ -47,6 +47,9 @@ export function applyCheckoutPrice(form,plan,language='en',{mode=process.env.STR
    }
  }
  form.set('locale',price.locale);
+ // Keep this direct, fixed-USD integration independent of the account's
+ // Managed Payments default, which requires Adaptive Pricing.
+ form.set('managed_payments[enabled]','false');
  form.set('adaptive_pricing[enabled]','false');
  form.set('metadata[language]',language||'en');
  return form;
