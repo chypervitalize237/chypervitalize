@@ -9,6 +9,8 @@ import {join,extname} from 'node:path';
 import {randomBytes,scryptSync,timingSafeEqual,createHmac} from 'node:crypto';
 import {DatabaseSync,backup} from 'node:sqlite';
 import PDFDocument from 'pdfkit';
+import {ADDED_TEMPLATES} from './public/template-catalog.js';
+import {renderAdditionalPdf} from './additional-template-pdf.mjs';
 import {startAutomaticBackup} from './ops/automatic-backup.mjs';
 import {initWithdrawals,submitWithdrawal,publicWithdrawal,withdrawalReceipt,adminAuthorized,receiptPdf} from './withdrawal.mjs';
 const root=import.meta.dirname, dir=process.env.DATA_DIR||join(root,'data');mkdirSync(dir,{recursive:true});
@@ -236,7 +238,7 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
   const account=db.prepare('SELECT * FROM users WHERE id=?').get(u.id);let paidProjects=[];try{paidProjects=JSON.parse(account.paid_projects||'[]')}catch{}
   if(!hasAccess(account))return json(res,{error:'subscription'},403);
   if(!paidProjects.includes(projectKey)){paidProjects.push(projectKey);db.prepare('UPDATE users SET paid_projects=? WHERE id=?').run(JSON.stringify(paidProjects.slice(-100)),u.id);}
-  const allowed=['basic','ats','modern','executive','minimal','creative','professional','compact','elegant','tech'],style=allowed.includes(b.cvStyle)?b.cvStyle:(b.resumeType==='basic'?'basic':'ats');
+  const allowed=['basic','ats','modern','executive','minimal','creative','professional','compact','elegant','tech',...ADDED_TEMPLATES.map(x=>x.id)],style=allowed.includes(b.cvStyle)?b.cvStyle:(b.resumeType==='basic'?'basic':'ats');
   const validColor=v=>/^#[0-9a-f]{6}$/i.test(String(v||'')),bg=validColor(b.cvBackground)?String(b.cvBackground).toLowerCase():'#ffffff',accent=validColor(b.basicAccent)?String(b.basicAccent):'#74866b',accent2=validColor(b.basicAccent2)?String(b.basicAccent2):'#b49a68';
    const rgb=[1,3,5].map(i=>parseInt(bg.slice(i,i+2),16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4),darkPaper=rgb[0]*.2126+rgb[1]*.7152+rgb[2]*.0722<.179,ink=darkPaper?'#ffffff':'#252921',muted=darkPaper?'#d5dbd5':'#626960';
    const layout=b.layout&&typeof b.layout==='object'?b.layout:{},customInk=readableColor(validColor(layout.textColor)?layout.textColor:ink,bg),customHeading=validColor(layout.headingColor)?readableColor(layout.headingColor,bg):null;
@@ -245,6 +247,7 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
    const pdf=new PDFDocument({size:'A4',margin:48,info:{Title:(d.name||'CV')+' — Chypervitalize',Author:d.name||''}});
    pdf.registerFont('regular',fontFiles[0]);pdf.registerFont('bold',fontFiles[1]);pdf.registerFont('serif',fontFiles[2]);
    res.writeHead(200,{'Content-Type':'application/pdf','Content-Disposition':'attachment; filename=Chypervitalize-CV.pdf'});pdf.pipe(res);
+   if(renderAdditionalPdf(pdf,{style,cv:d,labels:l,layout,accent,secondary:accent2,background:bg})){pdf.end();return;}
   const left=style==='minimal'?62:(style==='professional'||style==='tech'?66:48),right=pdf.page.width-48,width=right-left,contact=[d.email,d.phone,d.city,d.link].filter(Boolean).join('  •  ');
   const palette={modern:['#243b60','#92b6dc'],creative:['#f0e4ed','#56394f'],tech:['#123a31','#bd9a55'],compact:['#13283a','#ad734b'],professional:['#1d2722','#a55f3a'],elegant:['#b6252c','#b6252c']}[style]||[accent,accent2];
   const decoration=b.customAccent?accent:palette[0],decoration2=b.customAccent2?accent2:palette[1],onDecoration=readableColor('#ffffff',decoration);
@@ -356,7 +359,8 @@ http.createServer(async(req,res)=>{res.setHeader('X-Content-Type-Options','nosni
    pdf.end();return;
  }
  if(url.pathname.startsWith('/api/'))return json(res,{error:'Not found'},404);
- const path=url.pathname==='/'?'/index.html':url.pathname;const portraitMatch=path.match(/^\/chypermax_portraits_9\/person-([1-9])\.png$/);const portrait=!!portraitMatch;if(!portrait&&!['/withdrawal.html','/withdrawal.js','/withdrawals-admin.html','/withdrawals-admin.js','/legal-forms.css','/index.html','/terms.html','/privacy.html','/contact.html','/app.js','/examples.js','/style.css','/launch-polish.css','/i18n.js','/favicon.svg','/cv-examples.js','/cv-example-locales.js','/home-refresh.css','/premium-templates.js','/premium-templates.css','/nature-landscape.jpg','/nature-landscape-4k.jpg'].includes(path)){res.writeHead(404);res.end('Not found');return;}if(portrait){const file=join(root,'public','chypermax_portraits_9',`person-${portraitMatch[1]}.png`);if(!existsSync(file)){res.writeHead(404,{'Content-Type':'text/plain'});res.end('Portrait missing');return;}const img=readFileSync(file);res.writeHead(200,{'Content-Type':'image/png','Content-Length':img.length,'Cache-Control':'no-store'});res.end(img);return;}res.setHeader('Cache-Control','no-cache');res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg'})[extname(path)]);res.end(readFileSync(join(root,'public',path)));
+ const path=url.pathname==='/'?'/index.html':url.pathname;const portraitMatch=path.match(/^\/chypermax_portraits_9\/person-([1-9])\.png$/);const portrait=!!portraitMatch;if(!portrait&&!['/withdrawal.html','/withdrawal.js','/withdrawals-admin.html','/withdrawals-admin.js','/legal-forms.css','/index.html','/terms.html','/privacy.html','/contact.html','/app.js','/examples.js','/style.css','/launch-polish.css','/i18n.js','/favicon.svg','/cv-examples.js','/cv-example-locales.js','/home-refresh.css','/premium-templates.js','/premium-templates.css','/additional-templates.js','/additional-templates.css','/template-catalog.js','/nature-landscape.jpg','/nature-landscape-4k.jpg'].includes(path)){res.writeHead(404);res.end('Not found');return;}if(portrait){const file=join(root,'public','chypermax_portraits_9',`person-${portraitMatch[1]}.png`);if(!existsSync(file)){res.writeHead(404,{'Content-Type':'text/plain'});res.end('Portrait missing');return;}const img=readFileSync(file);res.writeHead(200,{'Content-Type':'image/png','Content-Length':img.length,'Cache-Control':'no-store'});res.end(img);return;}res.setHeader('Cache-Control','no-cache');res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg'})[extname(path)]);res.end(readFileSync(join(root,'public',path)));
  }catch(e){if(!res.headersSent)json(res,{error:'server'},500);else res.end();console.error(e.message);}}).listen(process.env.PORT||3000,'0.0.0.0');
+
 
 

@@ -86,7 +86,7 @@ button:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid #28
 .cv-fit .premium-midnight-modern .premium-columns{min-height:735px!important}
 .footer-col a{display:block;font-size:13px;line-height:1.7;margin-top:8px;color:inherit;text-decoration:none}.footer-col a:hover{text-decoration:underline}
 .auth-legal-note{font-size:12px;line-height:1.7;color:#244f63}.auth-legal-note a{color:#1e5a74;text-decoration:underline}
-.workspace .cv-paper.user-custom:not(.premium-cv) section>h3{color:var(--user-heading,var(--readable-heading,#264c3d))!important}
+.workspace .cv-paper.user-custom:not(.premium-cv):where(:not(.additional-cv)) section>h3{color:var(--user-heading,var(--readable-heading,#264c3d))!important}
 .workspace .premium-cv.custom-heading .premium-main .premium-name{color:var(--user-heading)!important}
 .workspace .premium-cv.custom-heading .premium-head-midnight .premium-name,.workspace .premium-cv.custom-heading .premium-head-monaco .premium-name{color:#fff!important}
 .workspace .premium-cv.custom-heading .premium-rail .premium-section>h3{color:inherit!important}
@@ -192,17 +192,17 @@ html,body{max-width:100%;overflow-x:clip}
 .basic-design-controls .color-control .color-strength{display:grid;gap:5px;margin:6px 0 14px;font-size:12px}
 .color-strength input[type=range]{width:100%;min-height:32px;padding:0;accent-color:#24634e}
 /* Shared defaults for the two classic papers; no container-specific typography. */
-#app .cv-fit .cv-paper:not(.premium-cv){font:11px/1.7 Arial,sans-serif!important;color:var(--user-ink,#282b27)!important;background:var(--cv-paper-bg,#fff)!important;padding:34px 28px!important;border:0!important;border-radius:0!important;text-align:left!important;letter-spacing:normal!important}
-#app .cv-fit .cv-paper:not(.premium-cv) :is(h2,h3,p,strong,small){color:inherit!important;text-shadow:none!important}
-#app .cv-fit .cv-paper:not(.premium-cv) h2{font:400 27px/1.3 Georgia,serif!important;letter-spacing:.3px!important;padding:0!important;margin:0!important;color:var(--user-heading,inherit)!important}
-#app .cv-fit .cv-paper:not(.premium-cv) h3{font:600 10px/1.6 Georgia,serif!important;letter-spacing:1.6px!important;text-transform:uppercase!important;text-align:center!important;border:0!important;border-bottom:1px solid var(--user-accent-two,#d0d4ca)!important;padding:0 0 8px!important;margin:22px 0 12px!important;color:var(--user-heading,inherit)!important}
-#app .cv-fit .cv-paper:not(.premium-cv) p{font:9px/1.7 Arial,sans-serif!important;padding:0!important;margin:0!important;letter-spacing:normal!important}
-#app .cv-fit .cv-paper:not(.premium-cv) strong{font:700 10px/1.7 Arial,sans-serif!important}
-#app .cv-fit .cv-paper:not(.premium-cv) small{font:8px/1.7 Arial,sans-serif!important}
-#app .cv-fit .cv-paper:not(.premium-cv) .cv-head{display:block!important;text-align:center!important;padding:0 0 8px!important;border:0!important;background:var(--user-accent,transparent)!important;grid-template-columns:none!important}
-#app .cv-fit .cv-paper:not(.premium-cv) .cv-title{font-size:10px!important;letter-spacing:1px!important;margin:8px 0 0!important}
-#app .cv-fit .cv-paper:not(.premium-cv) .cv-contact{font-size:8px!important;color:inherit!important;margin:10px 0!important}
-#app .cv-fit .cv-paper:not(.premium-cv)>section{background:transparent!important;padding:0!important;margin:0!important;border:0!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)){font:11px/1.7 Arial,sans-serif!important;color:var(--user-ink,#282b27)!important;background:var(--cv-paper-bg,#fff)!important;padding:34px 28px!important;border:0!important;border-radius:0!important;text-align:left!important;letter-spacing:normal!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) :is(h2,h3,p,strong,small){color:inherit!important;text-shadow:none!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) h2{font:400 27px/1.3 Georgia,serif!important;letter-spacing:.3px!important;padding:0!important;margin:0!important;color:var(--user-heading,inherit)!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) h3{font:600 10px/1.6 Georgia,serif!important;letter-spacing:1.6px!important;text-transform:uppercase!important;text-align:center!important;border:0!important;border-bottom:1px solid var(--user-accent-two,#d0d4ca)!important;padding:0 0 8px!important;margin:22px 0 12px!important;color:var(--user-heading,inherit)!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) p{font:9px/1.7 Arial,sans-serif!important;padding:0!important;margin:0!important;letter-spacing:normal!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) strong{font:700 10px/1.7 Arial,sans-serif!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) small{font:8px/1.7 Arial,sans-serif!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) .cv-head{display:block!important;text-align:center!important;padding:0 0 8px!important;border:0!important;background:var(--user-accent,transparent)!important;grid-template-columns:none!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) .cv-title{font-size:10px!important;letter-spacing:1px!important;margin:8px 0 0!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) .cv-contact{font-size:8px!important;color:inherit!important;margin:10px 0!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv))>section{background:transparent!important;padding:0!important;margin:0!important;border:0!important}
 #app .cv-fit .cv-paper.basic-cv{padding:0!important}
 #app .cv-fit .basic-cv .basic-head{padding:28px 30px!important;background:var(--basic-accent,#dbe8df)!important;color:var(--on-user-accent,#282b27)!important;display:flex!important;border:0!important;text-align:left!important}
 #app .cv-fit .basic-cv .basic-body{display:grid!important;grid-template-columns:30% minmax(0,1fr)!important}
@@ -216,14 +216,14 @@ html,body{max-width:100%;overflow-x:clip}
 #app .cv-fit .basic-cv.basic-side-right .basic-body>main{grid-column:1;grid-row:1}
 #app .cv-fit .cv-paper.premium-architectural{padding-left:0!important}
 #app .cv-fit .cv-paper.premium-cv{border:0!important}
-#app .cv-fit .cv-paper:not(.premium-cv) *{color:inherit!important}
-#app .cv-fit .cv-paper:not(.premium-cv) section{padding:0!important;margin:0 0 20px!important;background:transparent!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) *{color:inherit!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) section{padding:0!important;margin:0 0 20px!important;background:transparent!important}
 #app .cv-fit .cv-paper.basic-cv .basic-body>aside{color:var(--on-secondary,#fff)!important}
-#app .cv-fit .cv-paper:not(.premium-cv) .cv-entry{margin:0 0 13px!important}
-#app .cv-fit .cv-paper:not(.premium-cv) .cv-entry>div{display:flex!important;justify-content:space-between!important;align-items:baseline!important;flex-wrap:wrap!important;gap:10px!important}
-#app .cv-fit .cv-paper:not(.premium-cv) .cv-org{margin:4px 0!important;font-style:italic!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) .cv-entry{margin:0 0 13px!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) .cv-entry>div{display:flex!important;justify-content:space-between!important;align-items:baseline!important;flex-wrap:wrap!important;gap:10px!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)) .cv-org{margin:4px 0!important;font-style:italic!important}
 #app .cv-fit .cv-paper.basic-cv .basic-entry{font-size:11px!important}
-#app .cv-fit .cv-paper:not(.premium-cv).custom-serif :is(h2,h3,p,strong,small){font-family:Georgia,serif!important}
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)).custom-serif :is(h2,h3,p,strong,small){font-family:Georgia,serif!important}
 @media(max-width:520px){#app .cv-fit .premium-executive-gold .premium-gold-frame{padding:25px 20px!important}}
 #app .cv-fit .cv-paper{text-align:left!important}
 #app .cv-fit .cv-paper.basic-cv .basic-head{height:auto!important;min-height:0!important;align-items:center!important}
@@ -242,9 +242,10 @@ html,body{max-width:100%;overflow-x:clip}
 .referral-status{font-size:13px;line-height:1.8}
 .referral-checkout-note{padding:12px;border-radius:10px;background:#e4f5e8;color:#173f35;font-size:14px}
 /* Center the portrait above the centered identity in the classic ATS example. */
-#app .cv-fit .cv-paper:not(.premium-cv):not(.basic-cv) .cv-head .cv-photo,
-.example-modal-sheet .cv-paper:not(.premium-cv):not(.basic-cv) .cv-head .cv-photo{
+#app .cv-fit .cv-paper:not(.premium-cv):where(:not(.additional-cv)):not(.basic-cv) .cv-head .cv-photo,
+.example-modal-sheet .cv-paper:not(.premium-cv):where(:not(.additional-cv)):not(.basic-cv) .cv-head .cv-photo{
  position:static!important;float:none!important;display:block!important;
  width:105px!important;height:118px!important;margin:0 auto 16px!important;
  object-fit:cover!important;
 }
+

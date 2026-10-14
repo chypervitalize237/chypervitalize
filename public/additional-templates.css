@@ -1,0 +1,231 @@
+/* Additional papers are a separate family. Keep every rule beneath its root. */
+/* Legacy page-level header/main backgrounds must not tint CV documents. */
+.cv-paper.additional-cv>.additional-head{background:var(--add-head-bg)!important}
+.cv-paper.additional-cv.additional-rose>.additional-head{background:var(--add-panel)!important}
+.cv-paper.additional-cv>.additional-main{background:transparent!important}
+.cv-paper.additional-cv{
+  position:relative;
+  isolation:isolate;
+  width:100%;
+  min-height:877px;
+  margin:0;
+  padding:var(--add-top) var(--add-pad) var(--add-bottom);
+  border:0;
+  border-radius:0;
+  background:var(--add-paper,#fff);
+  color:var(--add-ink,#263238);
+  font-family:var(--add-font,Arial,sans-serif);
+  font-size:var(--add-text-size,12px);
+  line-height:var(--add-line-height,1.5);
+  overflow:visible;
+  overflow-wrap:anywhere;
+  text-align:left;
+  box-shadow:0 3px 12px #1c261409;
+}
+.additional-cv *{box-sizing:border-box}
+.additional-cv .premium-head{height:auto;min-height:0;display:flex;align-items:center;gap:22px;margin:0 0 var(--add-header-gap);padding:0;border:0;background:var(--add-head-bg);color:var(--add-head-ink)}
+.additional-cv .premium-identity{flex:1;min-width:0}
+.additional-cv .premium-name{margin:0;padding:0;font-family:var(--add-font);font-size:var(--add-name-size);font-weight:600;line-height:1.16;letter-spacing:-.025em;color:var(--add-head-heading);overflow-wrap:anywhere}
+.additional-cv .premium-title{margin:8px 0 0;padding:0;font-family:var(--add-font);font-size:calc(var(--add-text-size) + 1px);font-weight:400;line-height:1.45;letter-spacing:.025em;color:var(--add-head-ink)}
+.additional-cv .premium-contact{display:flex;flex-wrap:wrap;gap:4px 15px;list-style:none;margin:12px 0 0;padding:0;font-family:Arial,sans-serif;font-size:10px;line-height:1.5;color:var(--add-head-muted)}
+.additional-cv .premium-contact li{min-width:0;max-width:100%;overflow-wrap:anywhere}
+.additional-cv .premium-contact li+li::before{content:"";display:inline-block;width:3px;height:3px;margin:0 10px 2px 0;border-radius:50%;background:currentColor}
+.additional-cv .premium-photo{display:block;flex:0 0 auto;order:2;width:66px;height:76px;object-fit:cover}
+.additional-cv .premium-main{padding:0;min-width:0;background:transparent;color:var(--add-ink)}
+.additional-cv .premium-section{margin:0 0 var(--add-section-gap);padding:0;min-width:0;break-inside:auto}
+.additional-cv .premium-section:last-child{margin-bottom:0}
+.additional-cv .premium-section>h3{margin:0 0 10px;padding:0 0 7px;border:0;border-bottom:1px solid var(--add-rule);font-family:var(--add-font);font-size:var(--add-heading-size);font-weight:700;line-height:1.4;letter-spacing:.11em;text-align:left;text-transform:uppercase;color:var(--add-heading);break-after:avoid;overflow-wrap:anywhere}
+.additional-cv .additional-section-content{min-width:0}
+.additional-cv .premium-entry{position:relative;margin:0 0 var(--add-entry-gap);padding:0;min-width:0;break-inside:avoid}
+.additional-cv .premium-entry:last-child{margin-bottom:0}
+.additional-cv .premium-entry-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:3px 14px;min-width:0}
+.additional-cv .premium-entry h4{flex:1 1 55%;min-width:0;margin:0;padding:0;font-family:var(--add-font);font-size:calc(var(--add-text-size) + .5px);font-weight:700;line-height:1.45;color:var(--add-ink)}
+.additional-cv .premium-dates{min-width:0;max-width:100%;flex:0 1 auto;font-family:Arial,sans-serif;font-size:10px;line-height:1.45;color:var(--add-muted);text-align:right;overflow-wrap:anywhere}
+.additional-cv .premium-org{margin:3px 0 6px;padding:0;font-family:var(--add-font);font-size:calc(var(--add-text-size) - .7px);line-height:1.5;color:var(--add-muted)}
+.additional-cv .premium-org span{padding:0 2px}
+.additional-cv .premium-copy{margin:0;padding:0;font-family:var(--add-font);font-size:var(--add-text-size);line-height:var(--add-line-height);color:var(--add-ink);white-space:normal}
+.additional-cv .premium-skill-list,.additional-cv .premium-language-list{list-style:none;margin:0;padding:0;min-width:0}
+.additional-cv .premium-skill-list{display:flex;flex-wrap:wrap;gap:5px 16px}
+.additional-cv .premium-skill-list li{position:relative;min-width:0;max-width:100%;padding-inline-start:11px;font-size:var(--add-text-size);line-height:var(--add-line-height);color:var(--add-ink)}
+.additional-cv .premium-skill-list li::before{content:"";position:absolute;inset-inline-start:0;top:.62em;width:3px;height:3px;border-radius:50%;background:var(--add-marker)}
+.additional-cv .premium-language-list{display:grid;gap:7px}
+.additional-cv .premium-language-list li{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 12px;font-size:var(--add-text-size);line-height:var(--add-line-height);color:var(--add-ink)}
+.additional-cv .premium-language-list li>span:first-child{min-width:0;overflow-wrap:anywhere}
+.additional-cv .premium-language-level{display:inline-flex;gap:4px;flex:0 0 auto;color:var(--add-marker)}
+.additional-cv .premium-language-level i{width:6px;height:6px;border:1px solid currentColor;border-radius:50%}
+.additional-cv .premium-language-level i.is-filled{background:currentColor}
+.additional-cv.additional-font-serif .premium-name{font-weight:400;letter-spacing:-.015em}
+
+/* 01: traditional centered serif stationery. */
+.additional-cv.additional-classic .premium-head{flex-direction:column;gap:14px;text-align:center;padding-bottom:20px;border-bottom:1px solid var(--add-rule)}
+.additional-cv.additional-classic .premium-photo{order:0;width:58px;height:68px}
+.additional-cv.additional-classic .premium-identity{width:100%}
+.additional-cv.additional-classic .premium-name{letter-spacing:.035em}
+.additional-cv.additional-classic .premium-title{font-size:13px}
+.additional-cv.additional-classic .premium-contact{justify-content:center}
+.additional-cv.additional-classic .premium-section>h3{text-align:center;letter-spacing:.14em}
+.additional-cv.additional-classic .premium-org{font-style:italic}
+
+/* 02: narrower margins and tighter sans hierarchy, with no section rules. */
+.additional-cv.additional-compact .premium-head{gap:16px}
+.additional-cv.additional-compact .premium-name{font-weight:700;letter-spacing:-.035em}
+.additional-cv.additional-compact .premium-title{margin-top:4px;font-size:12px}
+.additional-cv.additional-compact .premium-contact{margin-top:8px;gap:3px 12px}
+.additional-cv.additional-compact .premium-section>h3{padding:0;border:0;margin-bottom:7px;letter-spacing:.075em}
+.additional-cv.additional-compact .premium-org{margin:2px 0 4px}
+.additional-cv.additional-compact .premium-photo{width:53px;height:62px}
+.additional-cv.additional-compact .premium-skill-list{gap:3px 14px}
+
+/* 03: a bold modern name and a top rule, with short section baselines. */
+.cv-paper.additional-cv.additional-line{border-top:6px solid var(--add-accent)}
+.additional-cv.additional-line .premium-name{font-weight:700;letter-spacing:-.045em}
+.additional-cv.additional-line .premium-head{padding-bottom:18px;border-bottom:1px solid var(--add-rule)}
+.additional-cv.additional-line .premium-section>h3{border:0;padding-bottom:9px;position:relative;letter-spacing:.08em}
+.additional-cv.additional-line .premium-section>h3::after{content:"";position:absolute;bottom:0;inset-inline-start:0;width:38px;height:2px;background:var(--add-secondary)}
+
+/* 04: generous folio margins, sentence-case serif headings and inset entries. */
+.additional-cv.additional-folio .premium-head{padding-bottom:19px;border-bottom:1px solid var(--add-rule)}
+.additional-cv.additional-folio .premium-title{font-style:italic;font-size:14px}
+.additional-cv.additional-folio .premium-section>h3{padding:0;border:0;text-transform:none;font-weight:400;letter-spacing:.01em;margin-bottom:11px}
+.additional-cv.additional-folio .additional-section-content{padding-inline-start:12px}
+.additional-cv.additional-folio .premium-entry h4{font-weight:700;font-size:13px}
+.additional-cv.additional-folio .premium-org{font-style:italic}
+
+/* 05: right-aligned identity and fine dividers between the career entries. */
+.additional-cv.additional-neutral .premium-head{text-align:right;flex-direction:row-reverse;padding-bottom:22px;border-bottom:2px solid var(--add-rule)}
+.additional-cv.additional-neutral .premium-name{font-weight:500;letter-spacing:-.035em}
+.additional-cv.additional-neutral .premium-title{font-size:12px;letter-spacing:.075em;text-transform:uppercase}
+.additional-cv.additional-neutral .premium-contact{justify-content:flex-end}
+.additional-cv.additional-neutral .premium-section>h3{padding:0;border:0;letter-spacing:.16em;font-size:10px}
+.additional-cv.additional-neutral .premium-entry+.premium-entry{padding-top:12px;border-top:1px solid var(--add-rule)}
+.additional-cv.additional-neutral .premium-photo{order:0}
+
+/* 06: a narrow colored margin, with inset section marks and a plain body. */
+.cv-paper.additional-cv.additional-margin{border-inline-start:10px solid var(--add-accent)}
+.additional-cv.additional-margin .premium-name{font-weight:600;letter-spacing:-.025em}
+.additional-cv.additional-margin .premium-title{color:var(--add-head-heading)}
+.additional-cv.additional-margin .premium-head{padding-bottom:20px;border-bottom:1px solid var(--add-rule)}
+.additional-cv.additional-margin .premium-section>h3{border:0;border-inline-start:3px solid var(--add-secondary);padding:2px 0 2px 11px;margin-inline-start:-14px;letter-spacing:.06em}
+
+/* 07: framed editorial masthead, large serif name, warm paper and serif titles. */
+.additional-cv.additional-editorial .premium-head{padding:23px 22px 22px;border:1px solid var(--add-secondary);border-top:4px solid var(--add-accent);gap:17px}
+.additional-cv.additional-editorial .premium-name{line-height:1.07;letter-spacing:-.035em}
+.additional-cv.additional-editorial .premium-title{font-family:Arial,sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-top:11px}
+.additional-cv.additional-editorial .premium-contact{margin-top:16px;font-size:9.5px;gap:4px 12px}
+.additional-cv.additional-editorial .premium-section>h3{font-weight:400;text-transform:none;letter-spacing:.015em;padding:0 0 7px;border-bottom:1px solid var(--add-rule)}
+.additional-cv.additional-editorial .premium-entry h4{font-size:13px}
+.additional-cv.additional-editorial .premium-org{font-style:italic}
+.additional-cv.additional-editorial .premium-photo{width:62px;height:80px}
+
+/* 08: full-width filled masthead and restrained bands on section headings. */
+.cv-paper.additional-cv.additional-slate{padding-top:0}
+.additional-cv.additional-slate .premium-head{margin-inline:calc(-1 * var(--add-pad));padding:var(--add-top) var(--add-pad) 27px;border-bottom:5px solid var(--add-secondary)}
+.additional-cv.additional-slate .premium-name{font-weight:700;letter-spacing:-.04em}
+.additional-cv.additional-slate .premium-title{font-size:12px;letter-spacing:.085em;text-transform:uppercase}
+.additional-cv.additional-slate .premium-contact{gap:5px 18px;margin-top:16px}
+.additional-cv.additional-slate .premium-photo{border:1px solid var(--add-secondary);padding:3px}
+.additional-cv.additional-slate .premium-section>h3{padding:7px 11px;background:var(--add-panel);color:var(--add-panel-heading);border:0;letter-spacing:.09em}
+
+/* 09: a centered rose profile plaque, circular portrait and paired title rules. */
+.additional-cv.additional-rose .premium-head{flex-direction:column;gap:15px;padding:24px 25px 23px;background:var(--add-panel);text-align:center;border-bottom:2px solid var(--add-accent)}
+.additional-cv.additional-rose .premium-identity{width:100%}
+.additional-cv.additional-rose .premium-title{font-family:Arial,sans-serif;font-size:11px;letter-spacing:.11em;text-transform:uppercase;margin-top:10px}
+.additional-cv.additional-rose .premium-contact{justify-content:center;font-size:9.5px;margin-top:13px}
+.additional-cv.additional-rose .premium-photo{order:0;width:66px;height:66px;border-radius:50%;border:2px solid var(--add-secondary)}
+.additional-cv.additional-rose .premium-section>h3{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px;padding:0;border:0;font-family:Arial,sans-serif;font-size:10px;font-weight:600;text-align:center;letter-spacing:.13em}
+.additional-cv.additional-rose .premium-section>h3::before,.additional-cv.additional-rose .premium-section>h3::after{content:"";flex:0 1 34px;min-width:10px;height:1px;background:var(--add-secondary)}
+.additional-cv.additional-rose .premium-org{font-style:italic}
+
+/* 10: a quiet timeline, with dates leading each milestone and no body rail. */
+.additional-cv.additional-timeline .premium-head{padding-inline-start:17px;border-inline-start:3px solid var(--add-accent);padding-block:4px}
+.additional-cv.additional-timeline .premium-name{font-weight:600;letter-spacing:-.035em}
+.additional-cv.additional-timeline .premium-title{font-size:12px;letter-spacing:.04em}
+.additional-cv.additional-timeline .premium-section>h3{border:0;padding:0;letter-spacing:.09em;margin-bottom:12px}
+.additional-cv.additional-timeline :is(.additional-experience,.additional-education,.additional-projects,.additional-awards,.additional-volunteer,.additional-certifications) .additional-section-content{border-inline-start:1px solid var(--add-rule);margin-inline-start:4px;padding-inline-start:18px}
+.additional-cv.additional-timeline .premium-entry::before{content:"";position:absolute;inset-inline-start:-22px;top:5px;width:7px;height:7px;border:2px solid var(--add-marker);border-radius:50%;background:var(--add-paper)}
+.additional-cv.additional-timeline .premium-entry-top{flex-direction:column;align-items:flex-start;gap:4px}
+.additional-cv.additional-timeline .premium-dates{order:-1;text-align:left;font-size:9.5px;letter-spacing:.025em}
+
+/* The optional two-column setting changes only section widths, preserving order. */
+.additional-cv .additional-main.additional-two-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 23px;align-content:start}
+.additional-cv .additional-two-columns>.premium-section{grid-column:1/-1}
+.additional-cv .additional-two-columns>.premium-section.additional-half{grid-column:span 1}
+.additional-cv .additional-two-columns .premium-dates{max-width:100%}
+.additional-choice-preview{height:220px;position:relative;overflow:hidden;border:1px solid #d8dfe0;background:#e6edf0;box-shadow:0 6px 18px #3331}
+.additional-choice-preview .cv-paper.additional-cv{position:absolute;top:0;width:620px;min-height:877px;margin:0;transform-origin:top left;pointer-events:none;box-shadow:none}
+@media print{
+  .cv-paper.additional-cv{min-height:0;box-shadow:none;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .additional-cv .premium-section>h3{break-after:avoid}
+  .additional-cv .premium-entry{break-inside:avoid}
+}
+
+/* 11: contact notes in a quiet serif masthead, with short heading dashes. */
+.additional-cv.additional-linen .premium-head{align-items:flex-start;padding-bottom:18px;border-bottom:1px solid var(--add-rule)}
+.additional-cv.additional-linen .premium-name{letter-spacing:.01em;line-height:1.2}
+.additional-cv.additional-linen .premium-title{margin-top:10px;font-family:Arial,sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.additional-cv.additional-linen .premium-contact{display:flex;flex-direction:column;gap:3px;margin-top:13px}
+.additional-cv.additional-linen .premium-contact li+li::before{display:none}
+.additional-cv.additional-linen .premium-section>h3{display:flex;align-items:center;gap:12px;border:0;padding:0;margin-bottom:11px;text-transform:none;font-weight:400;letter-spacing:.015em}
+.additional-cv.additional-linen .premium-section>h3::before{content:"";flex:0 0 24px;height:1px;background:var(--add-secondary)}
+.additional-cv.additional-linen .premium-org{font-style:italic}
+
+/* 12: a monochrome typographic index; numbering follows the filled section order. */
+.additional-cv.additional-index .premium-head{padding-bottom:20px;border-bottom:3px double var(--add-rule)}
+.additional-cv.additional-index .premium-name{font-weight:700;letter-spacing:.045em;text-transform:uppercase}
+.additional-cv.additional-index .premium-title{margin-top:10px;font-size:11px;letter-spacing:.13em;text-transform:uppercase}
+.additional-cv.additional-index .premium-contact{margin-top:13px}
+.additional-cv.additional-index .premium-main{counter-reset:additional-section}
+.additional-cv.additional-index .premium-section{counter-increment:additional-section}
+.additional-cv.additional-index .premium-section>h3{display:flex;align-items:baseline;gap:11px;border:0;padding:0;margin-bottom:11px;letter-spacing:.095em}
+.additional-cv.additional-index .premium-section>h3::before{content:counter(additional-section,decimal-leading-zero);flex:0 0 24px;font-size:10px;font-weight:400;letter-spacing:.03em;color:var(--add-heading)}
+
+/* 13: blue outlines frame the page and heading labels, with a two-part contact list. */
+.cv-paper.additional-cv.additional-outline::before{content:"";position:absolute;inset:18px;z-index:-1;border:1px solid var(--add-secondary);pointer-events:none}
+.additional-cv.additional-outline .premium-head{padding-bottom:20px;border-bottom:1px solid var(--add-rule)}
+.additional-cv.additional-outline .premium-name{font-weight:500;letter-spacing:.055em;text-transform:uppercase}
+.additional-cv.additional-outline .premium-title{margin-top:7px;font-size:14px;letter-spacing:.015em}
+.additional-cv.additional-outline .premium-contact{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 18px;margin-top:14px}
+.additional-cv.additional-outline .premium-contact li+li::before{display:none}
+.additional-cv.additional-outline .premium-section>h3{border:1px solid var(--add-secondary);padding:7px 11px;margin-bottom:10px;letter-spacing:.1em}
+.additional-cv.additional-outline .premium-photo{border:1px solid var(--add-secondary);padding:3px}
+
+/* 14: a serif letterhead places contacts opposite the name; dates sit below roles. */
+.additional-cv.additional-letter .premium-head{align-items:flex-start}
+.additional-cv.additional-letter .premium-identity{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:0 22px;align-items:start}
+.additional-cv.additional-letter .premium-name{grid-column:1;grid-row:1;letter-spacing:-.035em;line-height:1.16}
+.additional-cv.additional-letter .premium-title{grid-column:1;grid-row:2;margin-top:9px;font-size:13px;line-height:1.45}
+.additional-cv.additional-letter .premium-contact{grid-column:2;grid-row:1/span 2;display:flex;flex-direction:column;align-items:flex-end;gap:5px;margin:0;padding-top:4px;text-align:right}
+.additional-cv.additional-letter .premium-contact li+li::before{display:none}
+.additional-cv.additional-letter .premium-section>h3{border:0;padding:0;margin-bottom:11px;letter-spacing:.01em;text-transform:none;font-weight:700}
+.additional-cv.additional-letter .premium-entry-top{display:block}
+.additional-cv.additional-letter .premium-dates{display:block;margin-top:2px;text-align:left}
+.additional-cv.additional-letter .premium-org{font-style:italic}
+
+/* 15: an olive journal masthead and a filled summary panel, with quiet chapter marks. */
+.additional-cv.additional-journal .premium-head{padding-bottom:19px;border-bottom:3px solid var(--add-accent)}
+.additional-cv.additional-journal .premium-name{letter-spacing:.045em;text-transform:uppercase;line-height:1.16}
+.additional-cv.additional-journal .premium-title{margin-top:9px;font-size:13px;font-style:italic;letter-spacing:.01em}
+.additional-cv.additional-journal .premium-contact{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 18px;margin-top:15px}
+.additional-cv.additional-journal .premium-contact li+li::before{display:none}
+.additional-cv.additional-journal .premium-section>h3{position:relative;border:0;padding:8px 0 0;margin-bottom:11px;font-weight:400;letter-spacing:.015em;text-transform:none}
+.additional-cv.additional-journal .premium-section>h3::before{content:"";position:absolute;top:0;inset-inline-start:0;width:29px;height:2px;background:var(--add-secondary)}
+.additional-cv.additional-journal .additional-summary .additional-section-content{padding:14px;background:var(--add-panel);color:var(--add-panel-ink)}
+.additional-cv.additional-journal .additional-summary .premium-copy{color:var(--add-panel-ink)}
+.additional-cv.additional-journal .premium-org{font-style:italic}
+
+/* 16: a right-hand coral edge, a title tag and rules above each chapter. */
+.cv-paper.additional-cv.additional-edge{border-inline-end:8px solid var(--add-accent)}
+.additional-cv.additional-edge .premium-name{font-weight:700;letter-spacing:-.04em}
+.additional-cv.additional-edge .premium-title{display:inline-block;max-width:100%;margin-top:10px;padding:5px 9px;background:var(--add-panel);color:var(--add-panel-ink);font-size:11px;letter-spacing:.09em;text-transform:uppercase}
+.additional-cv.additional-edge .premium-contact{margin-top:15px}
+.additional-cv.additional-edge .premium-section>h3{border:0;border-top:1px solid var(--add-secondary);padding:8px 0 0;margin-bottom:10px;letter-spacing:.09em}
+
+/* 17: centered monochrome identity and bordered sections with compact label rows. */
+.additional-cv.additional-form .premium-head{flex-direction:column;gap:14px;text-align:center;padding-bottom:20px;border-bottom:1px solid var(--add-rule)}
+.additional-cv.additional-form .premium-identity{width:100%}
+.additional-cv.additional-form .premium-photo{order:0;width:58px;height:68px}
+.additional-cv.additional-form .premium-name{font-weight:600;letter-spacing:.075em;text-transform:uppercase}
+.additional-cv.additional-form .premium-title{margin-top:8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.additional-cv.additional-form .premium-contact{justify-content:center;margin-top:12px}
+.additional-cv.additional-form .premium-section{padding:14px;border:1px solid var(--add-rule)}
+.additional-cv.additional-form .premium-section>h3{margin:-14px -14px 12px;padding:8px 14px;border:0;border-bottom:1px solid var(--add-rule);font-size:10px;font-weight:700;letter-spacing:.12em}
