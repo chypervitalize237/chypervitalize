@@ -249,3 +249,18 @@ html,body{max-width:100%;overflow-x:clip}
  object-fit:cover!important;
 }
 
+
+/* Landing invitation stays separate from checkout and editor controls. */
+#app .referral-landing-offer{position:fixed;z-index:65;inset:auto 24px 24px auto;width:min(410px,calc(100% - 32px));max-height:calc(100dvh - 32px);overflow:auto;box-sizing:border-box;padding:26px;border:1px solid #c6d9cb;border-radius:20px;background:#fcfdf8;color:#183c31;box-shadow:0 18px 65px #173e3433;font:14px/1.55 "DM Sans",Arial,sans-serif;text-align:left;isolation:isolate}
+#app .referral-landing-offer h2{margin:14px 30px 12px 0;padding:0;border:0;color:#173e34;font:400 30px/1.1 "Libre Caslon Display",Georgia,serif;letter-spacing:0}
+#app .referral-landing-offer p{margin:0 0 12px;padding:0;color:#35594b;font:inherit;letter-spacing:0}
+#app .referral-landing-badge{display:inline-flex;align-items:center;padding:5px 12px;border-radius:30px;background:#deefac;color:#173e34;font:700 19px/1.4 "DM Sans",Arial,sans-serif}
+#app .referral-landing-close{position:absolute;top:12px;right:12px;width:40px;height:40px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:transparent;color:#35594b;font:400 27px/1 Arial,sans-serif;cursor:pointer;box-shadow:none}
+#app .referral-landing-close:hover{background:#e9f1e9}
+#app .referral-landing-offer .referral-landing-terms,.referral-invitation .referral-landing-terms{font:12px/1.5 "DM Sans",Arial,sans-serif;color:#526b5d}
+#app .referral-landing-cta{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:46px;margin:17px 0 0;padding:12px 15px;border:0;border-radius:10px;background:#1b604d;color:#fff;font:700 14px/1.4 "DM Sans",Arial,sans-serif;text-align:left;cursor:pointer;box-shadow:none;white-space:normal}
+#app .referral-landing-cta:hover{background:#174d3e}
+#app .referral-landing-later{display:block;min-height:40px;margin:5px auto -8px;padding:8px 14px;border:0;background:transparent;color:#526b5d;font:13px/1.5 "DM Sans",Arial,sans-serif;cursor:pointer;box-shadow:none}
+#app .referral-landing-offer button:focus-visible{outline:3px solid #336a9c;outline-offset:3px}
+.referral-invitation .referral-link{box-sizing:border-box;width:100%;font-size:14px;overflow-wrap:anywhere}
+@media(max-width:520px){#app .referral-landing-offer{right:16px;bottom:max(16px,env(safe-area-inset-bottom));padding:22px}#app .referral-landing-offer h2{font-size:27px}}

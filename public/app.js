@@ -31,6 +31,299 @@ state.colorStrength=normalizeStrength(stored?.colorStrength);
 state.visitCount=0;
 const params=new URLSearchParams(location.search),ref=params.get('ref');if(ref)localStorage.setItem('chypervitalize-ref',ref);const checkoutResult=params.get('checkout');let checkoutSession=params.get('session_id')||localStorage.getItem('chypervitalize-checkout-session');
 const t=k=>strings[state.lang][k],ct=k=>strings[state.cvLang][k];
+
+// Referral landing invitation: presentation only; reward qualification stays server-side.
+const referralLandingCopy={
+  "hu": {
+    "title": "Hívj meg egy barátot, és spórolj 50%-ot!",
+    "body": "Ha egy új felhasználó a meghívólinkeden keresztül regisztrál, és sikeresen kifizet egy előfizetést, te 50% kedvezményt kapsz egyetlen havi díjra.",
+    "terms": "A bevezető díjra nem érvényes. A kedvezményes havi díj után a szokásos havi díj következik.",
+    "ctaAnon": "Meghívólinket kérek",
+    "ctaMember": "Megnézem a meghívólinkemet",
+    "close": "Bezárás",
+    "later": "Most nem",
+    "linkLabel": "A meghívólinked",
+    "copy": "Link másolása"
+  },
+  "en": {
+    "title": "Invite a friend and save 50%!",
+    "body": "When a new user registers through your invitation link and successfully pays for a subscription, you earn 50% off one monthly payment.",
+    "terms": "The introductory fee is excluded. Regular monthly pricing resumes after the discounted payment.",
+    "ctaAnon": "Get my invitation link",
+    "ctaMember": "View my invitation link",
+    "close": "Close",
+    "later": "Not now",
+    "linkLabel": "Your invitation link",
+    "copy": "Copy link"
+  },
+  "de": {
+    "title": "Lade einen Freund ein und spare 50%!",
+    "body": "Wenn sich ein neuer Nutzer über deinen Einladungslink registriert und erfolgreich ein Abonnement bezahlt, erhältst du 50% Rabatt auf eine einzige Monatszahlung.",
+    "terms": "Die Einführungsgebühr ist ausgeschlossen. Nach der vergünstigten Monatszahlung gilt wieder der reguläre Monatspreis.",
+    "ctaAnon": "Meinen Einladungslink erhalten",
+    "ctaMember": "Meinen Einladungslink ansehen",
+    "close": "Schließen",
+    "later": "Jetzt nicht",
+    "linkLabel": "Dein Einladungslink",
+    "copy": "Link kopieren"
+  },
+  "fr": {
+    "title": "Invitez un ami et économisez 50% !",
+    "body": "Lorsqu’un nouvel utilisateur s’inscrit via votre lien d’invitation et règle son abonnement avec succès, vous bénéficiez de 50% de réduction sur une seule mensualité.",
+    "terms": "Le tarif de lancement est exclu. Le tarif mensuel habituel reprend après la mensualité réduite.",
+    "ctaAnon": "Obtenir mon lien d’invitation",
+    "ctaMember": "Voir mon lien d’invitation",
+    "close": "Fermer",
+    "later": "Pas maintenant",
+    "linkLabel": "Votre lien d’invitation",
+    "copy": "Copier le lien"
+  },
+  "es": {
+    "title": "¡Invita a un amigo y ahorra un 50%!",
+    "body": "Cuando un nuevo usuario se registra a través de tu enlace de invitación y paga correctamente una suscripción, tú obtienes un 50% de descuento en una sola mensualidad.",
+    "terms": "La tarifa inicial queda excluida. Tras la mensualidad con descuento, se aplica de nuevo el precio mensual habitual.",
+    "ctaAnon": "Obtener mi enlace de invitación",
+    "ctaMember": "Ver mi enlace de invitación",
+    "close": "Cerrar",
+    "later": "Ahora no",
+    "linkLabel": "Tu enlace de invitación",
+    "copy": "Copiar enlace"
+  },
+  "it": {
+    "title": "Invita un amico e risparmia il 50%!",
+    "body": "Quando un nuovo utente si registra tramite il tuo link di invito e paga con successo un abbonamento, ricevi il 50% di sconto su una sola mensilità.",
+    "terms": "La tariffa introduttiva è esclusa. Dopo la mensilità scontata, si applica nuovamente il normale prezzo mensile.",
+    "ctaAnon": "Ottieni il mio link di invito",
+    "ctaMember": "Visualizza il mio link di invito",
+    "close": "Chiudi",
+    "later": "Non ora",
+    "linkLabel": "Il tuo link di invito",
+    "copy": "Copia link"
+  },
+  "pt": {
+    "title": "Convida um amigo e poupa 50%!",
+    "body": "Quando um novo utilizador se regista através do teu link de convite e paga uma subscrição com sucesso, recebes 50% de desconto numa única mensalidade.",
+    "terms": "A tarifa introdutória está excluída. Após a mensalidade com desconto, volta a aplicar-se o preço mensal habitual.",
+    "ctaAnon": "Obter o meu link de convite",
+    "ctaMember": "Ver o meu link de convite",
+    "close": "Fechar",
+    "later": "Agora não",
+    "linkLabel": "O teu link de convite",
+    "copy": "Copiar link"
+  },
+  "nl": {
+    "title": "Nodig een vriend uit en bespaar 50%!",
+    "body": "Wanneer een nieuwe gebruiker zich via jouw uitnodigingslink registreert en met succes een abonnement betaalt, krijg jij 50% korting op één maandbetaling.",
+    "terms": "Het introductietarief is uitgesloten. Na de maandbetaling met korting geldt weer het normale maandtarief.",
+    "ctaAnon": "Mijn uitnodigingslink ontvangen",
+    "ctaMember": "Mijn uitnodigingslink bekijken",
+    "close": "Sluiten",
+    "later": "Niet nu",
+    "linkLabel": "Jouw uitnodigingslink",
+    "copy": "Link kopiëren"
+  },
+  "sk": {
+    "title": "Pozvi priateľa a ušetri 50%!",
+    "body": "Keď sa nový používateľ zaregistruje cez tvoj pozývací odkaz a úspešne zaplatí predplatné, ty získaš 50% zľavu na jednu mesačnú platbu.",
+    "terms": "Zľava sa nevzťahuje na úvodný poplatok. Po zľavnenej mesačnej platbe sa opäť účtuje bežná mesačná cena.",
+    "ctaAnon": "Získať môj pozývací odkaz",
+    "ctaMember": "Zobraziť môj pozývací odkaz",
+    "close": "Zavrieť",
+    "later": "Teraz nie",
+    "linkLabel": "Tvoj pozývací odkaz",
+    "copy": "Kopírovať odkaz"
+  },
+  "cs": {
+    "title": "Pozvi přítele a ušetři 50%!",
+    "body": "Když se nový uživatel zaregistruje přes tvůj zvací odkaz a úspěšně zaplatí předplatné, ty získáš 50% slevu na jednu měsíční platbu.",
+    "terms": "Sleva se nevztahuje na úvodní poplatek. Po zlevněné měsíční platbě se opět účtuje běžná měsíční cena.",
+    "ctaAnon": "Získat můj zvací odkaz",
+    "ctaMember": "Zobrazit můj zvací odkaz",
+    "close": "Zavřít",
+    "later": "Teď ne",
+    "linkLabel": "Tvůj zvací odkaz",
+    "copy": "Kopírovat odkaz"
+  },
+  "pl": {
+    "title": "Zaproś znajomego i oszczędź 50%!",
+    "body": "Gdy nowy użytkownik zarejestruje się przez Twój link z zaproszeniem i pomyślnie opłaci subskrypcję, otrzymasz 50% zniżki na jedną miesięczną płatność.",
+    "terms": "Zniżka nie obejmuje opłaty wprowadzającej. Po obniżonej miesięcznej płatności ponownie obowiązuje zwykła cena miesięczna.",
+    "ctaAnon": "Odbierz mój link z zaproszeniem",
+    "ctaMember": "Pokaż mój link z zaproszeniem",
+    "close": "Zamknij",
+    "later": "Nie teraz",
+    "linkLabel": "Twój link z zaproszeniem",
+    "copy": "Kopiuj link"
+  },
+  "ro": {
+    "title": "Invită un prieten și economisește 50%!",
+    "body": "Când un utilizator nou se înregistrează prin linkul tău de invitație și plătește cu succes un abonament, primești o reducere de 50% la o singură plată lunară.",
+    "terms": "Taxa introductivă este exclusă. După plata lunară redusă, se aplică din nou prețul lunar obișnuit.",
+    "ctaAnon": "Obține linkul meu de invitație",
+    "ctaMember": "Vezi linkul meu de invitație",
+    "close": "Închide",
+    "later": "Nu acum",
+    "linkLabel": "Linkul tău de invitație",
+    "copy": "Copiază linkul"
+  },
+  "hr": {
+    "title": "Pozovi prijatelja i uštedi 50%!",
+    "body": "Kada se novi korisnik registrira putem tvoje poveznice za poziv i uspješno plati pretplatu, ti dobivaš 50% popusta na jednu mjesečnu uplatu.",
+    "terms": "Popust ne vrijedi za uvodnu naknadu. Nakon snižene mjesečne uplate ponovno se primjenjuje redovna mjesečna cijena.",
+    "ctaAnon": "Preuzmi moju poveznicu za poziv",
+    "ctaMember": "Prikaži moju poveznicu za poziv",
+    "close": "Zatvori",
+    "later": "Ne sada",
+    "linkLabel": "Tvoja poveznica za poziv",
+    "copy": "Kopiraj poveznicu"
+  },
+  "sl": {
+    "title": "Povabi prijatelja in prihrani 50%!",
+    "body": "Ko se nov uporabnik registrira prek tvoje povezave za povabilo in uspešno plača naročnino, ti prejmeš 50% popusta pri enem mesečnem plačilu.",
+    "terms": "Popust ne velja za uvodno pristojbino. Po znižanem mesečnem plačilu znova velja redna mesečna cena.",
+    "ctaAnon": "Pridobi mojo povezavo za povabilo",
+    "ctaMember": "Pokaži mojo povezavo za povabilo",
+    "close": "Zapri",
+    "later": "Ne zdaj",
+    "linkLabel": "Tvoja povezava za povabilo",
+    "copy": "Kopiraj povezavo"
+  },
+  "sr": {
+    "title": "Pozovi prijatelja i uštedi 50%!",
+    "body": "Kada se novi korisnik registruje preko tvog linka za poziv i uspešno plati pretplatu, ti dobijaš 50% popusta na jednu mesečnu uplatu.",
+    "terms": "Popust ne važi za uvodnu naknadu. Posle snižene mesečne uplate ponovo se primenjuje redovna mesečna cena.",
+    "ctaAnon": "Preuzmi moj link za poziv",
+    "ctaMember": "Prikaži moj link za poziv",
+    "close": "Zatvori",
+    "later": "Ne sada",
+    "linkLabel": "Tvoj link za poziv",
+    "copy": "Kopiraj link"
+  },
+  "bg": {
+    "title": "Покани приятел и спести 50%!",
+    "body": "Когато нов потребител се регистрира чрез твоята връзка за покана и успешно плати абонамент, ти получаваш 50% отстъпка от едно месечно плащане.",
+    "terms": "Отстъпката не важи за въвеждащата такса. След намаленото месечно плащане отново се прилага редовната месечна цена.",
+    "ctaAnon": "Получи моята връзка за покана",
+    "ctaMember": "Виж моята връзка за покана",
+    "close": "Затвори",
+    "later": "Не сега",
+    "linkLabel": "Твоята връзка за покана",
+    "copy": "Копирай връзката"
+  },
+  "el": {
+    "title": "Προσκάλεσε έναν φίλο και εξοικονόμησε 50%!",
+    "body": "Όταν ένας νέος χρήστης εγγραφεί μέσω του συνδέσμου πρόσκλησής σου και πληρώσει επιτυχώς μια συνδρομή, εσύ κερδίζεις έκπτωση 50% σε μία μηνιαία πληρωμή.",
+    "terms": "Η εισαγωγική χρέωση εξαιρείται. Μετά τη μειωμένη μηνιαία πληρωμή, ισχύει ξανά η κανονική μηνιαία τιμή.",
+    "ctaAnon": "Λήψη του συνδέσμου πρόσκλησής μου",
+    "ctaMember": "Προβολή του συνδέσμου πρόσκλησής μου",
+    "close": "Κλείσιμο",
+    "later": "Όχι τώρα",
+    "linkLabel": "Ο σύνδεσμος πρόσκλησής σου",
+    "copy": "Αντιγραφή συνδέσμου"
+  },
+  "da": {
+    "title": "Invitér en ven og spar 50%!",
+    "body": "Når en ny bruger tilmelder sig via dit invitationslink og gennemfører betalingen for et abonnement, får du 50% rabat på én månedlig betaling.",
+    "terms": "Introduktionsprisen er undtaget. Efter den månedlige betaling med rabat gælder den normale månedspris igen.",
+    "ctaAnon": "Få mit invitationslink",
+    "ctaMember": "Se mit invitationslink",
+    "close": "Luk",
+    "later": "Ikke nu",
+    "linkLabel": "Dit invitationslink",
+    "copy": "Kopiér link"
+  },
+  "sv": {
+    "title": "Bjud in en vän och spara 50%!",
+    "body": "När en ny användare registrerar sig via din inbjudningslänk och genomför betalningen för en prenumeration får du 50% rabatt på en enda månadsbetalning.",
+    "terms": "Introduktionsavgiften är undantagen. Efter månadsbetalningen med rabatt gäller det ordinarie månadspriset igen.",
+    "ctaAnon": "Hämta min inbjudningslänk",
+    "ctaMember": "Visa min inbjudningslänk",
+    "close": "Stäng",
+    "later": "Inte nu",
+    "linkLabel": "Din inbjudningslänk",
+    "copy": "Kopiera länk"
+  },
+  "no": {
+    "title": "Inviter en venn og spar 50%!",
+    "body": "Når en ny bruker registrerer seg via invitasjonslenken din og fullfører betalingen for et abonnement, får du 50% rabatt på én månedsbetaling.",
+    "terms": "Introduksjonsprisen er unntatt. Etter månedsbetalingen med rabatt gjelder den vanlige månedsprisen igjen.",
+    "ctaAnon": "Hent invitasjonslenken min",
+    "ctaMember": "Se invitasjonslenken min",
+    "close": "Lukk",
+    "later": "Ikke nå",
+    "linkLabel": "Invitasjonslenken din",
+    "copy": "Kopier lenke"
+  },
+  "fi": {
+    "title": "Kutsu ystävä ja säästä 50%!",
+    "body": "Kun uusi käyttäjä rekisteröityy kutsulinkkisi kautta ja maksaa tilauksen onnistuneesti, sinä saat 50% alennuksen yhdestä kuukausimaksusta.",
+    "terms": "Alennus ei koske aloitusmaksua. Alennetun kuukausimaksun jälkeen normaali kuukausihinta tulee jälleen voimaan.",
+    "ctaAnon": "Hae kutsulinkkini",
+    "ctaMember": "Näytä kutsulinkkini",
+    "close": "Sulje",
+    "later": "Ei nyt",
+    "linkLabel": "Kutsulinkkisi",
+    "copy": "Kopioi linkki"
+  }
+};
+const referralLandingSeenKey='chypervitalize-referral-offer-seen-v1';
+const referralLandingBlockedEntry=Boolean(ref||checkoutResult||checkoutSession||params.has('session_id')||params.get('account')==='1');
+let referralLandingVisible=false,referralLandingDone=false,referralLandingTimer=0,pendingReferralInvitation=false;
+const referralLandingText=()=>referralLandingCopy[state.lang]||referralLandingCopy.en;
+function markReferralLandingSeen(){
+ referralLandingDone=true;
+ try{sessionStorage.setItem(referralLandingSeenKey,'1');}catch{}
+}
+function dismissReferralLanding(markSeen=true){
+ clearTimeout(referralLandingTimer);referralLandingTimer=0;
+ referralLandingVisible=false;
+ if(markSeen)markReferralLandingSeen();
+ document.getElementById('referral-landing-offer')?.remove();
+}
+function referralLandingEligible(){
+ if(referralLandingBlockedEntry||referralLandingDone||state.route!=='home'||document.getElementById('modal')?.open)return false;
+ if(state.pendingAccount||state.pendingCheckout||state.pendingDownload||state.paymentResume||state.checkoutBusy)return false;
+ try{if(sessionStorage.getItem(referralLandingSeenKey)==='1')return false;}catch{}
+ return true;
+}
+function referralLandingMarkup(){
+ if(!referralLandingVisible||state.route!=='home')return '';
+ const c=referralLandingText();
+ return `<aside id="referral-landing-offer" class="referral-landing-offer" aria-labelledby="referral-landing-title"><button type="button" class="referral-landing-close" data-action="dismiss-referral-offer" aria-label="${esc(c.close)}">×</button><span class="referral-landing-badge">−50%</span><h2 id="referral-landing-title">${esc(c.title)}</h2><p>${esc(c.body)}</p><p class="referral-landing-terms">${esc(c.terms)}</p><button type="button" class="referral-landing-cta" data-action="open-referral-invitation">${esc(state.user?c.ctaMember:c.ctaAnon)} <span aria-hidden="true">↗</span></button><button type="button" class="referral-landing-later" data-action="dismiss-referral-offer">${esc(c.later)}</button></aside>`;
+}
+function scheduleReferralLanding(){
+ if(referralLandingTimer||!referralLandingEligible())return;
+ referralLandingTimer=setTimeout(()=>{
+  referralLandingTimer=0;
+  if(!referralLandingEligible())return;
+  referralLandingVisible=true;markReferralLandingSeen();
+  if(!document.getElementById('referral-landing-offer'))document.getElementById('app').insertAdjacentHTML('beforeend',referralLandingMarkup());
+ },1800);
+}
+function openReferralInvitation(){
+ dismissReferralLanding();
+ if(!state.user){pendingReferralInvitation=true;state.authMode='register';auth();return;}
+ pendingReferralInvitation=false;
+ const c=referralLandingText(),hasLink=typeof state.user.ref==='string'&&state.user.ref.trim();
+ const link=hasLink?location.origin+'/?ref='+encodeURIComponent(state.user.ref):'';
+ openModal(`<section class="referral-invitation"><p class="eyebrow">CHYPERVITALIZE / −50%</p><h2>${esc(c.title)}</h2><p>${esc(c.body)}</p><p class="referral-landing-terms">${esc(c.terms)}</p>${link?`<label class="referral-link-label">${esc(c.linkLabel)}<input class="referral-link" readonly value="${esc(link)}" aria-label="${esc(c.linkLabel)}"></label>${button(c.copy,'copy-ref','secondary','')}`:`${button(t('account'),'account','secondary','')}`}</section>`);
+}
+document.addEventListener('click',event=>{
+ const action=event.target.closest('[data-action]')?.dataset.action;
+ if(action==='dismiss-referral-offer')dismissReferralLanding();
+ if(action==='open-referral-invitation')openReferralInvitation();
+ if(action==='close')pendingReferralInvitation=false;
+});
+document.addEventListener('keydown',event=>{
+ if(event.key==='Escape'&&referralLandingVisible&&!document.getElementById('modal')?.open)dismissReferralLanding();
+});
+document.getElementById('modal').addEventListener('cancel',()=>{pendingReferralInvitation=false;});
+document.getElementById('modal').addEventListener('click',event=>{
+ const modal=document.getElementById('modal');if(event.target!==modal)return;
+ const rect=modal.getBoundingClientRect();
+ if(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom)pendingReferralInvitation=false;
+});
+// End referral landing invitation.
 const icons={arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',check:'<path d="m5 12 4 4L19 6"/>',file:'<path d="M14 2H6a2 2 0 0 0-2 2v16h16V8zM14 2v6h6M8 12h8M8 16h6"/>',spark:'<path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/>',download:'<path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/>',user:'<circle cx="12" cy="8" r="4"/><path d="M4 22v-3a8 8 0 0 1 16 0v3"/>',globe:'<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',palette:'<path d="M12 3a9 9 0 1 0 0 18h1.1a1.9 1.9 0 0 0 1.4-3.2 1.8 1.8 0 0 1 1.3-3.1H18a3 3 0 0 0 3-3C21 7.3 16.9 3 12 3Z"/><circle cx="7.5" cy="11" r=".8"/><circle cx="10" cy="7.5" r=".8"/><circle cx="15" cy="8" r=".8"/>',list:'<path d="m4 6 1.5 1.5L8 5M11 6h9M4 12l1.5 1.5L8 11M11 12h9M4 18l1.5 1.5L8 17M11 18h9"/>',shield:'<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m9 12 2 2 4-4"/>',device:'<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/>',languages:'<path d="m5 8 4-4 4 4M9 4v12M5 12c1.2 2.2 3.2 4 6 5M15 20l4-10 4 10m-6.5-3h5"/>',modern:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8 9h8M8 13h4M8 17h8"/>',value:'<path d="M12 2v20M17 6.5c-.8-1-2.3-1.5-4-1.5-2.2 0-4 1.1-4 2.8 0 4.4 9 1.6 9 6.4 0 1.9-1.8 3.3-4.5 3.3-1.9 0-3.7-.7-4.6-2"/>'};
 const icon=k=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[k]||icons.file}</svg>`;
 const button=(text,action,cls='primary',ico='arrow')=>`<button class="${cls}" data-action="${action}">${esc(text)}${ico?icon(ico):''}</button>`;
@@ -105,7 +398,7 @@ function render(){document.documentElement.lang=state.lang;document.title='Chype
  <div class="footer-col"><strong>Nyelv</strong><div class="footer-language">${languageMenu('footer-language',state.lang)}</div></div>
 </div>
 <div class="impact-strip">${esc(impactStripText())}</div>
-<div class="footer-bottom"><span>© ${new Date().getFullYear()} Chypervitalize</span><span>CV by Chypervitalize</span></div>`;$('#app').className=state.route==='editor'?'workspace':'page';$('#app').innerHTML=state.route==='home'?home()+`<p id="visit-proof" class="visitor-proof" role="status">${visitLabel()}</p>`:state.route==='setup'?setup():state.route==='payment'?paymentPage():editor();requestAnimationFrame(fitExamples);}
+<div class="footer-bottom"><span>© ${new Date().getFullYear()} Chypervitalize</span><span>CV by Chypervitalize</span></div>`;$('#app').className=state.route==='editor'?'workspace':'page';$('#app').innerHTML=state.route==='home'?home()+referralLandingMarkup()+`<p id="visit-proof" class="visitor-proof" role="status">${visitLabel()}</p>`:state.route==='setup'?setup():state.route==='payment'?paymentPage():editor();requestAnimationFrame(fitExamples);}
 function sample(){const l=strings[state.lang];const org=l.exampleOrganization||'Northline Studio';const city=l.exampleCity||'Budapest';return {...blank,name:l.exampleName,title:l.exampleTitle,email:'hello@example.com',phone:'+44 7700 900123',city,link:'linkedin.com/in/example',summary:l.exampleSummary,skills:l.exampleSkills,languages:l.exampleLanguages,languageLevels:[5,4,3],experience:[{heading:l.exampleHeading,organization:org,location:city,dates:l.exampleDates,details:l.exampleDetails},{heading:l.exampleHeading,organization:org,location:city,dates:'2021 — 2023',details:l.exampleDetails}],education:[{heading:'Business & Communication',organization:'Metropolitan University',location:city,dates:'2018 — 2021',details:'Strategy · communication · digital projects'}],projects:[{heading:'Portfolio project',organization:'Independent',location:'',dates:'2024',details:'Research, planning and measurable delivery.'}],certifications:[{heading:'Professional Certificate',organization:'Online Academy',location:'',dates:'2024',details:'Completed practical professional training.'}]};}
 function languageMarkup(d,l){const lines=String(d.languages||'').split(/\n|,/).map(x=>x.trim()).filter(Boolean);if(!lines.length)return '';return `<section class="cv-languages"><h3>${esc(l.languages)}</h3>${lines.map((name,i)=>{const level=Math.max(1,Math.min(5,Number(d.languageLevels?.[i]||5)));return `<div class="cv-language"><span>${esc(name)}</span><span class="language-dots" aria-label="${level} / 5">${[1,2,3,4,5].map(n=>`<i class="${n<=level?'filled':''}"></i>`).join('')}</span></div>`}).join('')}</section>`;}
 function cvMarkup(d,lang,example=false){const l=strings[lang];const has=Object.values(d).some(v=>typeof v==='string'?!!v.trim():Array.isArray(v)&&v.some(r=>Object.values(r).some(value=>typeof value==='string'&&value.trim())));if(!has&&!example)return `<article class="cv-paper empty-paper"><div class="empty-icon">${icon('file')}</div><h3>${t('empty')}</h3><div class="skeleton-lines"><i></i><i></i><i></i></div></article>`;const part=(k,txt)=>txt?`<section><h3>${esc(l[k])}</h3><p>${esc(txt).replace(/\n/g,'<br>')}</p></section>`:'';return `<article class="cv-paper"><div class="cv-head">${d.photo?`<img class="cv-photo" src="${esc(d.photo)}" alt="">`:''}<h2>${esc(d.name)}</h2><p class="cv-title">${esc(d.title)}</p><p class="cv-contact">${[d.email,d.phone,d.city,d.link].filter(Boolean).map(esc).join(' <span>·</span> ')}</p></div>${part('summary',d.summary)}${['experience','education','projects','awards','volunteer','certifications'].map(k=>(d[k]||[]).some(r=>r.heading||r.details)?`<section><h3>${esc(l[k])}</h3>${d[k].map(r=>`<div class="cv-entry"><div><strong>${esc(r.heading)}</strong><small>${esc(r.dates)}</small></div><p class="cv-org">${[r.organization,r.location].filter(Boolean).map(esc).join(' · ')}</p><p>${esc(r.details).replace(/\n/g,'<br>')}</p></div>`).join('')}</section>`:'').join('')}${part('skills',d.skills)}${languageMarkup(d,l)}</article>`;}
@@ -374,7 +667,7 @@ document.addEventListener('focusin',e=>{
 document.addEventListener('focusout',e=>{if(e.target.dataset.field){focusedPreviewField=null;refreshEditorPreview();}});
 
 function editor(){return `<div class="editor-top"><div><p class="eyebrow">${t('editDesc')}</p><h1>${t('editTitle')}</h1></div><div class="editor-actions"><span class="save-label">${icon('check')}<span id="save-status">${t('saved')}</span></span>${button(t('download'),'download','primary','download')}</div></div><div class="editor-layout"><aside class="section-nav"><div class="nav-title">${state.lang==='hu'?'Kitöltött szakaszok':'Filled sections'} <span>${sections.filter(complete).length}/${sections.length}</span></div>${sections.map((k,i)=>`<button class="section-link ${state.section===i?'active':''}" data-action="section-${i}"><span class="nav-num">${complete(k)?'✓':String(i+1).padStart(2,'0')}</span>${t(k)}</button>`).join('')}<button class="review-button" data-action="review">${icon('spark')}${state.lang==='hu'?'CV ellenőrzés':t('review')}</button><div class="nav-note">${t('atsNote')}</div></aside><section class="form-panel"><div class="form-head"><span class="eyebrow">${String(state.section+1).padStart(2,'0')} / 10</span><h2>${t(sections[state.section])}</h2>${state.section>=6?`<p class="hint">${state.lang==='hu'?'Választható szakasz. Csak akkor töltsd ki, ha releváns a jelentkezésedhez.':'Optional section. Include it when relevant to your application.'}</p>`:''}</div><div id="fields">${sectionFields()}</div>${basicDesignControls()}<div class="form-pagination"><button class="text-button" data-action="prev-section">← ${t('back')}</button>${button(t(state.section===9?'download':'next'),state.section===9?'download':'next-section','primary')}</div></section><section class="preview-panel"><div class="preview-toolbar"><span>${t('preview')}</span>${languageSelect('cv-language',state.cvLang)}</div>${true?`<p class="preview-demo-note">${state.lang==='hu'?'A halvány szöveg csak minta. A PDF-be kizárólag a saját, kitöltött adataid kerülnek.':'Faded text is an example only. Only your own completed details appear in the PDF.'}</p>`:''}<div id="cv-preview" class="cv-fit editor-sheet">${editorPreviewMarkup()}</div><p class="preview-note">${t('cvLanguageNote')}<span class="pdf-layout-note">${state.lang==='hu'?'A PDF tördelése eltérhet az élő előnézettől.':'PDF layout may differ from the live preview.'}</span></p></section></div>`;}
-function openModal(html){const m=$('#modal');m.innerHTML=`<button class="modal-close" data-action="close" aria-label="${t('close')}">×</button>${html}`;if(!m.open)m.showModal();}
+function openModal(html){dismissReferralLanding(false);const m=$('#modal');m.innerHTML=`<button class="modal-close" data-action="close" aria-label="${t('close')}">×</button>${html}`;if(!m.open)m.showModal();}
 function auth(){openModal(`<p class="eyebrow">CHYPERVITALIZE</p><h2>${t('authTitle')}</h2><p>${t('authDesc')}</p><div class="auth-tabs"><button data-action="auth-register" class="${state.authMode==='register'?'active':''}">${t('register')}</button><button data-action="auth-login" class="${state.authMode==='login'?'active':''}">${t('login')}</button></div><form id="auth-form"><label class="field">${t('email')}<input name="email" type="email" required autocomplete="email"></label><label class="field">${t('password')}<input name="password" type="password" required minlength="10" maxlength="200" placeholder="${t('passwordHint')}" autocomplete="${state.authMode==='register'?'new-password':'current-password'}"></label><p class="auth-legal-note">${state.lang==='hu'?'A fiók használatáról és adataidról:':'About your account and data:'} <a href="/terms.html" target="_blank" rel="noopener">${state.lang==='hu'?'Felhasználási feltételek':'Terms'}</a> · <a href="/privacy.html" target="_blank" rel="noopener">${state.lang==='hu'?'Adatvédelem':'Privacy'}</a></p><p id="auth-error" role="alert"></p><button class="primary" type="submit">${t(state.authMode==='register'?'register':'login')}${icon('arrow')}</button></form>`);}
 function checkout(){openModal(`<p class="eyebrow">CHYPERVITALIZE / PDF</p><h2>${state.lang==='hu'?'Válassz hozzáférést':'Choose your access'}</h2><div class="alt-plans plan-choice-grid">${['day','month'].map(p=>planCard(p,true)).join('')}</div>${subscriptionHelp()}<p class="fx-note">${fxNote()}</p>`);}
 function checkoutSelected(){const intro=state.plan==='day';openModal(`<p class="eyebrow">CHYPERVITALIZE / PDF</p><h2>${state.lang==='hu'?'Kiválasztott csomag':'Selected plan'}</h2><div class="checkout-total"><span>${planLabel(state.plan)}</span><strong>${state.plan==='month'&&monthlyReferralEligible()?money(6.24):money(state.plan)}</strong></div><p>${intro?(state.lang==='hu'?`Az első 7 nap ${money('day')}. Ezután automatikusan ${money('month')}/hó, amíg le nem mondod.`:`First 7 days ${money('day')}. Then automatically ${money('month')}/month until cancelled.`):(state.lang==='hu'?`${money('month')}/hó, automatikusan megújul, amíg le nem mondod.`:`${money('month')}/month, automatically renews until cancelled.`)}</p>${state.plan==='month'?referralCheckoutNote():''}${subscriptionHelp()}<p class="fx-note">${fxNote()}</p>${button(state.lang==='hu'?'Tovább a fizetéshez':'Continue to payment','pay','primary','download')}<div class="payment-marks"><span>VISA</span><span>mastercard</span><span>stripe</span></div>`);}
@@ -407,6 +700,7 @@ async function resumeAfterAuth(){
  if(state.pendingAccount){state.pendingAccount=false;account();return;}
  if(state.pendingCheckout){await startCheckout();return;}
  if(state.pendingDownload){state.pendingDownload=false;await download();}
+ else if(pendingReferralInvitation){openReferralInvitation();}
 }
 async function pdf(showThanks=true){toast(t('exporting'));try{const res=await fetch('/api/pdf',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cv:state.cv,labels:strings[state.cvLang],projectKey:state.projectKey,resumeType:state.resumeType,cvStyle:state.cvStyle||state.resumeType,layout:state.layout,basicSide:state.basicSide,cvBackground:effectiveColor('cvBackground'),basicAccent:effectiveColor('basicAccent'),basicAccent2:effectiveColor('basicAccent2'),customAccent:state.customAccent,customAccent2:state.customAccent2})});if(!res.ok)throw Error();const blob=await res.blob(),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Chypervitalize-CV.pdf';a.click();setTimeout(()=>URL.revokeObjectURL(url),20000);if(showThanks)openModal(`<div class="success-mark">${icon('check')}</div><h2>${t('thanks')}</h2><p>${t('thanksDesc')}</p>${button(t('downloadAgain'),'download','primary','download')}<button class="text-button" data-action="close">${t('close')}</button>`);else $('#modal').close();}catch{toast(t('error'));}}
 function referralSection(){
@@ -594,7 +888,7 @@ api('me').then(async r=>{
  if(state.user){
   if(!(Number(state.user.credits||0)>0)){try{const paid=await api('checkout-status',{});state.user=paid.user||state.user;if(paid.paid&&Number(state.user.credits||0)>0){state.route='editor';render();showDownloadModal();return;}}catch{}}
  }
- render();
+ render();scheduleReferralLanding();
 }).catch(()=>{if(checkoutResult==='success'){state.route='payment';state.payment='error';render();}});
 
 function fitEditorPaper(){
