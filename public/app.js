@@ -1,4 +1,4 @@
-import {openStyleCarousel} from './style-carousel.js?v=20261015-carousel';
+import {openStyleCarousel} from './style-carousel.js?v=20261015-carousel-ready';
 import {locales,strings} from './i18n.js?v=20260925-prices';
 import {fieldExample} from './examples.js';
 import {getCvExamples as getOriginalCvExamples} from './cv-examples.js?v=20261009-photo-placeholders';
